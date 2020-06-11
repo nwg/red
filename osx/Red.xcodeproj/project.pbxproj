@@ -1,0 +1,606 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA6DDE87248E493A009AD2D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDE86248E493A009AD2D5 /* AppDelegate.swift */; };
+		AA6DDE89248E493A009AD2D5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDE88248E493A009AD2D5 /* ContentView.swift */; };
+		AA6DDE8B248E493C009AD2D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDE8A248E493C009AD2D5 /* Assets.xcassets */; };
+		AA6DDE8E248E493C009AD2D5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDE8D248E493C009AD2D5 /* Preview Assets.xcassets */; };
+		AA6DDE91248E493C009AD2D5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDE8F248E493C009AD2D5 /* Main.storyboard */; };
+		AA6DDE9D248E493C009AD2D5 /* RedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDE9C248E493C009AD2D5 /* RedTests.swift */; };
+		AA6DDEA8248E493C009AD2D5 /* RedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEA7248E493C009AD2D5 /* RedUITests.swift */; };
+		AA6DDEB6248E7F95009AD2D5 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEB5248E7F95009AD2D5 /* TextView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA6DDE99248E493C009AD2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA6DDE7B248E493A009AD2D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA6DDE82248E493A009AD2D5;
+			remoteInfo = Red;
+		};
+		AA6DDEA4248E493C009AD2D5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA6DDE7B248E493A009AD2D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA6DDE82248E493A009AD2D5;
+			remoteInfo = Red;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AA6DDE83248E493A009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA6DDE86248E493A009AD2D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA6DDE88248E493A009AD2D5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA6DDE8A248E493C009AD2D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA6DDE8D248E493C009AD2D5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		AA6DDE90248E493C009AD2D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AA6DDE92248E493C009AD2D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA6DDE93248E493C009AD2D5 /* Red.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Red.entitlements; sourceTree = "<group>"; };
+		AA6DDE98248E493C009AD2D5 /* RedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA6DDE9C248E493C009AD2D5 /* RedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedTests.swift; sourceTree = "<group>"; };
+		AA6DDE9E248E493C009AD2D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA6DDEA3248E493C009AD2D5 /* RedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA6DDEA7248E493C009AD2D5 /* RedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedUITests.swift; sourceTree = "<group>"; };
+		AA6DDEA9248E493C009AD2D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA6DDEB5248E7F95009AD2D5 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA6DDE80248E493A009AD2D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDE95248E493C009AD2D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDEA0248E493C009AD2D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA6DDE7A248E493A009AD2D5 = {
+			isa = PBXGroup;
+			children = (
+				AA6DDE85248E493A009AD2D5 /* Red */,
+				AA6DDE9B248E493C009AD2D5 /* RedTests */,
+				AA6DDEA6248E493C009AD2D5 /* RedUITests */,
+				AA6DDE84248E493A009AD2D5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA6DDE84248E493A009AD2D5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA6DDE83248E493A009AD2D5 /* Red.app */,
+				AA6DDE98248E493C009AD2D5 /* RedTests.xctest */,
+				AA6DDEA3248E493C009AD2D5 /* RedUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA6DDE85248E493A009AD2D5 /* Red */ = {
+			isa = PBXGroup;
+			children = (
+				AA6DDE86248E493A009AD2D5 /* AppDelegate.swift */,
+				AA6DDEB5248E7F95009AD2D5 /* TextView.swift */,
+				AA6DDE88248E493A009AD2D5 /* ContentView.swift */,
+				AA6DDE8A248E493C009AD2D5 /* Assets.xcassets */,
+				AA6DDE8F248E493C009AD2D5 /* Main.storyboard */,
+				AA6DDE92248E493C009AD2D5 /* Info.plist */,
+				AA6DDE93248E493C009AD2D5 /* Red.entitlements */,
+				AA6DDE8C248E493C009AD2D5 /* Preview Content */,
+			);
+			path = Red;
+			sourceTree = "<group>";
+		};
+		AA6DDE8C248E493C009AD2D5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				AA6DDE8D248E493C009AD2D5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		AA6DDE9B248E493C009AD2D5 /* RedTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA6DDE9C248E493C009AD2D5 /* RedTests.swift */,
+				AA6DDE9E248E493C009AD2D5 /* Info.plist */,
+			);
+			path = RedTests;
+			sourceTree = "<group>";
+		};
+		AA6DDEA6248E493C009AD2D5 /* RedUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AA6DDEA7248E493C009AD2D5 /* RedUITests.swift */,
+				AA6DDEA9248E493C009AD2D5 /* Info.plist */,
+			);
+			path = RedUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA6DDE82248E493A009AD2D5 /* Red */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA6DDEAC248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "Red" */;
+			buildPhases = (
+				AA6DDE7F248E493A009AD2D5 /* Sources */,
+				AA6DDE80248E493A009AD2D5 /* Frameworks */,
+				AA6DDE81248E493A009AD2D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Red;
+			productName = Red;
+			productReference = AA6DDE83248E493A009AD2D5 /* Red.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA6DDE97248E493C009AD2D5 /* RedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA6DDEAF248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "RedTests" */;
+			buildPhases = (
+				AA6DDE94248E493C009AD2D5 /* Sources */,
+				AA6DDE95248E493C009AD2D5 /* Frameworks */,
+				AA6DDE96248E493C009AD2D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA6DDE9A248E493C009AD2D5 /* PBXTargetDependency */,
+			);
+			name = RedTests;
+			productName = RedTests;
+			productReference = AA6DDE98248E493C009AD2D5 /* RedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AA6DDEA2248E493C009AD2D5 /* RedUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA6DDEB2248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "RedUITests" */;
+			buildPhases = (
+				AA6DDE9F248E493C009AD2D5 /* Sources */,
+				AA6DDEA0248E493C009AD2D5 /* Frameworks */,
+				AA6DDEA1248E493C009AD2D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA6DDEA5248E493C009AD2D5 /* PBXTargetDependency */,
+			);
+			name = RedUITests;
+			productName = RedUITests;
+			productReference = AA6DDEA3248E493C009AD2D5 /* RedUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA6DDE7B248E493A009AD2D5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = ManicMind;
+				TargetAttributes = {
+					AA6DDE82248E493A009AD2D5 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					AA6DDE97248E493C009AD2D5 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = AA6DDE82248E493A009AD2D5;
+					};
+					AA6DDEA2248E493C009AD2D5 = {
+						CreatedOnToolsVersion = 11.5;
+						TestTargetID = AA6DDE82248E493A009AD2D5;
+					};
+				};
+			};
+			buildConfigurationList = AA6DDE7E248E493A009AD2D5 /* Build configuration list for PBXProject "Red" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA6DDE7A248E493A009AD2D5;
+			productRefGroup = AA6DDE84248E493A009AD2D5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA6DDE82248E493A009AD2D5 /* Red */,
+				AA6DDE97248E493C009AD2D5 /* RedTests */,
+				AA6DDEA2248E493C009AD2D5 /* RedUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA6DDE81248E493A009AD2D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6DDE91248E493C009AD2D5 /* Main.storyboard in Resources */,
+				AA6DDE8E248E493C009AD2D5 /* Preview Assets.xcassets in Resources */,
+				AA6DDE8B248E493C009AD2D5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDE96248E493C009AD2D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDEA1248E493C009AD2D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA6DDE7F248E493A009AD2D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6DDEB6248E7F95009AD2D5 /* TextView.swift in Sources */,
+				AA6DDE89248E493A009AD2D5 /* ContentView.swift in Sources */,
+				AA6DDE87248E493A009AD2D5 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDE94248E493C009AD2D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6DDE9D248E493C009AD2D5 /* RedTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6DDE9F248E493C009AD2D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6DDEA8248E493C009AD2D5 /* RedUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA6DDE9A248E493C009AD2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA6DDE82248E493A009AD2D5 /* Red */;
+			targetProxy = AA6DDE99248E493C009AD2D5 /* PBXContainerItemProxy */;
+		};
+		AA6DDEA5248E493C009AD2D5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA6DDE82248E493A009AD2D5 /* Red */;
+			targetProxy = AA6DDEA4248E493C009AD2D5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AA6DDE8F248E493C009AD2D5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AA6DDE90248E493C009AD2D5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AA6DDEAA248E493C009AD2D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA6DDEAB248E493C009AD2D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AA6DDEAD248E493C009AD2D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Red/Preview Content\"";
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Red/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA6DDEAE248E493C009AD2D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Red/Preview Content\"";
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Red/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AA6DDEB0248E493C009AD2D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = RedTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.RedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Red.app/Contents/MacOS/Red";
+			};
+			name = Debug;
+		};
+		AA6DDEB1248E493C009AD2D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = RedTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.RedTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Red.app/Contents/MacOS/Red";
+			};
+			name = Release;
+		};
+		AA6DDEB3248E493C009AD2D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = RedUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.RedUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Red;
+			};
+			name = Debug;
+		};
+		AA6DDEB4248E493C009AD2D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = RedUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.RedUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Red;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA6DDE7E248E493A009AD2D5 /* Build configuration list for PBXProject "Red" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA6DDEAA248E493C009AD2D5 /* Debug */,
+				AA6DDEAB248E493C009AD2D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA6DDEAC248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "Red" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA6DDEAD248E493C009AD2D5 /* Debug */,
+				AA6DDEAE248E493C009AD2D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA6DDEAF248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "RedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA6DDEB0248E493C009AD2D5 /* Debug */,
+				AA6DDEB1248E493C009AD2D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA6DDEB2248E493C009AD2D5 /* Build configuration list for PBXNativeTarget "RedUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA6DDEB3248E493C009AD2D5 /* Debug */,
+				AA6DDEB4248E493C009AD2D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA6DDE7B248E493A009AD2D5 /* Project object */;
+}
