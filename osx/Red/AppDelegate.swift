@@ -2,32 +2,28 @@
 //  AppDelegate.swift
 //  Red
 //
-//  Created by Nathaniel W Griswold on 6/8/20.
+//  Created by Nathaniel W Griswold on 6/11/20.
 //  Copyright © 2020 ManicMind. All rights reserved.
 //
 
 import Cocoa
-import SwiftUI
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var window: NSWindow!
-
+    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var mainMenu: NSMenu!
+    
+    var topPanel: PanelViewController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
-
-        // Create the window and set the content view. 
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.center()
-        window.setFrameAutosaveName("Main Window")
-        window.contentView = NSHostingView(rootView: contentView)
-        window.makeKeyAndOrderFront(nil)
+        topPanel = PanelViewController(menu: mainMenu)
+        topPanel.view.frame = window.contentView!.frame
+        
+        let firstVC = PanelViewController(menu: mainMenu)
+        topPanel.splitViewItems = [ NSSplitViewItem(viewController: firstVC) ]
+        
+        window.contentViewController = topPanel
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
