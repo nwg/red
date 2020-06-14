@@ -14,6 +14,8 @@
 		AA6DDF18249276A1009AD2D5 /* RedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF17249276A1009AD2D5 /* RedUITests.swift */; };
 		AA6DDF2724927973009AD2D5 /* PanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF2524927973009AD2D5 /* PanelViewController.swift */; };
 		AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDF2624927973009AD2D5 /* PanelViewController.xib */; };
+		AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */; };
+		AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		AA6DDF19249276A2009AD2D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA6DDF2524927973009AD2D5 /* PanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelViewController.swift; sourceTree = "<group>"; };
 		AA6DDF2624927973009AD2D5 /* PanelViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PanelViewController.xib; sourceTree = "<group>"; };
+		AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
+		AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScrollViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,8 @@
 				AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */,
 				AA6DDF2524927973009AD2D5 /* PanelViewController.swift */,
 				AA6DDF2624927973009AD2D5 /* PanelViewController.xib */,
+				AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */,
+				AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */,
 				AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */,
 				AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */,
 				AA6DDF02249276A1009AD2D5 /* Info.plist */,
@@ -234,6 +240,7 @@
 				AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */,
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
+				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */,
+				AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */,
 				AA6DDF2724927973009AD2D5 /* PanelViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

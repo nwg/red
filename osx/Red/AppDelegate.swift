@@ -14,16 +14,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var mainMenu: NSMenu!
     
-    var topPanel: PanelViewController!
+    var scrollVC : ScrollViewController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        topPanel = PanelViewController(menu: mainMenu)
-        topPanel.view.frame = window.contentView!.frame
-        
-        let firstVC = PanelViewController(menu: mainMenu)
-        topPanel.splitViewItems = [ NSSplitViewItem(viewController: firstVC) ]
-        
-        window.contentViewController = topPanel
+        scrollVC = ScrollViewController(menu: mainMenu, frame: window.contentView!.frame)
+        window.contentViewController = scrollVC
+//        scrollVC!.view.frame = window.contentView!.frame
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
