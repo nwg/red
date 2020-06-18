@@ -16,6 +16,11 @@
 		AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDF2624927973009AD2D5 /* PanelViewController.xib */; };
 		AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */; };
 		AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */; };
+		AA6DDF32249A3621009AD2D5 /* MMTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF30249A3621009AD2D5 /* MMTextViewController.swift */; };
+		AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDF31249A3621009AD2D5 /* MMTextViewController.xib */; };
+		AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF36249A365F009AD2D5 /* MMTextView.swift */; };
+		AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */; };
+		AA703993249AC87C009FD158 /* MMClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA703992249AC87C009FD158 /* MMClipView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,12 @@
 		AA6DDF2624927973009AD2D5 /* PanelViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PanelViewController.xib; sourceTree = "<group>"; };
 		AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController.swift; sourceTree = "<group>"; };
 		AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScrollViewController.xib; sourceTree = "<group>"; };
+		AA6DDF30249A3621009AD2D5 /* MMTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextViewController.swift; sourceTree = "<group>"; };
+		AA6DDF31249A3621009AD2D5 /* MMTextViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextViewController.xib; sourceTree = "<group>"; };
+		AA6DDF36249A365F009AD2D5 /* MMTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextView.swift; sourceTree = "<group>"; };
+		AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridge.swift; sourceTree = "<group>"; };
+		AA703991249A6D21009FD158 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		AA703992249AC87C009FD158 /* MMClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMClipView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,10 +118,16 @@
 				AA6DDF2624927973009AD2D5 /* PanelViewController.xib */,
 				AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */,
 				AA6DDF2A24969A2E009AD2D5 /* ScrollViewController.xib */,
+				AA6DDF30249A3621009AD2D5 /* MMTextViewController.swift */,
+				AA6DDF31249A3621009AD2D5 /* MMTextViewController.xib */,
+				AA6DDF36249A365F009AD2D5 /* MMTextView.swift */,
+				AA703992249AC87C009FD158 /* MMClipView.swift */,
 				AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */,
 				AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */,
 				AA6DDF02249276A1009AD2D5 /* Info.plist */,
 				AA6DDF03249276A1009AD2D5 /* Red.entitlements */,
+				AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */,
+				AA703991249A6D21009FD158 /* MyPlayground.playground */,
 			);
 			path = Red;
 			sourceTree = "<group>";
@@ -241,6 +258,7 @@
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
+				AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +285,11 @@
 			files = (
 				AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */,
 				AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */,
+				AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */,
 				AA6DDF2724927973009AD2D5 /* PanelViewController.swift in Sources */,
+				AA6DDF32249A3621009AD2D5 /* MMTextViewController.swift in Sources */,
+				AA703993249AC87C009FD158 /* MMClipView.swift in Sources */,
+				AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

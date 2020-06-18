@@ -8,171 +8,192 @@
 
 import Cocoa
 
-//class MyTextResponder : NSResponder {
-//    var textView : MyTextView!
-//
-//    convenience init(forView: MyTextView) {
-//        self.init()
-//        self.textView = forView
-//    }
-//
-//    override func keyDown(with event: NSEvent) {
-//        print("Key down")
-//    }
-//}
-
-class MyTextView : NSView, NSTextInputClient {
-    
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    func insertText(_ string: Any, replacementRange: NSRange) {
-        
-    }
-    
-    func setMarkedText(_ string: Any, selectedRange: NSRange, replacementRange: NSRange) {
-        
-    }
-    
-    func unmarkText() {
-        
-    }
-    
-    func selectedRange() -> NSRange {
-        return NSRange(location: 0, length: 0)
-    }
-    
-    func markedRange() -> NSRange {
-        return NSRange(location: 0, length: 0)
-    }
-    
-    func hasMarkedText() -> Bool {
-        return false
-    }
-    
-    func attributedSubstring(forProposedRange range: NSRange, actualRange: NSRangePointer?) -> NSAttributedString? {
-        return NSAttributedString(string: "Something")
-    }
-    
-    func validAttributesForMarkedText() -> [NSAttributedString.Key] {
-        return []
-    }
-    
-    func firstRect(forCharacterRange range: NSRange, actualRange: NSRangePointer?) -> NSRect {
-        return NSRect(origin: .zero, size: CGSize(width: 20, height: 40))
-    }
-    
-    func characterIndex(for point: NSPoint) -> Int {
-        return 0
-    }
-    
-    override var acceptsFirstResponder: Bool {
-        return true
-    }
-    
-    override func becomeFirstResponder() -> Bool {
-        return true
-    }
-    
-    override func resignFirstResponder() -> Bool {
-        return true
-    }
-    
-    override func keyDown(with event: NSEvent) {
-        print("Key down")
-        self.inputContext?.handleEvent(event)
-    }
-    
-    override func deleteBackward(_ sender: Any?) {
-        
-    }
-    
-    override func doCommand(by selector: Selector) {
-        super.doCommand(by: selector)
-    }
-    
-    override func insertNewline(_ sender: Any?) {
-        
-    }
-}
-
 class ScrollViewController: NSViewController {
 
     @IBOutlet var scrollView: NSScrollView!
-    var initialFrame : CGRect = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-    var textView : NSTextView!
-    var myView : NSView!
+    var textVC : MMTextViewController!
+    var lastLayoutY : CGFloat?
+    var lastBounds : CGRect?
+    var observation: NSKeyValueObservation?
     
-    convenience init(menu: NSMenu, frame: CGRect) {
+    var hasInitializedScroll : Bool = false
+    
+//    override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
+//        super.init(nibName: nil, bundle: nil)
+//        self.textVC = MMTextViewController(parentScrollView: self.scrollView)
+//        self.scrollView.documentView = self.textVC.view
+//    }
+    convenience init() {
         self.init(nibName: nil, bundle: nil)
-        self.initialFrame = frame
+
+
+
+    }
+//    required init?(coder: NSCoder) {
+//        super.init(coder: coder)
+//    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        func change(object : NSClipView, change : NSKeyValueObservedChange<CGRect>) {
+            if !self.hasInitializedScroll {
+                return
+            }
+            
+            if let oldBounds = self.lastBounds {
+                let newBounds = object.bounds
+                let newY = oldBounds.origin.y + oldBounds.height - newBounds.height
+                self.scrollView.contentView.scroll(to: NSPoint(x: 0, y: newY))
+            }
+            
+            print("Setting bounds to \(object.bounds)")
+            self.lastBounds = object.bounds
+            //            print("myDate changed from: \(change.oldValue!), updated to: \(change.newValue!)")
+
+        }
+        
+        let fun = { (object : NSClipView, change : NSKeyValueObservedChange<CGRect>) in
+            if !self.hasInitializedScroll {
+                return
+            }
+            
+            if let oldBounds = self.lastBounds {
+                let newBounds = object.bounds
+                let newY = oldBounds.origin.y + oldBounds.height - newBounds.height
+                self.scrollView.contentView.scroll(to: NSPoint(x: 0, y: newY))
+            }
+            
+            print("Setting bounds to \(object.bounds)")
+            self.lastBounds = object.bounds
+            //            print("myDate changed from: \(change.oldValue!), updated to: \(change.newValue!)")
+        }
+        
+//        observation = scrollView.contentView.observe(
+//            \NSClipView.frame,
+//            options: [.new],
+//            changeHandler: change)
+//        observation = scrollView.contentView.observe(
+//            \NSClipView.bounds,
+//            options: [.new],
+//            changeHandler: change)
+
+
+//        NSUserNotificationCenter.default.addObserver(self, forKeyPath: "something", options: [.initial, .new], context: nil)
+        
+    }
+    
+    override func viewWillLayout() {
+        super.viewWillLayout()
+        
+        if !self.hasInitializedScroll {
+            self.hasInitializedScroll = true
+            let y = self.scrollView.documentView!.bounds.height - self.scrollView.contentView.bounds.height
+            self.scrollView.documentView!.scroll(NSPoint(x: 0, y: y))
+        }
+
+    }
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        
+        print("offset: \(self.scrollView.contentView.bounds)")
+
+        
+//        self.lastLayoutY = self.scrollView.contentView.bounds.origin.y
+//        self.lastBounds = self.scrollView.contentView.bounds
+//
+//        if let lastLayoutY = self.lastLayoutY, let lastBounds = self.lastBounds {
+//            let newY = lastLayoutY + lastBounds.height - self.scrollView.contentView.bounds.height
+//            self.scrollView.contentView.scroll(to: NSPoint(x: 0, y: newY))
+//        }
+//
+//        self.lastLayoutY = self.scrollView.contentView.bounds.origin.y
+//        self.lastBounds = self.scrollView.contentView.bounds
+    }
+    
+    override func viewWillAppear() {
+        super.viewWillAppear()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.frame = self.initialFrame
-//        let textView = NSTextView(
-//            frame: NSRect(origin: .zero, size: CGSize(width: self.view.frame.size.width, height: 2000)),
-//            textContainer: NSTextContainer(containerSize: NSSize(width: self.view.frame.size.width, height: self.view.frame.size.height)))
-//        let textStorage = NSTextStorage()
-//        let manager = NSLayoutManager()
-//        let container = NSTextContainer(size: NSSize(width: self.view.frame.size.width, height: self.view.frame.size.height))
-//        let textView = NSTextView(frame: NSRect(origin: .zero,
-//                                                size: NSSize(width: self.view.frame.size.width, height: self.view.frame.size.height)),
-//                                  textContainer: container)
-//        textView.isEditable = true
-//        textView.isSelectable = true
-//        textView.textColor = NSColor.white
-//        self.textView = textView
-        self.myView = MyTextView(frame: NSRect(origin: .zero, size: NSSize(width: self.view.frame.size.width, height: self.view.frame.size.height)))
-        self.myView.wantsLayer = true
-        self.myView.layer?.backgroundColor = NSColor.red.cgColor
-        self.myView.becomeFirstResponder()
         
+        self.scrollView.contentView.postsBoundsChangedNotifications = true
+        self.scrollView.contentView.postsFrameChangedNotifications = true
         
+        NotificationCenter.default.addObserver(self, selector: #selector(viewBoundsChanged), name: NSView.boundsDidChangeNotification, object: self.scrollView.contentView)
+        NotificationCenter.default.addObserver(self, selector: #selector(viewFrameChanged), name: NSView.frameDidChangeNotification, object: self.scrollView.contentView)
 
-//        textStorage.addLayoutManager(manager)
-//        manager.addTextContainer(container)
-//        let delegate = TextViewDelegate()
-//        textView.delegate = delegate
-        let documentView = NSView(frame: CGRect(origin: .zero, size: CGSize(width: self.view.frame.size.width, height: 2000)))
-        documentView.wantsLayer = true
-        documentView.layer?.backgroundColor = NSColor.green.cgColor
-        documentView.addSubview(myView)
-        self.scrollView.documentView = documentView
-        self.scrollView.backgroundColor = NSColor.green
-        self.scrollView.contentView.scroll(to: .zero)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(boundsDidChange),
-                                               name: NSView.boundsDidChangeNotification,
-                                               object: scrollView.contentView)
 
-//        self.scrollView.contentView.scrollToBeginningOfDocument(nil)
+        self.scrollView.automaticallyAdjustsContentInsets = false
+        
+        self.textVC = MMTextViewController(parentScrollView: self.scrollView)
+//        self.textVC.view.frame = self.view.bounds
+//        self.textVC.view.layer?.masksToBounds = true
+//        self.view.wantsLayer = true
+//        self.view.layer?.backgroundColor = NSColor.purple.cgColor
+        self.textVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 3000.0)
+        self.scrollView.documentView = self.textVC.view
     }
     
-    @objc func boundsDidChange(notification: NSNotification) {
-        let clipView = notification.object as! NSClipView
-
-        self.myView.frame = clipView.bounds
+    @objc func viewBoundsChanged(_ notification : NSNotification) {
+        self.geometryChange()
+//
+////        print("here")
+//
+////        guard let documentView = self.scrollView.documentView else { return }
+//        let contentView = self.scrollView.contentView
+//        let contentBounds = contentView.bounds
+//        guard let oldBounds = self.lastBounds else { self.lastBounds = contentBounds; return }
+//
+////        print("bounds changed")
+//        let newBounds = contentBounds
+//        if oldBounds.size.equalTo(newBounds.size) { self.lastBounds = contentBounds; return }
+//        let newY = oldBounds.origin.y + oldBounds.height - newBounds.height
+//
+//        if (newY == newBounds.origin.y) { self.lastBounds = contentBounds; return }
+//
+//        print("Adjusting y to \(newY) from \(newBounds.origin.y), max is \(self.scrollView.documentView!.bounds.height - newBounds.height)")
+//
+//        self.scrollView.contentView.scroll(to: NSPoint(x: newBounds.origin.x, y: newY))
+//        self.scrollView.reflectScrolledClipView(self.scrollView.contentView)
+////        self.scrollView.contentView.bounds = CGRect(x: 0, y: newY, width: newBounds.width, height: newBounds.height)
+//        self.lastBounds = newBounds
+//        self.scrollView.setNeedsDisplay(self.scrollView.bounds)
     }
     
+    func geometryChange() {
+        if !self.hasInitializedScroll { return }
+        
+        let contentView = self.scrollView.contentView
+        let contentBounds = contentView.bounds
+        guard let oldBounds = self.lastBounds else { self.lastBounds = contentBounds; return }
+        
+        //        print("bounds changed")
+        let newBounds = contentBounds
+        if oldBounds.size.equalTo(newBounds.size) { self.lastBounds = contentBounds; return }
+//        let newY = oldBounds.origin.y + oldBounds.height - newBounds.height
+        let newY = oldBounds.maxY - newBounds.height
+        
+        if (newY == newBounds.origin.y) { self.lastBounds = contentBounds; return }
+        
+        print("Adjusting y to \(newY) from \(newBounds.origin.y), max is \(self.scrollView.documentView!.bounds.height - newBounds.height)")
+        
+        let newOrigin = NSPoint(x: newBounds.origin.x, y: newY)
+        let finalBounds = CGRect(origin: newOrigin, size: newBounds.size)
+//        self.scrollView.contentView.scroll(to: newOrigin)
+//        self.scrollView.reflectScrolledClipView(self.scrollView.contentView)
+        //        self.scrollView.reflectScrolledClipView(self.scrollView.contentView)
+        self.scrollView.contentView.bounds = finalBounds
+        
+        self.lastBounds = finalBounds
+        //        self.scrollView.setNeedsDisplay(self.scrollView.bounds)
+
+    }
+
+    @objc func viewFrameChanged(_ notification : NSNotification) {
+        self.geometryChange()
+    }
+
 }
 
-class TextViewDelegate : NSObject, NSTextViewDelegate {
-    func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
-        return true
-    }
-    
-//    func textDidChange(_ notification: Notification) {
-//        let textObject = notification.object as! NSTextView
-//        //            print("text now: \(String(describing: textObject.string))")
-//        self.parent.text = textObject.string
-//    }
-
-}

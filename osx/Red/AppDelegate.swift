@@ -15,11 +15,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var mainMenu: NSMenu!
     
     var scrollVC : ScrollViewController!
+    var textVC : MMTextViewController!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        scrollVC = ScrollViewController(menu: mainMenu, frame: window.contentView!.frame)
-        window.contentViewController = scrollVC
 //        scrollVC!.view.frame = window.contentView!.frame
+        //        let frameSize = window.contentRect(forFrameRect: window.frame)
+//        scrollVC = ScrollViewController(menu: mainMenu, frame: window.contentView!.frame)
+//        window.contentViewController = scrollVC
+//        window.contentViewController = scrollVC
+        
+//        window.titlebarAppearsTransparent = true
+        scrollVC = ScrollViewController()
+        
+//        textVC = MMTextViewController(nibName: nil, bundle: nil)
+        let bounds = window.contentView!.bounds
+        let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+//        scrollVC.view.frame = window.contentView!.bounds
+        window.contentView?.addSubview(scrollVC.view)
+        scrollVC.view.frame = frame
+        
+        print("Content view frame is \(window.contentView!.frame)")
+        
+//        scrollVC.view.layer.
+    }
+    
+    func applicationDidUpdate(_ notification: Notification) {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
