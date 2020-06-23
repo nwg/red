@@ -21,6 +21,7 @@
 		AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF36249A365F009AD2D5 /* MMTextView.swift */; };
 		AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */; };
 		AA703993249AC87C009FD158 /* MMClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA703992249AC87C009FD158 /* MMClipView.swift */; };
+		AA70399624A28C0D009FD158 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = AA70399524A28C0D009FD158 /* test.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,9 @@
 		AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridge.swift; sourceTree = "<group>"; };
 		AA703991249A6D21009FD158 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AA703992249AC87C009FD158 /* MMClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMClipView.swift; sourceTree = "<group>"; };
+		AA70399424A28C0D009FD158 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
+		AA70399524A28C0D009FD158 /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
+		AA70399724A28D4D009FD158 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,9 @@
 				AA6DDF03249276A1009AD2D5 /* Red.entitlements */,
 				AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */,
 				AA703991249A6D21009FD158 /* MyPlayground.playground */,
+				AA70399424A28C0D009FD158 /* test.h */,
+				AA70399524A28C0D009FD158 /* test.c */,
+				AA70399724A28D4D009FD158 /* bridge.h */,
 			);
 			path = Red;
 			sourceTree = "<group>";
@@ -218,6 +225,7 @@
 				TargetAttributes = {
 					AA6DDEF7249276A1009AD2D5 = {
 						CreatedOnToolsVersion = 11.5;
+						LastSwiftMigration = 1150;
 					};
 					AA6DDF07249276A1009AD2D5 = {
 						CreatedOnToolsVersion = 11.5;
@@ -290,6 +298,7 @@
 				AA6DDF32249A3621009AD2D5 /* MMTextViewController.swift in Sources */,
 				AA703993249AC87C009FD158 /* MMClipView.swift in Sources */,
 				AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */,
+				AA70399624A28C0D009FD158 /* test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +462,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -465,6 +475,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Red/bridge.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -473,6 +485,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -485,6 +498,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Red/bridge.h;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

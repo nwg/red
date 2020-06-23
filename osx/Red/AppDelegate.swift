@@ -36,6 +36,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         print("Content view frame is \(window.contentView!.frame)")
         
+        let blah = NSString()
+        takePointer(bridgeRetained(obj: blah))
+        
 //        scrollVC.view.layer.
     }
     
