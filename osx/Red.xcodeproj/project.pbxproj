@@ -22,6 +22,8 @@
 		AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */; };
 		AA703993249AC87C009FD158 /* MMClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA703992249AC87C009FD158 /* MMClipView.swift */; };
 		AA70399624A28C0D009FD158 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = AA70399524A28C0D009FD158 /* test.c */; };
+		AA7039A924A2EAC1009FD158 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7039A424A2E74F009FD158 /* Racket.framework */; };
+		AA7039AA24A2EAC1009FD158 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA7039A424A2E74F009FD158 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,20 @@
 			remoteInfo = Red;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA7039AB24A2EAC1009FD158 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AA7039AA24A2EAC1009FD158 /* Racket.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AA6DDEF8249276A1009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +83,7 @@
 		AA70399424A28C0D009FD158 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		AA70399524A28C0D009FD158 /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		AA70399724A28D4D009FD158 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
+		AA7039A424A2E74F009FD158 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Racket.framework; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA7039A924A2EAC1009FD158 /* Racket.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +119,7 @@
 				AA6DDF0B249276A1009AD2D5 /* RedTests */,
 				AA6DDF16249276A1009AD2D5 /* RedUITests */,
 				AA6DDEF9249276A1009AD2D5 /* Products */,
+				AA70399C24A2E4F7009FD158 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +176,14 @@
 			path = RedUITests;
 			sourceTree = "<group>";
 		};
+		AA70399C24A2E4F7009FD158 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AA7039A424A2E74F009FD158 /* Racket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -167,6 +194,7 @@
 				AA6DDEF4249276A1009AD2D5 /* Sources */,
 				AA6DDEF5249276A1009AD2D5 /* Frameworks */,
 				AA6DDEF6249276A1009AD2D5 /* Resources */,
+				AA7039AB24A2EAC1009FD158 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -464,10 +492,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Z2B87YMX6M;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Red",
+				);
+				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
 				INFOPLIST_FILE = Red/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -475,6 +510,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Red/bridge.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -487,10 +523,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Red/Red.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Z2B87YMX6M;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Red",
+				);
+				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
 				INFOPLIST_FILE = Red/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -498,6 +541,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Red/bridge.h;
 				SWIFT_VERSION = 5.0;
 			};
