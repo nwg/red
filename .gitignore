@@ -1,5 +1,7 @@
 run-server
 
+compiled
+
 # Racket stuff
 *.LOCKpkgs.rktd
 
