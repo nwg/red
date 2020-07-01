@@ -56,7 +56,7 @@ $(server): $(server_dir)/server.rkt $(server_iso)
 	$(RACO_ESC) exe -o $@ $<
 
 $(server_iso): $(server_utf8)
-	iconv -f ISO_8859-1 -t UTF-8 <$< >$@
+	iconv -f UTF-8 -t ISO_8859-1 <$< >$@
 
 all_out := $(local_catalogs) $(server)
 
