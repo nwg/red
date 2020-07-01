@@ -16,6 +16,7 @@ RACO_ESC := $(call fixspace,$(RACO))
 
 .DEFAULT_GOAL := all
 
+# local cache stuff
 pkgs_dir := $(ROOT_DIR)/pkg
 catalog_dir := $(pkgs_dir)/catalog
 local_pkgs := $(pkgs_dir)/local-modules
@@ -26,12 +27,16 @@ auto_dep_pkgname := red-dependencies
 auto_dep_pkg := $(pkgs_install_tgt)/$(auto_dep_pkgname)
 plt_config := $(pkgs_install_tgt)/config.rktd 
 
+# server stuff
+server_dir := $(ROOT_DIR)/server
+server := $(server_dir)/server
+server_iso := $(server_dir)/sample.iso8859-1
+server_utf8 := $(server_dir)/sample.utf8
+
 export PLTADDONDIR=$(pkgs_install)
 
-all_out := $(local_catalogs)
-
 .PHONY: all
-all: $(local_catalogs) $(auto_dep_pkg)
+all: $(local_catalogs) $(auto_dep_pkg) $(server)
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 
@@ -47,5 +52,14 @@ $(auto_dep_pkg): $(local_catalogs)/pkg
 	$(RACO_ESC) pkg install --batch --auto $(auto_dep_pkgname) || /usr/bin/true
 	touch $@
 
+$(server): $(server_dir)/server.rkt $(server_iso)
+	$(RACO_ESC) exe -o $@ $<
+
+$(server_iso): $(server_utf8)
+	iconv -f ISO_8859-1 -t UTF-8 <$< >$@
+
+all_out := $(local_catalogs) $(server)
+
 clean:
 	rm -rf $(all_out)
+
