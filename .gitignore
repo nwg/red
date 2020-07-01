@@ -1,3 +1,15 @@
+# Racket stuff
+*.LOCKpkgs.rktd
+
+pkg/*
+!pkg/install
+pkg/install/*/*
+!pkg/install/*/pkgs
+pkg/install/*/pkgs/*
+!pkg/install/*/pkgs/pkgs.rktd
+
+*.swp
+
 # Mac OS X ...
 
 # General
