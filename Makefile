@@ -28,15 +28,16 @@ auto_dep_pkg := $(pkgs_install_tgt)/$(auto_dep_pkgname)
 plt_config := $(pkgs_install_tgt)/config.rktd 
 
 # server stuff
-server_dir := $(ROOT_DIR)/server
-server := $(server_dir)/server
+server_dir := $(ROOT_DIR)/src/racket/red-server
 server_iso := $(server_dir)/sample.iso8859-1
 server_utf8 := $(server_dir)/sample.utf8
+run_server_dir := $(ROOT_DIR)/src/racket
+run_server := $(run_server_dir)/run-server.rkt
 
 export PLTADDONDIR=$(pkgs_install)
 
 .PHONY: all
-all: $(local_catalogs) $(auto_dep_pkg) $(server)
+all: $(local_catalogs) $(auto_dep_pkg) run-server
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 
@@ -52,7 +53,7 @@ $(auto_dep_pkg): $(local_catalogs)/pkg
 	$(RACO_ESC) pkg install --batch --auto $(auto_dep_pkgname) || /usr/bin/true
 	touch $@
 
-$(server): $(server_dir)/server.rkt $(server_iso)
+run-server: $(run_server) $(server_iso)
 	$(RACO_ESC) exe -o $@ $<
 
 $(server_iso): $(server_utf8)

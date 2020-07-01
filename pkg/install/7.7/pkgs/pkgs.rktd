@@ -1,1 +1,1 @@
-#hash(("red-dependencies" . #s((sc-pkg-info pkg-info 3) (catalog "red-dependencies") "" #f "red-dependencies")))
+#hash(("red-dependencies" . #s((sc-pkg-info pkg-info 3) (catalog "red-dependencies") "" #f "red-dependencies")) ("red-server" . #s((sc-pkg-info pkg-info 3) (dir "/Users/griswold/project/red/src/racket/red-server/") #f #f "red-server")))
