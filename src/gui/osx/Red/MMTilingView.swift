@@ -10,13 +10,45 @@ import Cocoa
 import CoreGraphics
 
 class MMTilingView: NSView, CALayerDelegate {
+    
+    var tiledLayer : CATiledLayer!
 
     override func makeBackingLayer() -> CALayer {
-        let tiledLayer = CATiledLayer()
-        tiledLayer.delegate = self
-        return tiledLayer
+        self.tiledLayer = CATiledLayer()
+        self.tiledLayer.delegate = self
+        print("\(self.tiledLayer.tileSize)")
+        return self.tiledLayer
     }
     
+    override var acceptsFirstResponder: Bool {
+        get {
+            return true
+        }
+    }
+    
+    override func keyDown(with event: NSEvent) {
+//        if let keyString = theEvent.charactersIgnoringModifiers where keyString == "UP" || keyString == "up" {
+//            Swift.print("BUT...BUT…")
+//        }
+        let changeSize = CGFloat(100)
+        if let key = event.specialKey {
+            switch (key) {
+            case .upArrow:
+                let currentSize = tiledLayer.tileSize
+                let newSize = CGSize(width: currentSize.width + changeSize, height: currentSize.height + changeSize)
+                tiledLayer.tileSize = newSize
+            case .downArrow:
+                let currentSize = tiledLayer.tileSize
+                let newSize = CGSize(width: currentSize.width - changeSize, height: currentSize.height - changeSize)
+                tiledLayer.tileSize = newSize
+            default:
+                break
+            }
+        } else {
+            super.keyDown(with: event)
+        }
+    }
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
