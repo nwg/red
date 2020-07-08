@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="MMTilingTest" customModule="Red" customModuleProvider="target">
+            <connections>
+                <outlet property="scrollView" destination="QWE-Fi-9Ct" id="k4x-8L-H5b"/>
+                <outlet property="tilingView" destination="Jhb-t8-7vq" id="6N6-pG-QI7"/>
+                <outlet property="view" destination="QWE-Fi-9Ct" id="Eib-CE-x6c"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="QWE-Fi-9Ct">
+            <rect key="frame" x="0.0" y="0.0" width="345" height="251"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <clipView key="contentView" id="xIV-u0-Lb6">
+                <rect key="frame" x="1" y="1" width="343" height="249"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <view wantsLayer="YES" id="Jhb-t8-7vq" customClass="MMTilingView" customModule="Red" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="5000" height="5000"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    </view>
+                </subviews>
+            </clipView>
+            <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="keN-Zo-umq">
+                <rect key="frame" x="1" y="234" width="343" height="16"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="oBd-Ms-qeu">
+                <rect key="frame" x="328" y="1" width="16" height="249"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <point key="canvasLocation" x="74.5" y="53.5"/>
+        </scrollView>
+    </objects>
+</document>
