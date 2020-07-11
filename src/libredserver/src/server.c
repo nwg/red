@@ -9,12 +9,12 @@
 struct buf_s {
 };
 
-int init_server(const char *execname) {
+int init_server(const char *execname, const char *petite, const char *scheme, const char *racket) {
     racket_boot_arguments_t ba;
     memset(&ba, 0, sizeof(ba));
-    ba.boot1_path = "./petite.boot";
-    ba.boot2_path = "./scheme.boot";
-    ba.boot3_path = "./racket.boot";
+    ba.boot1_path = petite;
+    ba.boot2_path = scheme;
+    ba.boot3_path = racket;
 
     ba.exec_file = execname;
 
@@ -22,8 +22,13 @@ int init_server(const char *execname) {
 
     declare_modules();
 
+    /*
+    racket_namespace_require(Sstring_to_symbol("red-server"));
+    racket_eval(Scons(Sstring_to_symbol("red-server-run"), Snil));
+    */
+
     ptr mod = Scons(Sstring_to_symbol("quote"),
-                    Scons(Sstring_to_symbol("run"),
+                    Scons(Sstring_to_symbol("modules"),
                           Snil));
     racket_dynamic_require(mod, Sfalse);
 

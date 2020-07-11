@@ -28,7 +28,7 @@ set_target_properties(RedServer PROPERTIES
 
 add_custom_command(TARGET RedServer POST_BUILD
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/RedServer.framework"
-    COMMAND "/bin/ln" "-s" "Versions/A/Modules"
+    COMMAND "/bin/ln" "-sf" "Versions/A/Modules"
     COMMENT "Linking RedServer Modules"
 )
 

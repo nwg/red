@@ -34,8 +34,11 @@ install_lib_dir := $(install_dir)/lib
 red_server_framework := RedServer.framework
 server_dir := $(ROOT_DIR)/src/libredserver
 server_lib_build := $(build_dir)/libredserver
-server_result := $(server_lib_build)/RedServer.framework
+server_result_framework := $(server_lib_build)/RedServer.framework
+server_result_lib := $(server_lib_build)/RedServer.framework/RedServer
 server_install_dest := $(install_dir)/lib/RedServer.framework
+boot_files := petite.boot scheme.boot racket.boot
+boot_files_build := $(foreach boot,$(boot_files),$(server_lib_build)/$(boot))
 
 # racket stuff
 racket_framework_src := $(RACKET_LIB)/Racket.framework
@@ -43,24 +46,32 @@ racket_framework_dest := $(install_lib_dir)/Racket.framework
 
 export PLTADDONDIR=$(pkgs_install)
 
+.PHONY: FORCE
+FORCE:
+
 .PHONY: all
 all: $(local_catalogs) $(auto_dep_pkg) $(server_install_dest) $(racket_framework_dest)
 
-$(racket_framework_dest): $(racket_framework) | $(install_lib_dir)
+$(boot_files_build): | $(server_lib_build)
+	cp $(
+
+$(server_lib_build)/%.boot: $(RACKET_DIST)/
+
+$(racket_framework_dest): $(racket_framework_src) | $(install_lib_dir)
+	rm -rf "$@"
 	cp -a "$(racket_framework_src)" "$@"
 	touch "$@"
 
-$(server_install_dest): $(server_result) | $(install_lib_dir)
-	cp -a $< $@
+$(server_install_dest): $(server_result_lib) | $(install_lib_dir)
+	rm -rf "$@"
+	cp -a "$(server_result_framework)" "$@"
 	touch $@
 
 $(server_lib_build) $(install_dir) | $(install_lib_dir):
 	mkdir -p $@
 
-$(server_result): $(server_dir) | $(server_lib_build)
-	echo "$(server_result) needs updating (looking at $(server_lib_build))"
+$(server_result_lib): FORCE $(server_dir) | $(server_lib_build)
 	cd $(server_lib_build) && cmake $(server_dir) && gmake
-	touch $@
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 

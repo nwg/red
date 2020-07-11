@@ -15,6 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var mainMenu: NSMenu!
+    var racketThread : Thread!
     
 //    var scrollVC : ScrollViewController!
 //    var textVC : MMTextViewController!
@@ -47,7 +48,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let blah = NSString()
         takePointer(bridgeRetained(obj: blah))
         
-//        scrollVC.view.layer.
+        racketThread = Thread(block: {
+            let racketBundle = Bundle(identifier: "org.racket-lang.Racket")
+            let bootPath = NSString.path(withComponents: [racketBundle!.bundlePath, "Versions/Current/boot"])
+            let petite = NSString.path(withComponents: [bootPath, "petite.boot"])
+            let scheme = NSString.path(withComponents: [bootPath, "scheme.boot"])
+            let racket = NSString.path(withComponents: [bootPath, "racket.boot"])
+
+            init_server(CommandLine.arguments[0], petite, scheme, racket)
+        })
+        racketThread.start()
     }
     
     func applicationDidUpdate(_ notification: Notification) {
