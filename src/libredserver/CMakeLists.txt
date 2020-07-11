@@ -4,8 +4,14 @@ disallow_intree_builds()
 
 project(RedServer VERSION 0.0.0 DESCRIPTION "Server for the Red Text Editor")
 
+set_property(SOURCE src/module.modulemap
+    PROPERTY MACOSX_PACKAGE_LOCATION "Modules")
+
 add_library(RedServer SHARED
     ${CMAKE_CURRENT_BINARY_DIR}/server.c
+    src/server.h
+    src/RedServer.h
+    src/module.modulemap
 )
 
 set_target_properties(RedServer PROPERTIES
@@ -17,7 +23,15 @@ set_target_properties(RedServer PROPERTIES
     #MACOSX_FRAMEWORK_INFO_PLIST Info.plist
     PUBLIC_HEADER RedServer.h
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "None"
+    PUBLIC_HEADER "src/RedServer.h;src/server.h"
 )
+
+add_custom_command(TARGET RedServer POST_BUILD
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/RedServer.framework"
+    COMMAND "/bin/ln" "-s" "Versions/A/Modules"
+    COMMENT "Linking RedServer Modules"
+)
+
 
 install(TARGETS RedServer
     FRAMEWORK DESTINATION lib

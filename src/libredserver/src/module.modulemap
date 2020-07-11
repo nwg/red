@@ -1,0 +1,4 @@
+framework module RedServer {
+  umbrella header "RedServer.h"  export *
+  module * { export * }
+}

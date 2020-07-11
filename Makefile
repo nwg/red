@@ -57,12 +57,10 @@ $(server_install_dest): $(server_result) | $(install_lib_dir)
 $(server_lib_build) $(install_dir) | $(install_lib_dir):
 	mkdir -p $@
 
-$(server_result): $(server_lib_build)
+$(server_result): $(server_dir) | $(server_lib_build)
 	echo "$(server_result) needs updating (looking at $(server_lib_build))"
 	cd $(server_lib_build) && cmake $(server_dir) && gmake
 	touch $@
-
-$(info server_lib_build=$(server_lib_build) and server_result=$(server_result))
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 

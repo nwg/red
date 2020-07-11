@@ -7,6 +7,8 @@
 //
 
 import Cocoa
+import RedServer
+
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
