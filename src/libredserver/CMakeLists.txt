@@ -19,6 +19,10 @@ set_target_properties(RedServer PROPERTIES
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "None"
 )
 
+install(TARGETS RedServer
+    FRAMEWORK DESTINATION lib
+)
+
 target_include_directories(RedServer PRIVATE src)
 target_include_directories(RedServer PRIVATE "/Applications/Racket\ v7.7/include")
 

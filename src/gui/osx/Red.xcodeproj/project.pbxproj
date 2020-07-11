@@ -26,6 +26,10 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
+		AAA8174724B9BC9B00A770A1 /* RedServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8174524B9A13F00A770A1 /* RedServer.framework */; };
+		AAA8174824B9BC9B00A770A1 /* RedServer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8174524B9A13F00A770A1 /* RedServer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AAA8174C24B9BF0C00A770A1 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8174A24B9BEF600A770A1 /* Racket.framework */; };
+		AAA8174D24B9BF0D00A770A1 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8174A24B9BEF600A770A1 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,21 @@
 			remoteInfo = Red;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AAA8174924B9BC9B00A770A1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AAA8174D24B9BF0D00A770A1 /* Racket.framework in Embed Frameworks */,
+				AAA8174824B9BC9B00A770A1 /* RedServer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AA6DDEF8249276A1009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +95,9 @@
 		AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTilingTest.xib; sourceTree = "<group>"; };
 		AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTilingView.swift; sourceTree = "<group>"; };
 		AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AAA8174124B9A0DF00A770A1 /* RedServer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedServer.framework; path = ../../../build/libredserver/RedServer.framework; sourceTree = "<group>"; };
+		AAA8174524B9A13F00A770A1 /* RedServer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedServer.framework; path = ../../../../build/libredserver/RedServer.framework; sourceTree = "<group>"; };
+		AAA8174A24B9BEF600A770A1 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = ../../../../build/install/lib/Racket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +105,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAA8174C24B9BF0C00A770A1 /* Racket.framework in Frameworks */,
 				AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */,
+				AAA8174724B9BC9B00A770A1 /* RedServer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +173,8 @@
 				AA70399424A28C0D009FD158 /* test.h */,
 				AA70399524A28C0D009FD158 /* test.c */,
 				AA70399724A28D4D009FD158 /* bridge.h */,
+				AAA8174A24B9BEF600A770A1 /* Racket.framework */,
+				AAA8174524B9A13F00A770A1 /* RedServer.framework */,
 			);
 			path = Red;
 			sourceTree = "<group>";
@@ -174,6 +200,7 @@
 		AA70399C24A2E4F7009FD158 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAA8174124B9A0DF00A770A1 /* RedServer.framework */,
 				AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */,
 				AA7039A424A2E74F009FD158 /* Racket.framework */,
 			);
@@ -190,6 +217,7 @@
 				AA6DDEF4249276A1009AD2D5 /* Sources */,
 				AA6DDEF5249276A1009AD2D5 /* Frameworks */,
 				AA6DDEF6249276A1009AD2D5 /* Resources */,
+				AAA8174924B9BC9B00A770A1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -407,6 +435,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/../../../build/install/lib";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -467,6 +496,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/../../../build/install/lib";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
