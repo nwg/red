@@ -26,18 +26,26 @@ pkgs_install_tgt := $(pkgs_install)/$(RACKET_VERSION)/pkgs
 auto_dep_pkgname := red-dependencies
 auto_dep_pkg := $(pkgs_install_tgt)/$(auto_dep_pkgname)
 plt_config := $(pkgs_install_tgt)/config.rktd 
+build_dir := $(ROOT_DIR)/build
 
 # server stuff
-server_dir := $(ROOT_DIR)/src/racket/red-server
-server_iso := $(server_dir)/sample.iso8859-1
-server_utf8 := $(server_dir)/sample.utf8
-run_server_dir := $(ROOT_DIR)/src/racket
-run_server := $(run_server_dir)/run-server.rkt
+server_dir := $(ROOT_DIR)/src/libredserver
+server_lib_build := $(build_dir)/libredserver
+server_product := $(server_lib_build)/RedServer.framework
+
+$(server_lib_build):
+	mkdir -p $@
+
+$(server_product): $(server_lib_build)
+	cd $(server_lib_build) && cmake $(server_dir) && gmake
+	touch $(server_product)
+
+$(info $(server_product))
 
 export PLTADDONDIR=$(pkgs_install)
 
 .PHONY: all
-all: $(local_catalogs) $(auto_dep_pkg) run-server
+all: $(local_catalogs) $(auto_dep_pkg) $(server_product)
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 
@@ -53,14 +61,10 @@ $(auto_dep_pkg): $(local_catalogs)/pkg
 	$(RACO_ESC) pkg install --batch --auto $(auto_dep_pkgname) || /usr/bin/true
 	touch $@
 
-run-server: $(run_server) $(server_iso)
-	$(RACO_ESC) exe -o $@ $<
-
-$(server_iso): $(server_utf8)
-	iconv -f UTF-8 -t ISO_8859-1 <$< >$@
-
-all_out := $(local_catalogs) $(server)
+all_out := $(local_catalogs) $(build_dir)
 
 clean:
 	rm -rf $(all_out)
+
+
 
