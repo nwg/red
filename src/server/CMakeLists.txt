@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
-#include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+include (utils.cmake)
+disallow_intree_builds()
 
 project(RedServer VERSION 0.0.0 DESCRIPTION "Server for the Red Text Editor")
 
