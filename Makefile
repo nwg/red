@@ -37,8 +37,6 @@ server_lib_build := $(build_dir)/libredserver
 server_result_framework := $(server_lib_build)/RedServer.framework
 server_result_lib := $(server_lib_build)/RedServer.framework/RedServer
 server_install_dest := $(install_dir)/lib/RedServer.framework
-boot_files := petite.boot scheme.boot racket.boot
-boot_files_build := $(foreach boot,$(boot_files),$(server_lib_build)/$(boot))
 
 # racket stuff
 racket_framework_src := $(RACKET_LIB)/Racket.framework
@@ -52,11 +50,6 @@ FORCE:
 .PHONY: all
 all: $(local_catalogs) $(auto_dep_pkg) $(server_install_dest) $(racket_framework_dest)
 
-$(boot_files_build): | $(server_lib_build)
-	cp $(
-
-$(server_lib_build)/%.boot: $(RACKET_DIST)/
-
 $(racket_framework_dest): $(racket_framework_src) | $(install_lib_dir)
 	rm -rf "$@"
 	cp -a "$(racket_framework_src)" "$@"
@@ -67,7 +60,7 @@ $(server_install_dest): $(server_result_lib) $(racket_framework_dest) | $(instal
 	cp -a "$(server_result_framework)" "$@"
 	touch $@
 
-$(server_lib_build) $(install_dir) | $(install_lib_dir):
+$(server_lib_build) $(install_dir) $(install_lib_dir) $(pkgs_dir) $(local_catalogs)/pkg:
 	mkdir -p $@
 
 $(server_result_lib): FORCE $(server_dir) $(racket_framework_dest) | $(server_lib_build)
