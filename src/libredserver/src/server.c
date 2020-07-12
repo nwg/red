@@ -17,6 +17,7 @@ int init_server(const char *execname, const char *petite, const char *scheme, co
     ba.boot3_path = racket;
 
     ba.exec_file = execname;
+    ba.collects_dir = ":";
 
     racket_boot(&ba);
 

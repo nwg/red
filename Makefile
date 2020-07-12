@@ -62,7 +62,7 @@ $(racket_framework_dest): $(racket_framework_src) | $(install_lib_dir)
 	cp -a "$(racket_framework_src)" "$@"
 	touch "$@"
 
-$(server_install_dest): $(server_result_lib) | $(install_lib_dir)
+$(server_install_dest): $(server_result_lib) $(racket_framework_dest) | $(install_lib_dir)
 	rm -rf "$@"
 	cp -a "$(server_result_framework)" "$@"
 	touch $@
@@ -70,8 +70,9 @@ $(server_install_dest): $(server_result_lib) | $(install_lib_dir)
 $(server_lib_build) $(install_dir) | $(install_lib_dir):
 	mkdir -p $@
 
-$(server_result_lib): FORCE $(server_dir) | $(server_lib_build)
+$(server_result_lib): FORCE $(server_dir) $(racket_framework_dest) | $(server_lib_build)
 	cd $(server_lib_build) && cmake $(server_dir) && gmake
+	#cd $(server_lib_build) && cmake -DCMAKE_BUILD_TYPE=Debug $(server_dir) && gmake VERBOSE=1
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"
 

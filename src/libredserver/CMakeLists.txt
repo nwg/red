@@ -4,6 +4,9 @@ disallow_intree_builds()
 
 project(RedServer VERSION 0.0.0 DESCRIPTION "Server for the Red Text Editor")
 
+SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+SET(CMAKE_C_FLAGS_DEBUG "-g -O0")
+
 set_property(SOURCE src/module.modulemap
     PROPERTY MACOSX_PACKAGE_LOCATION "Modules")
 
@@ -28,7 +31,7 @@ set_target_properties(RedServer PROPERTIES
 
 add_custom_command(TARGET RedServer POST_BUILD
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/RedServer.framework"
-    COMMAND "/bin/ln" "-sf" "Versions/A/Modules"
+    COMMAND "/bin/ln" "-sf" "Versions/Current/Modules"
     COMMENT "Linking RedServer Modules"
 )
 
@@ -50,7 +53,7 @@ set(SERVER_MODULES
 
 add_custom_command(
     OUTPUT ${SERVER_MODULES}
-    COMMAND raco ctool --c-mods ${SERVER_MODULES} ${CMAKE_SOURCE_DIR}/src/modules.rkt
+    COMMAND raco ctool --c-mods ${SERVER_MODULES} ++lib racket ${CMAKE_SOURCE_DIR}/src/modules.rkt
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/modules.rkt"
     COMMENT "Generating modules.c using raco"
