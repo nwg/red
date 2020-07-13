@@ -17,6 +17,19 @@ add_library(RedServer SHARED
     src/module.modulemap
 )
 
+find_library(ZMQ_NAME NAMES libzmq.5.dylib libzmq.dylib)
+find_path(ZMQ_INCLUDE_NAME NAMES zmq.h)
+
+message("Zmq at ${ZMQ_NAME} ${ZMQ_INCLUDE_NAME}")
+
+add_library(zmq SHARED IMPORTED)
+set_target_properties(zmq PROPERTIES
+    IMPORTED_LOCATION "${ZMQ_NAME}"
+    INTERFACE_INCLUDE_DIRECTORIES "${ZMQ_INCLUDE_NAME}"
+)
+
+target_link_libraries(RedServer zmq)
+
 set_target_properties(RedServer PROPERTIES
     SOVERSION 0
     VERSION ${PROJECT_VERSION}
