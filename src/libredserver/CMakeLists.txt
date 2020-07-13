@@ -53,7 +53,7 @@ set(SERVER_MODULES
 
 add_custom_command(
     OUTPUT ${SERVER_MODULES}
-    COMMAND raco ctool --c-mods ${SERVER_MODULES} ${CMAKE_SOURCE_DIR}/src/modules.rkt
+    COMMAND raco ctool --c-mods ${SERVER_MODULES} ++lib racket/promise ${CMAKE_SOURCE_DIR}/src/modules.rkt
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/modules.rkt"
     COMMENT "Generating modules.c using raco"
