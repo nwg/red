@@ -1,33 +1,24 @@
 #lang racket
 
-(require (prefix-in zmq: net/zmq))
+(require zeromq)
 
 (provide test-server)
 
-(define (test-server)
-  (let ([ctx (zmq:context 1)])
-    (define blah
-      (thread
-       (λ ()
-         (let* ([socket (zmq:socket ctx 'REP)])
-           (println "Server now listening on inproc transport")
-           (zmq:socket-bind! socket "inproc://here")
-           (println "Here")
-           (printf "~a\n" (bytes->string/utf-8 (zmq:socket-recv! socket)))
-           (println "After")))))
-         ;; (println msg)))))
-         ;; (printf "Got msg ~a\n" msg)))))
-  ;; (define c2
-  ;;   (thread
-  ;;    (λ ()
-  ;;      (let* ([ctx (zmq:context 1)]
-  ;;             [socket (zmq:socket ctx 'REQ)])
-  ;;        (zmq:socket-send! socket (string->bytes/utf-8 "hello"))))))
-    (printf "here\n")
-    (let* ([socket (zmq:socket ctx 'REQ)])
-      (println "Client")
-      (zmq:socket-connect! socket "inproc://here")
-      (zmq:socket-send! socket (string->bytes/utf-8 "Some Message")))
-
-    (thread-wait blah)))
+(define test-server 2)
+;; (define (test-server)
+;;   (define responder-thread
+;;     (thread
+;;      (λ ()
+;;        (define responder (zmq-socket 'rep))
+;;        (zmq-bind responder "tcp://*:5555")
+;;        (let loop ()
+;;          (define msg (zmq-recv-string responder))
+;;          (printf "Server received: ~s\n" msg)
+;;          (zmq-send responder "World")
+;;          (loop)))))
+;;   (define requester (zmq-socket 'req #:connect "tcp://localhost:5555"))
+;;   (for ([request-number (in-range 3)])
+;;     (zmq-send requester "Hello")
+;;     (define response (zmq-recv-string requester))
+;;     (printf "Client received ~s (#~s)\n" response request-number)))
 
