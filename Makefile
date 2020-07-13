@@ -46,7 +46,7 @@ racket_framework_dest := $(install_lib_dir)/Racket.framework
 FORCE:
 
 .PHONY: all
-all: $(local_catalogs) $(auto_dep_pkg) $(server_install_dest) $(racket_framework_dest)
+all: $(local_catalogs) $(server_install_dest) $(racket_framework_dest)
 
 $(racket_framework_dest): $(racket_framework_src) | $(install_lib_dir)
 	rm -rf "$@"
@@ -62,7 +62,7 @@ $(server_lib_build) $(install_dir) $(install_lib_dir) $(pkgs_dir) $(local_catalo
 	mkdir -p $@
 
 $(server_result_lib): FORCE $(server_dir) $(racket_framework_dest) | $(server_lib_build)
-	rm -rf $(server_lib_build) && mkdir -p $(server_lib_build) && cd $(server_lib_build) && cmake $(server_dir) && gmake
+	rm -rf $(server_lib_build) && mkdir -p $(server_lib_build) && cd $(server_lib_build) && cmake -DCMAKE_BUILD_TYPE=Debug $(server_dir) && gmake
 	#cd $(server_lib_build) && cmake -DCMAKE_BUILD_TYPE=Debug $(server_dir) && gmake VERBOSE=1
 
 make_catalog = racket -l- pkg/dirs-catalog "$(1)" "$(2)"

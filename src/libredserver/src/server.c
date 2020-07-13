@@ -17,7 +17,41 @@ int init_server(const char *execname, const char *petite, const char *scheme, co
     ba.boot3_path = racket;
 
     ba.exec_file = execname;
-    ba.collects_dir = ":";
+    ba.collects_dir = "/Users/griswold/.red/collects";
+
+    /*
+    const char * home = getenv("HOME");
+    char dotdir[PATH_MAX];
+    strncpy(dotdir, home, PATH_MAX);
+    strcat(dotdir, "/.red/etc");
+
+    printf("outside dotdir=%s\n", dotdir);
+    int r = mkpath(dotdir, S_IRWXU | S_IRWXG);
+    if (r != 0) {
+        printf("r was %d\n", r);
+    }
+    char realdotdir[PATH_MAX];
+    const char *result = realpath(dotdir, realdotdir);
+    printf("%s\n", realdotdir);
+    assert(result != NULL);
+    */
+
+    ba.config_dir = "/Users/griswold/.red/etc";
+
+    ba.argc = 9;
+    char *argv[] = {
+        "-n",
+//"--no-user-path",
+        "-G",
+        "/Users/griswold/.red/Racket/etc",
+        "-A",
+        "/Users/griswold/.red/Racket/addon",
+        "-X",
+        "/Applications/Racket v7.7/collects",
+        "-W",
+        "debug@ffi-lib",
+    };
+    ba.argv = argv;
 
     racket_boot(&ba);
 
