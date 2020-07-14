@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA5A210E24BE199A00F4584E /* render.h in Headers */ = {isa = PBXBuildFile; fileRef = AA5A210C24BE199A00F4584E /* render.h */; };
+		AA5A210F24BE199A00F4584E /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = AA5A210D24BE199A00F4584E /* render.c */; };
+		AA5A211724BE19DE00F4584E /* red_render_core_text_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5A211624BE19DE00F4584E /* red_render_core_text_tests.swift */; };
+		AA5A211924BE19DE00F4584E /* libred-render-core-text.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA5A210524BE195400F4584E /* libred-render-core-text.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA5A211A24BE19DE00F4584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA5A20FD24BE195400F4584E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA5A210424BE195400F4584E;
+			remoteInfo = "red-render-core-text";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AA10125324BE2B6600226448 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
+		AA5A210524BE195400F4584E /* libred-render-core-text.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libred-render-core-text.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA5A210C24BE199A00F4584E /* render.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = render.h; sourceTree = "<group>"; };
+		AA5A210D24BE199A00F4584E /* render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = render.c; sourceTree = "<group>"; };
+		AA5A211424BE19DE00F4584E /* red-render-core-text-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "red-render-core-text-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA5A211624BE19DE00F4584E /* red_render_core_text_tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = red_render_core_text_tests.swift; sourceTree = "<group>"; };
+		AA5A211824BE19DE00F4584E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA5A210324BE195400F4584E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA5A211124BE19DE00F4584E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5A211924BE19DE00F4584E /* libred-render-core-text.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA5A20FC24BE195400F4584E = {
+			isa = PBXGroup;
+			children = (
+				AA5A210C24BE199A00F4584E /* render.h */,
+				AA5A210D24BE199A00F4584E /* render.c */,
+				AA5A211524BE19DE00F4584E /* red-render-core-text-tests */,
+				AA5A210624BE195400F4584E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA5A210624BE195400F4584E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA5A210524BE195400F4584E /* libred-render-core-text.dylib */,
+				AA5A211424BE19DE00F4584E /* red-render-core-text-tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA5A211524BE19DE00F4584E /* red-render-core-text-tests */ = {
+			isa = PBXGroup;
+			children = (
+				AA5A211624BE19DE00F4584E /* red_render_core_text_tests.swift */,
+				AA5A211824BE19DE00F4584E /* Info.plist */,
+				AA10125324BE2B6600226448 /* bridge.h */,
+			);
+			path = "red-render-core-text-tests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		AA5A210124BE195400F4584E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5A210E24BE199A00F4584E /* render.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		AA5A210424BE195400F4584E /* red-render-core-text */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA5A210924BE195400F4584E /* Build configuration list for PBXNativeTarget "red-render-core-text" */;
+			buildPhases = (
+				AA5A210124BE195400F4584E /* Headers */,
+				AA5A210224BE195400F4584E /* Sources */,
+				AA5A210324BE195400F4584E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "red-render-core-text";
+			productName = "red-render-core-text";
+			productReference = AA5A210524BE195400F4584E /* libred-render-core-text.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		AA5A211324BE19DE00F4584E /* red-render-core-text-tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA5A211C24BE19DE00F4584E /* Build configuration list for PBXNativeTarget "red-render-core-text-tests" */;
+			buildPhases = (
+				AA5A211024BE19DE00F4584E /* Sources */,
+				AA5A211124BE19DE00F4584E /* Frameworks */,
+				AA5A211224BE19DE00F4584E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA5A211B24BE19DE00F4584E /* PBXTargetDependency */,
+			);
+			name = "red-render-core-text-tests";
+			productName = "red-render-core-text-tests";
+			productReference = AA5A211424BE19DE00F4584E /* red-render-core-text-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA5A20FD24BE195400F4584E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1150;
+				LastUpgradeCheck = 1150;
+				ORGANIZATIONNAME = ManicMind;
+				TargetAttributes = {
+					AA5A210424BE195400F4584E = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					AA5A211324BE19DE00F4584E = {
+						CreatedOnToolsVersion = 11.5;
+					};
+				};
+			};
+			buildConfigurationList = AA5A210024BE195400F4584E /* Build configuration list for PBXProject "red-render-core-text" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA5A20FC24BE195400F4584E;
+			productRefGroup = AA5A210624BE195400F4584E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA5A210424BE195400F4584E /* red-render-core-text */,
+				AA5A211324BE19DE00F4584E /* red-render-core-text-tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA5A211224BE19DE00F4584E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA5A210224BE195400F4584E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5A210F24BE199A00F4584E /* render.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA5A211024BE19DE00F4584E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA5A211724BE19DE00F4584E /* red_render_core_text_tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA5A211B24BE19DE00F4584E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA5A210424BE195400F4584E /* red-render-core-text */;
+			targetProxy = AA5A211A24BE19DE00F4584E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AA5A210724BE195400F4584E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		AA5A210824BE195400F4584E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AA5A210A24BE195400F4584E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		AA5A210B24BE195400F4584E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		AA5A211D24BE19DE00F4584E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = "red-render-core-text-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.manicmind.red-render-core-text-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "red-render-core-text-tests/bridge.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA5A211E24BE19DE00F4584E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z2B87YMX6M;
+				INFOPLIST_FILE = "red-render-core-text-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.manicmind.red-render-core-text-tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "red-render-core-text-tests/bridge.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA5A210024BE195400F4584E /* Build configuration list for PBXProject "red-render-core-text" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA5A210724BE195400F4584E /* Debug */,
+				AA5A210824BE195400F4584E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA5A210924BE195400F4584E /* Build configuration list for PBXNativeTarget "red-render-core-text" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA5A210A24BE195400F4584E /* Debug */,
+				AA5A210B24BE195400F4584E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA5A211C24BE19DE00F4584E /* Build configuration list for PBXNativeTarget "red-render-core-text-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA5A211D24BE19DE00F4584E /* Debug */,
+				AA5A211E24BE19DE00F4584E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA5A20FD24BE195400F4584E /* Project object */;
+}
