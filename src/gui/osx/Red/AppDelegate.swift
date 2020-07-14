@@ -56,8 +56,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let racket = NSString.path(withComponents: [bootPath, "racket.boot"])
 
             init_server(CommandLine.arguments[0], petite, scheme, racket)
+            
+            DispatchQueue.main.async {
+                try_client();
+            }
+            
+            run_server();
         })
         racketThread.start()
+        
     }
     
     func applicationDidUpdate(_ notification: Notification) {

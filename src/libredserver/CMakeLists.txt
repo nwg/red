@@ -60,19 +60,4 @@ target_link_directories(RedServer PRIVATE "/Applications/Racket\ v7.7/lib")
 target_link_libraries(RedServer "-framework Racket")
 target_link_options(RedServer PRIVATE "-F" "${CMAKE_CURRENT_SOURCE_DIR}/../../third-party")
 
-set(SERVER_MODULES
-    "${CMAKE_CURRENT_BINARY_DIR}/data.c"
-)
-
-add_custom_command(
-    OUTPUT ${SERVER_MODULES}
-    COMMAND raco ctool --c-mods ${SERVER_MODULES} ++lib racket/promise ${CMAKE_SOURCE_DIR}/src/modules.rkt
-    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/modules.rkt"
-    COMMENT "Generating modules.c using raco"
-    VERBATIM
-)
-add_custom_target(raco_ctool_modules DEPENDS ${SERVER_MODULES})
-add_dependencies(RedServer raco_ctool_modules)
-
 configure_file("src/server.c" "${CMAKE_CURRENT_BINARY_DIR}/server.c" COPYONLY)
