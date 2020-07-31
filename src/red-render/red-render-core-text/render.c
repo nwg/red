@@ -36,4 +36,8 @@ EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_ren
     CTLineRef line = CTLineCreateWithAttributedString(attr);
     
     outInfo->width = CTLineGetTypographicBounds(line, &outInfo->ascent, &outInfo->descent, &outInfo->leading);
+    
+    CFRelease(str);
+    CFRelease(attr);
+    CFRelease(line);
 }
