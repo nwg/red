@@ -7,10 +7,12 @@
   [#:opaque lineInfo lineInfo?]
   [make-lineInfo (-> Float Float Float Float lineInfo)]
   [lineInfo-ascent (-> lineInfo Real)]
+  [lineInfo-descent (-> lineInfo Real)]
   [red_render_init (-> Integer)]
   [red_render_get_line_info (-> Bytes Integer lineInfo lineInfo)])
-    
-(red_render_init)
+
+(when (not (= (red_render_init) 0))
+    (error "Could not initialize renderer"))
 
 (struct LineInfo ([l : lineInfo]) #:transparent)
 
@@ -25,5 +27,6 @@
 
 (let* ([bs (string->bytes/utf-8 "something")]
        [info1 (make-empty-LineInfo)]
-       [info2 (get-line-info bs (bytes-length bs) info1)])
-  (displayln (lineInfo-ascent (LineInfo-l info2)))) 
+       [info2 (get-line-info bs (bytes-length bs) info1)]
+       [cinfo (LineInfo-l info2)])
+  (displayln (+ (lineInfo-ascent cinfo) (lineInfo-descent cinfo))))
