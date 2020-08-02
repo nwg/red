@@ -24,8 +24,10 @@
 ;; http://docs.racket-lang.org/style/index.html
 
 ;; Code here
-
-
+(require "private/interface.rkt")
+;; (let* ([bs (string->bytes/utf-8 "something")]
+;;        [info (get-line-info bs (bytes-length bs))])
+;;   (displayln info))
 
 (module+ test
   ;; Any code in this `test` submodule runs when this file is run using DrRacket
