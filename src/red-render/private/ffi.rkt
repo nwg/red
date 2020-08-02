@@ -12,7 +12,8 @@
          lineInfo?
          make-lineInfo
          lineInfo-ascent
-         (struct-out lineInfo))
+         (struct-out lineInfo)
+         make-lineInfo)
 
 (define-ffi-definer define-red-render (ffi-lib "libred-render-core-text"))
 
@@ -37,5 +38,5 @@
 
 (define-red-render
   red_render_get_line_info
-  (_fun _bytes _int (info : (_ptr o _lineInfo)) -> _void
+  (_fun _bytes _int (info : _lineInfo-pointer) -> _void
         -> info))
