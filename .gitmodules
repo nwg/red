@@ -1,0 +1,3 @@
+[submodule "third-party/racket"]
+	path = third-party/racket
+	url = git@github.com:racket/racket.git
