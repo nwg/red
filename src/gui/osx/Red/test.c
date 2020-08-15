@@ -7,8 +7,7 @@
 //
 
 #include "test.h"
-#include "chezscheme.h"
-#include "racketcs.h"
+#include <CoreGraphics/CoreGraphics.h>
 
 void takePointer(const void *ptr) {
     

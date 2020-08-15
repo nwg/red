@@ -26,10 +26,8 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
-		AAD2BE9E24BB14EE006F7606 /* RedServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD2BE9C24BB14EE006F7606 /* RedServer.framework */; };
-		AAD2BE9F24BB14EE006F7606 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD2BE9D24BB14EE006F7606 /* Racket.framework */; };
-		AAD2BEA024BB14F4006F7606 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAD2BE9D24BB14EE006F7606 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		AAD2BEA124BB14FF006F7606 /* RedServer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAD2BE9C24BB14EE006F7606 /* RedServer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AAC1FDCB24E80F23003508CE /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; };
+		AAC1FDCD24E81018003508CE /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,8 +54,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AAD2BEA124BB14FF006F7606 /* RedServer.framework in Embed Frameworks */,
-				AAD2BEA024BB14F4006F7606 /* Racket.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,8 +90,8 @@
 		AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTilingTest.xib; sourceTree = "<group>"; };
 		AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTilingView.swift; sourceTree = "<group>"; };
 		AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AAD2BE9C24BB14EE006F7606 /* RedServer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedServer.framework; path = ../../../build/install/lib/RedServer.framework; sourceTree = "<group>"; };
-		AAD2BE9D24BB14EE006F7606 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = ../../../build/install/lib/Racket.framework; sourceTree = "<group>"; };
+		AAC1FDCA24E80F23003508CE /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = "../../../third-party/install/Frameworks/Racket.framework"; sourceTree = "<group>"; };
+		AAC1FDCC24E81018003508CE /* RedLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedLib.framework; path = ../../libred/build/RedLib.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,9 +99,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAD2BE9F24BB14EE006F7606 /* Racket.framework in Frameworks */,
+				AAC1FDCB24E80F23003508CE /* Racket.framework in Frameworks */,
 				AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */,
-				AAD2BE9E24BB14EE006F7606 /* RedServer.framework in Frameworks */,
+				AAC1FDCD24E81018003508CE /* RedLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,8 +192,8 @@
 		AA70399C24A2E4F7009FD158 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AAD2BE9D24BB14EE006F7606 /* Racket.framework */,
-				AAD2BE9C24BB14EE006F7606 /* RedServer.framework */,
+				AAC1FDCC24E81018003508CE /* RedLib.framework */,
+				AAC1FDCA24E80F23003508CE /* Racket.framework */,
 				AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
@@ -431,7 +427,6 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/../../../build/install/lib";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -492,7 +487,6 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "${PROJECT_DIR}/../../../build/install/lib";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -525,6 +519,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Red",
+					"$(PROJECT_DIR)/../../libred/build",
+					"$(PROJECT_DIR)/../../../third-party/install/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
 				INFOPLIST_FILE = Red/Info.plist;
@@ -556,6 +552,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Red",
+					"$(PROJECT_DIR)/../../libred/build",
+					"$(PROJECT_DIR)/../../../third-party/install/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
 				INFOPLIST_FILE = Red/Info.plist;

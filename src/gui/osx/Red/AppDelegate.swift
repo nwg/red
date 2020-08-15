@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import RedServer
+import RedLib
 
 
 @NSApplicationMain
