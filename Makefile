@@ -29,10 +29,10 @@ $(RACKET_INPLACE_FRAMEWORK):
 
 $(RACKET_FRAMEWORK): $(RACKET_INPLACE_FRAMEWORK) $(RACKET_RESOURCES_DIR) $(RACKET_HEADERS_DIR) $(RACKET_MODULES_DIR)
 	cp -R $(RACKET_INPLACE_FRAMEWORK)/ $(RACKET_FRAMEWORK)/
-	cd $(RACKET_FRAMEWORK)/Versions && ln -s $(RACKET_VERSION)_CS Current
-	cd $(RACKET_FRAMEWORK) && ln -s Versions/Current/Resources
-	cd $(RACKET_FRAMEWORK) && ln -s Versions/Current/Racket
-	cd $(RACKET_FRAMEWORK) && ln -s Versions/Current/Headers
+	cd $(RACKET_FRAMEWORK)/Versions && ln -sf $(RACKET_VERSION)_CS Current
+	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Resources
+	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Racket
+	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Headers
 	mkdir -p $(RACKET_MODULES_DIR)
 	cp third-party/Racket-Info.plist $(RACKET_RESOURCES_DIR)Info.plist
 	cp third-party/Racket-modules.modulemap $(RACKET_FRAMEWORK)/Versions/Current/Modules/
