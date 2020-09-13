@@ -6,17 +6,19 @@
 
 (provide test-server server-ctx responder-thread server-init run-server)
 
-(define-cpointer-type _zmq_ctx-pointer)
-
 (define-ffi-definer define-client #f)
 (define-client
   init_client_from_server
   (_fun _zmq_ctx-pointer -> _void))
 
-(define (server-ctx) (zmq-get-ctx))
+(define (server-ctx) (zmq-unsafe-get-ctx))
+
+(define holdon-prevent-gc '())
 
 (define (server-init)
-  (init_client_from_server (server-ctx)))
+  (let-values ([(ctx holdon) (server-ctx)])
+    (set! holdon-prevent-gc holdon)
+    (init_client_from_server ctx)))
 
 (define (run-server)
   (define r (responder-thread))

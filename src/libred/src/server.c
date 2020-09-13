@@ -30,7 +30,7 @@ int init_server(const char *execname, const char *petite, const char *scheme, co
         "-A",
         "/Users/griswold/.red/Racket/addon",
         "-X",
-        "/Applications/Racket v7.7/collects",
+        "/Applications/Racket v7.8/collects",
         "-W",
         "debug@ffi-lib",
     };
@@ -38,7 +38,7 @@ int init_server(const char *execname, const char *petite, const char *scheme, co
 
     racket_boot(&ba);
 
-    racket_namespace_require(Sstring_to_symbol("red-server"));
+    racket_namespace_require(Sstring_to_symbol("red-dispatch"));
 
     ptr proc;
     proc = Scar(racket_eval(Sstring_to_symbol("server-init")));
