@@ -33,10 +33,12 @@ $(RACKET_FRAMEWORK): $(RACKET_INPLACE_FRAMEWORK) $(RACKET_RESOURCES_DIR) $(RACKE
 	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Resources
 	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Racket
 	cd $(RACKET_FRAMEWORK) && ln -sf Versions/Current/Headers
+	cd $(RACKET_FRAMEWORK)/Versions && ln -sf $(RACKET_VERSION)_CS A
 	mkdir -p $(RACKET_MODULES_DIR)
 	cp third-party/Racket-Info.plist $(RACKET_RESOURCES_DIR)Info.plist
 	cp third-party/Racket-modules.modulemap $(RACKET_FRAMEWORK)/Versions/Current/Modules/
 	cp third-party/Racket.h $(RACKET_UMBRELLA)
+	install_name_tool -id @rpath/Racket.framework/Versions/7.8_CS/Racket $(RACKET_FRAMEWORK)/Racket
 
 $(INSTALL_LIB_DIR) $(INSTALL_FRAMEWORK_DIR) $(INSTALL_INCLUDE_DIR) \
 	$(REDLIB_BUILD) $(RACKET_MODULES_DIR) $(RACKET_HEADERS_DIR) $(RACKET_RESOURCES_DIR):

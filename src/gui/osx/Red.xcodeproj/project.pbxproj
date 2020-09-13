@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA3BDA3224F9979B00B4137D /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; };
+		AA3BDA3324F9979B00B4137D /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
+		AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */; };
 		AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */; };
 		AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */; };
@@ -26,8 +30,6 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
-		AAC1FDCB24E80F23003508CE /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; };
-		AAC1FDCD24E81018003508CE /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */,
+				AA3BDA3324F9979B00B4137D /* Racket.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,9 +103,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAC1FDCB24E80F23003508CE /* Racket.framework in Frameworks */,
+				AA3BDA3224F9979B00B4137D /* Racket.framework in Frameworks */,
 				AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */,
-				AAC1FDCD24E81018003508CE /* RedLib.framework in Frameworks */,
+				AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
