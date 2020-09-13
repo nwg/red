@@ -1,8 +1,8 @@
 #lang info
-(define collection "red-server")
+(define collection "red-dispatch")
 (define deps '())
 (define build-deps '())
 (define scribblings '())
-(define pkg-desc "Red Backend Server")
+(define pkg-desc "Red Racket Dispatch Server")
 (define version "0.1")
 (define pkg-authors '(nwg))

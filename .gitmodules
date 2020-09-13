@@ -1,3 +1,6 @@
 [submodule "third-party/racket"]
 	path = third-party/racket
 	url = git@github.com:racket/racket.git
+[submodule "third-party/racket-modules/racket-zeromq"]
+	path = third-party/racket-modules/racket-zeromq
+	url = git@github.com:rmculpepper/racket-zeromq.git
