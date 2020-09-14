@@ -42,8 +42,8 @@ int init_server(const char *execname, const char *petite, const char *scheme, co
 
     ptr proc;
     proc = Scar(racket_eval(Sstring_to_symbol("server-init")));
-    racket_apply(proc, Snil);
-
+    ptr values = racket_apply(proc, Snil);
+    ctx = Scar(values);
     assert(ctx != NULL);
 
     return 0;
@@ -54,12 +54,6 @@ int run_server() {
   racket_apply(proc, Snil);
 
   return 0;
-}
-
-void init_client_from_server(void *zmq_ctx) {
-  printf("Client initialized\n");
-  ctx = zmq_ctx;
-
 }
 
 void try_client() {
@@ -76,8 +70,6 @@ void try_client() {
     printf ("Received World %d (%s)\n", request_nbr, buffer);
   }
 }
-
-  
 
 buf_t *create_buffer() {
     return NULL;

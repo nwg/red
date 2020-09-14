@@ -1,8 +1,5 @@
 #lang racket/base
 
-(require "private/dispatch.rkt")
-(provide server-init run-server)
-
 (module+ test
   (require rackunit))
 
