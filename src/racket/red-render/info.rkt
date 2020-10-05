@@ -6,4 +6,4 @@
 (define pkg-desc "Description Here")
 (define version "0.0")
 (define pkg-authors '(griswold))
-(define copy-foreign-libs '("lib/libred-render-core-text.dylib"))
+(define copy-foreign-libs '("lib/libred-render-core-text.dylib" "lib/libred-render-something-else.dylib"))

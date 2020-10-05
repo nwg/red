@@ -1,19 +1,22 @@
 #lang racket/base
 
 (require ffi/unsafe
-         ffi/unsafe/define)
+         ffi/unsafe/define
+         "params.rkt"
+         "ffi-types.rkt")
 
 ;; (require/typed "ffi_untyped.rkt"
 ;;   [#:opaque lineInfo lineInfo?]
 ;;   [lineInfo-ascent Real])
 
 (provide red_render_init
-         red_render_get_line_info
-         lineInfo?
-         make-lineInfo
-         (struct-out lineInfo))
+         red_render_get_line_info)
 
-(define-ffi-definer define-red-render (ffi-lib "libred-render-core-text"))
+(define-ffi-definer
+  define-red-render
+  (ffi-lib
+   (current-render-lib)
+   #:custodian (current-render-custodian)))
 
 (define (check f)
  (λ (v who)
@@ -23,18 +26,13 @@
 
 (define check-zero? (check zero?))
 
-(define-cstruct _lineInfo ([ascent _double]
-                           [descent _double]
-                           [leading _double]
-                           [width _double]))
-
 (define-red-render
   red_render_init
   (_fun -> (r : _int)
         -> (check-zero? r 'red_render_init)))
 
-
 (define-red-render
   red_render_get_line_info
   (_fun _bytes _int (info : _lineInfo-pointer) -> _void
         -> info))
+
