@@ -33,6 +33,7 @@
 		AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */; };
 		AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */; };
 		AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */; };
+		AAF120AD252B9D0C00CBD0D9 /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = AAF120AC252B9D0C00CBD0D9 /* test.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextScrollView.xib; sourceTree = "<group>"; };
 		AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextScrollView.swift; sourceTree = "<group>"; };
 		AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextPortalView.swift; sourceTree = "<group>"; };
+		AAF120AC252B9D0C00CBD0D9 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 				AA70399424A28C0D009FD158 /* test.h */,
 				AA70399524A28C0D009FD158 /* test.c */,
 				AA70399724A28D4D009FD158 /* bridge.h */,
+				AAF120AC252B9D0C00CBD0D9 /* test.txt */,
 			);
 			path = Red;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
 				AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */,
+				AAF120AD252B9D0C00CBD0D9 /* test.txt in Resources */,
 				AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

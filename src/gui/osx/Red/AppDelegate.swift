@@ -61,7 +61,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async {
                 mm_client_init(ctx);
                 print("Client running load renderer");
-                mm_client_backend_load_renderer("something")
+//                mm_client_backend_load_renderer("something")
+                mm_client_backend_load_file("test.txt")
             }
             
             run_server()

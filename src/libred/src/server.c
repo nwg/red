@@ -10,6 +10,10 @@
 
 static void *ctx = NULL;
 
+void server_set_ctx(void *new_ctx) {
+  ctx = new_ctx;
+}
+
 void *mm_server_get_ctx() {
     printf("Getting ctx\n");
     assert(ctx != NULL);

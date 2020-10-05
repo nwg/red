@@ -5,6 +5,7 @@
 (require ffi/unsafe)
 (require ffi/unsafe/define)
 (require msgpack)
+(require racket/set)
 
 (provide server-ctx server-init run-server)
 
@@ -18,6 +19,9 @@
   server_set_ctx
   (_fun _zmq_ctx-pointer -> _void))
 
+(define bufmgr-cmds
+  (set "load-file"))
+
 (define (server-init)
   (let-values ([(ctx holdon) (server-ctx)])
     (set! holdon-prevent-gc holdon)
@@ -27,11 +31,17 @@
     (server_set_ctx ctx)))
 
 (define (run-server)
-  (let loop ()
-    (define msg (zmq-recv responder))
-    (let-values ([(cmd rest) (unpack/rest msg)])
-      (printf "Server received: ~s / ~s\n" cmd (unpack rest)))
-
-    (zmq-send responder (pack 0))
-    (loop)))
+  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)])
+    (let loop ()
+      (define msg (zmq-recv responder))
+      (let-values ([(cmd rest) (unpack/rest msg)])
+        (printf "Server received: ~s / ~s\n" cmd (unpack rest))
+        (cond
+          [(set-member? bufmgr-cmds cmd)
+           (place-channel-put bufmgr (cons cmd (unpack rest)))
+           (let ([result (place-channel-get bufmgr)])
+             (zmq-send responder (pack result)))]
+          [else
+           (zmq-send responder (pack 0))]))
+      (loop))))
 

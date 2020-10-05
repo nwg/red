@@ -110,6 +110,30 @@ static inline int get_remote_status(msgpack_object *obj, bool *valid) {
     return -1;
   }
 }
+
+static int simple_remote(const char *func) {
+  msgpack_object deserialized;
+  int result = synchronous_call(&deserialized);
+  if (result != 0) {
+    printf("%s: Synchronous call to backend-load-renderer failed\n", func);
+    return -1;
+  }
+
+  bool valid;
+  result = get_remote_status(&deserialized, &valid);
+  if (!valid) {
+    printf("%s: backend-load-renderer remote status invalid\n", func);
+    return -1;
+  }
+
+  if (result != 0) {
+    printf("%s: backend-load-renderer failed\n", func);
+    return result;
+  }
+
+  return 0;
+}
+
 int mm_client_backend_load_renderer(const char *renderer) {
   if (current_renderer != NULL) {
     if (strcmp(renderer, current_renderer) == 0) {
@@ -123,22 +147,8 @@ int mm_client_backend_load_renderer(const char *renderer) {
   msgpack_pack_str(&pk, len);
   msgpack_pack_str_body(&pk, renderer, len);
 
-  msgpack_object deserialized;
-  int result = synchronous_call(&deserialized);
+  int result = simple_remote(__func__);
   if (result != 0) {
-    printf("%s: Synchronous call to backend-load-renderer failed\n", __func__);
-    return -1;
-  }
-
-  bool valid;
-  result = get_remote_status(&deserialized, &valid);
-  if (!valid) {
-    printf("%s: backend-load-renderer remote status invalid\n", __func__);
-    return -1;
-  }
-
-  if (result != 0) {
-    printf("%s: backend-load-renderer failed\n", __func__);
     return result;
   }
 
@@ -146,3 +156,17 @@ int mm_client_backend_load_renderer(const char *renderer) {
   return 0;
 }
 
+int mm_client_backend_load_file(const char *filename) {
+  pack_str("load-file");
+  msgpack_pack_array(&pk, 1);
+  int len = strlen(filename);
+  msgpack_pack_str(&pk, len);
+  msgpack_pack_str_body(&pk, filename, len);
+
+  int result = simple_remote(__func__);
+  if (result != 0) {
+    return result;
+  }
+
+  return 0;
+}
