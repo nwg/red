@@ -56,12 +56,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let racket = NSString.path(withComponents: [bootPath, "racket.boot"])
 
             init_server(CommandLine.arguments[0], petite, scheme, racket)
-            
+            let ctx = mm_server_get_ctx();
+
             DispatchQueue.main.async {
-                try_client();
+                mm_client_init(ctx);
+                print("Client running load renderer");
+                mm_client_backend_load_renderer("something")
             }
             
-            run_server();
+            run_server()
         })
         racketThread.start()
         

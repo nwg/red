@@ -16,6 +16,7 @@ add_library(RedLib SHARED
     src/client.c
     src/client.h
     src/RedLib.h
+    src/libred.h
     src/module.modulemap
 )
 
@@ -58,7 +59,7 @@ set_target_properties(RedLib PROPERTIES
     MACOSX_FRAMEWORK_IDENTIFIER com.manicmind.RedLib
     PUBLIC_HEADER RedLib.h
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "None"
-    PUBLIC_HEADER "src/RedLib.h;src/server.h"
+    PUBLIC_HEADER "src/RedLib.h;src/server.h;src/libred.h;src/client.h"
 )
 
 add_custom_command(TARGET RedLib POST_BUILD

@@ -3,6 +3,7 @@
 #include <msgpack.h>
 #include <string.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #include "client.h"
 
@@ -21,9 +22,12 @@ static char recvbuf[MAX_RECV_SIZE];
 int mm_client_init(void *shared_ctx) {
   requester = zmq_socket(shared_ctx, ZMQ_REQ);
   int status = zmq_connect (requester, "inproc://dispatch");
-  if (status == 0) {
-    return 0;
+  if (status != 0) {
+    return status;
   }
+    
+    char blah[256];
+    int result = zmq_recv(requester, blah, 256, 0);
 
   msgpack_sbuffer_init(&sbuf);
   msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
@@ -64,14 +68,17 @@ static inline void pack_str(const char *str) {
 }
 
 static inline int synchronous_call(msgpack_object *deserialized) {
-  int result = zmq_send(requester, sbuf.data, sbuf.size, 0);
-  if (result != 0) {
-    return result;
+//    const char blah[256] = "hello";
+//    int result = zmq_send(requester, blah, 5, ZMQ_DONTWAIT);
+  int nbytes = zmq_send(requester, sbuf.data, sbuf.size, 0);
+  if (nbytes == -1) {
+    perror(__func__);
+    return errno;
   }
 
-  int nbytes = zmq_recv(requester, recvbuf, MAX_RECV_SIZE, 0);
+  nbytes = zmq_recv(requester, recvbuf, MAX_RECV_SIZE, 0);
   if (nbytes == -1) {
-    return -1;
+    return errno;
   }
 
   msgpack_unpack_return unpack_result = msgpack_unpack(recvbuf, nbytes, NULL, &mempool, deserialized);
@@ -103,8 +110,7 @@ static inline int get_remote_status(msgpack_object *obj, bool *valid) {
     return -1;
   }
 }
-
-int mm_backend_load_renderer(const char *renderer) {
+int mm_client_backend_load_renderer(const char *renderer) {
   if (current_renderer != NULL) {
     if (strcmp(renderer, current_renderer) == 0) {
       return 0;

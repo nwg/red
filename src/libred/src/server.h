@@ -8,5 +8,6 @@ typedef struct buf_s buf_t;
 LIBRED_EXPORT buf_t *create_buffer();
 LIBRED_EXPORT int init_server(const char *execname, const char *petite, const char *scheme, const char *racket);
 LIBRED_EXPORT int run_server();
+LIBRED_EXPORT void *mm_server_get_ctx();
 
 #endif

@@ -10,6 +10,12 @@
 
 static void *ctx = NULL;
 
+void *mm_server_get_ctx() {
+    printf("Getting ctx\n");
+    assert(ctx != NULL);
+    return ctx;
+}
+
 int init_server(const char *execname, const char *petite, const char *scheme, const char *racket) {
     racket_boot_arguments_t ba;
     memset(&ba, 0, sizeof(ba));
