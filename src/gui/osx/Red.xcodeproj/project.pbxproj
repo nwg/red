@@ -30,6 +30,9 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
+		AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */; };
+		AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */; };
+		AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +99,9 @@
 		AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AAC1FDCA24E80F23003508CE /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = "../../../third-party/install/Frameworks/Racket.framework"; sourceTree = "<group>"; };
 		AAC1FDCC24E81018003508CE /* RedLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedLib.framework; path = ../../libred/build/RedLib.framework; sourceTree = "<group>"; };
+		AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextScrollView.xib; sourceTree = "<group>"; };
+		AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextScrollView.swift; sourceTree = "<group>"; };
+		AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextPortalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +168,9 @@
 				AAA8173924B59EC200A770A1 /* MMTilingTest.swift */,
 				AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */,
 				AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */,
+				AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */,
+				AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */,
+				AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */,
 				AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */,
 				AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */,
 				AA6DDF02249276A1009AD2D5 /* Info.plist */,
@@ -311,6 +320,7 @@
 			files = (
 				AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */,
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
+				AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
 				AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */,
@@ -340,9 +350,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAA8173B24B59EC200A770A1 /* MMTilingTest.swift in Sources */,
+				AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */,
 				AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */,
 				AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */,
 				AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */,
+				AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */,
 				AA6DDF2724927973009AD2D5 /* PanelViewController.swift in Sources */,
 				AA6DDF32249A3621009AD2D5 /* MMTextViewController.swift in Sources */,
 				AA703993249AC87C009FD158 /* MMClipView.swift in Sources */,

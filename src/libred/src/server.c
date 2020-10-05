@@ -56,21 +56,6 @@ int run_server() {
   return 0;
 }
 
-void try_client() {
-  assert(ctx != NULL);
-  void *requester = zmq_socket(ctx, ZMQ_REQ);
-  zmq_connect (requester, "inproc://dispatch");
-  int request_nbr;
-  for (request_nbr = 0; request_nbr != 10; request_nbr++) {
-    char buffer [10];
-    printf ("Sending Hello %d…\n", request_nbr);
-    zmq_send (requester, "Hello", 5, 0);
-    zmq_recv (requester, buffer, 10, 0);
-    buffer[9] = '\0';
-    printf ("Received World %d (%s)\n", request_nbr, buffer);
-  }
-}
-
 buf_t *create_buffer() {
     return NULL;
 }

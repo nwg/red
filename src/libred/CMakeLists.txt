@@ -13,9 +13,13 @@ set_property(SOURCE src/module.modulemap
 add_library(RedLib SHARED
     ${CMAKE_CURRENT_BINARY_DIR}/server.c
     src/server.h
+    src/client.c
+    src/client.h
     src/RedLib.h
     src/module.modulemap
 )
+
+set_property(TARGET RedLib PROPERTY C_STANDARD 11)
 
 SET(THIRD_PARTY_INSTALL "${CMAKE_CURRENT_SOURCE_DIR}/../../third-party/install/")
 SET(THIRD_PARTY_INCLUDE "${THIRD_PARTY_INSTALL}include/")
@@ -34,8 +38,17 @@ set_target_properties(zmq PROPERTIES
     IMPORTED_LOCATION "${ZMQ_NAME}"
     INTERFACE_INCLUDE_DIRECTORIES "${ZMQ_INCLUDE_NAME}"
 )
-
 target_link_libraries(RedLib zmq)
+
+find_library(MSGPACK_NAME NAMES libmsgpackc.dylib)
+find_path(MSGPACK_INCLUDE_NAME NAMES msgpack.h)
+
+add_library(msgpack SHARED IMPORTED)
+set_target_properties(msgpack PROPERTIES
+    IMPORTED_LOCATION "${MSGPACK_NAME}"
+    INTERFACE_INCLUDE_DIRECTORIES "${MSGPACK_INCLUDE_NAME}"
+)
+target_link_libraries(RedLib msgpack)
 
 set_target_properties(RedLib PROPERTIES
     SOVERSION 0

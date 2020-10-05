@@ -3,6 +3,7 @@
 (require zeromq)
 (require ffi/unsafe)
 (require ffi/unsafe/define)
+(require msgpack)
 
 (provide server-ctx server-init run-server)
 
@@ -22,9 +23,9 @@
   (zmq-bind responder "inproc://dispatch")
 
   (let loop ()
-    (define msg (zmq-recv-string responder))
-    (printf "Server received: ~s\n" msg)
+    (define msg (zmq-recv responder))
+    (printf "Server received: ~s\n" (unpack msg))
 
-    (zmq-send responder "World")
+    (zmq-send responder (pack 0))
     (loop)))
 
