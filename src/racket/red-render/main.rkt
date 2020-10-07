@@ -27,7 +27,8 @@
 (require "private/interface.rkt")
 (require "private/ffi-types.rkt")
 
-(provide (all-from-out "private/ffi-types.rkt"))
+(provide (all-from-out "private/ffi-types.rkt")
+         (all-from-out "private/interface.rkt"))
 
 ;; (let* ([bs (string->bytes/utf-8 "something")]
 ;;        [info (get-line-info bs (bytes-length bs))])

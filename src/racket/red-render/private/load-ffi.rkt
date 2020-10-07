@@ -1,7 +1,8 @@
 #lang racket/base
 
 (require racket/runtime-path)
-(provide render-reload get-func get-line-height)
+(provide render-reload render-get-func get-line-info
+         (struct-out lineInfo))
 (require "params.rkt")
 (require "ffi-types.rkt")
 
@@ -32,13 +33,13 @@
   (parameterize ([current-namespace ns])
     (namespace-require ffi)))
 
-(define (get-func sym)
+(define (render-get-func sym)
   (if ns
       (namespace-variable-value sym #t #f ns)
       #f))
 
-(define (get-line-height s)
+(define (get-line-info s)
   (let* ([bs (string->bytes/utf-8 "something")]
          [info (make-lineInfo 0.0 0.0 0.0 0.0)])
-    ((get-func 'red_render_get_line_info) bs (bytes-length bs) info)
-    (+ (lineInfo-ascent info) (lineInfo-descent info))))
+    ((render-get-func 'red_render_get_line_info) bs (bytes-length bs) info)))
+    

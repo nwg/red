@@ -111,7 +111,7 @@ static inline int get_remote_status(msgpack_object *obj, bool *valid) {
   }
 }
 
-static int simple_remote(const char *func) {
+static int simple_remote(const char *func, const char *cmdname) {
   msgpack_object deserialized;
   int result = synchronous_call(&deserialized);
   if (result != 0) {
@@ -131,6 +131,7 @@ static int simple_remote(const char *func) {
     return result;
   }
 
+  printf("%s: %s succeeded\n", func, cmdname);
   return 0;
 }
 
@@ -147,7 +148,7 @@ int mm_client_backend_load_renderer(const char *renderer) {
   msgpack_pack_str(&pk, len);
   msgpack_pack_str_body(&pk, renderer, len);
 
-  int result = simple_remote(__func__);
+  int result = simple_remote(__func__, "backend-load-renderer");
   if (result != 0) {
     return result;
   }
@@ -163,7 +164,7 @@ int mm_client_backend_load_file(const char *filename) {
   msgpack_pack_str(&pk, len);
   msgpack_pack_str_body(&pk, filename, len);
 
-  int result = simple_remote(__func__);
+  int result = simple_remote(__func__, "load-file");
   if (result != 0) {
     return result;
   }

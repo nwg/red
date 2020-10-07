@@ -38,7 +38,7 @@
         (printf "Server received: ~s / ~s\n" cmd (unpack rest))
         (cond
           [(set-member? bufmgr-cmds cmd)
-           (place-channel-put bufmgr (cons cmd (unpack rest)))
+           (place-channel-put bufmgr (cons (string->symbol cmd) (vector->list (unpack rest))))
            (let ([result (place-channel-get bufmgr)])
              (zmq-send responder (pack result)))]
           [else

@@ -62,7 +62,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 mm_client_init(ctx);
                 print("Client running load renderer");
 //                mm_client_backend_load_renderer("something")
-                mm_client_backend_load_file("test.txt")
+                let path = NSString.path(withComponents: [Bundle.main.resourcePath!, "test.txt"])
+                mm_client_backend_load_file(path)
             }
             
             run_server()
