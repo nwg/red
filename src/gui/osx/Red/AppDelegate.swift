@@ -23,6 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var ctx : UnsafeMutableRawPointer!
     private var socket : UnsafeMutableRawPointer!
     private var outputPipe: [Int32] = [-1, -1]
+    private var inputPipe: [Int32] = [-1, -1]
 
 //    var scrollVC : ScrollViewController!
 //    var textVC : MMTextViewController!
@@ -91,14 +92,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defer { for case let arg? in argv { free(arg) } }
         
         assert(pipe(&outputPipe) == 0)
-        
+        assert(pipe(&inputPipe) == 0)
+
         var childFDActions : posix_spawn_file_actions_t?
         posix_spawn_file_actions_init(&childFDActions)
+        
         posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 1)
         posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 2)
         posix_spawn_file_actions_addclose(&childFDActions, outputPipe[0])
         posix_spawn_file_actions_addclose(&childFDActions, outputPipe[1])
-        
+
+        posix_spawn_file_actions_adddup2(&childFDActions, inputPipe[0], 0)
+        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[0])
+        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[1])
+
         let result = posix_spawn(&racketPid, argv[0], &childFDActions, nil, argv + [nil], nil)
         if result != 0 {
             let error = String(format: "%s", strerror(result))
@@ -106,12 +113,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApplication.shared.terminate(self)
         }
 
+        close(outputPipe[1])
+        close(inputPipe[0])
+
         let t = Thread {
 
-            
-            
-            close(self.outputPipe[1])
-            
             let buf = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
             while true {
                 let nbytes = read(self.outputPipe[0], buf, 4096 - 1)

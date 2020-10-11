@@ -26,17 +26,24 @@
     (zmq-bind responder fn)))
 
 (define (run-server)
-  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)])
+  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)]
+        [closed (zmq-closed-evt responder)])
+    
     (let loop ()
-      (define msg (zmq-recv responder))
-      (let-values ([(cmd rest) (unpack/rest msg)])
-        (printf "Server received: ~s / ~s\n" cmd (unpack rest))
-        (cond
-          [(set-member? bufmgr-cmds cmd)
-           (place-channel-put bufmgr (cons (string->symbol cmd) (vector->list (unpack rest))))
-           (let ([result (place-channel-get bufmgr)])
-             (zmq-send responder (pack result)))]
-          [else
-           (zmq-send responder (pack 0))]))
-      (loop))))
+
+      (let ([evt (sync responder (eof-evt (current-input-port)))])
+        (match evt
+          [(zmq-message frames)             
+           (define msg (car frames))
+           (let-values ([(cmd rest) (unpack/rest msg)])
+             (printf "Server received: ~s / ~s\n" cmd (unpack rest))
+             (cond
+               [(set-member? bufmgr-cmds cmd)
+                (place-channel-put bufmgr (cons (string->symbol cmd) (vector->list (unpack rest))))
+                (let ([result (place-channel-get bufmgr)])
+                  (zmq-send responder (pack result)))]
+               [else
+                (zmq-send responder (pack -1))]))
+           (loop)]
+          [(? eof-object?) '()])))))
 
