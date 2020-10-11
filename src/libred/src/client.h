@@ -3,7 +3,8 @@
 
 #include "libred.h"
 
-LIBRED_EXPORT int mm_client_init(void *shared_ctx);
+LIBRED_EXPORT int mm_client_init(void *zmq_socket);
+
 LIBRED_EXPORT int mm_client_backend_load_renderer(const char *renderer);
 LIBRED_EXPORT int mm_client_backend_load_file(const char *filename);
 

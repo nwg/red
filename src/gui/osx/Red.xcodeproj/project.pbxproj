@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA3BDA3224F9979B00B4137D /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; };
-		AA3BDA3324F9979B00B4137D /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCA24E80F23003508CE /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA0E95DD25339532006EDF67 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; };
+		AA0E95DE25339532006EDF67 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
 		AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */; };
@@ -30,10 +30,14 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
+		AAB8020025336BC500B843A1 /* collects in Resources */ = {isa = PBXBuildFile; fileRef = AAB801FF25336BC500B843A1 /* collects */; };
+		AAB8020425336BF800B843A1 /* share in Resources */ = {isa = PBXBuildFile; fileRef = AAB8020325336BF800B843A1 /* share */; };
 		AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */; };
 		AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */; };
 		AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */; };
 		AAF120AD252B9D0C00CBD0D9 /* test.txt in Resources */ = {isa = PBXBuildFile; fileRef = AAF120AC252B9D0C00CBD0D9 /* test.txt */; };
+		AAF120DD253329E500CBD0D9 /* libzmq.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF120DC253329E500CBD0D9 /* libzmq.5.dylib */; };
+		AAF120E625332FE600CBD0D9 /* racket in Resources */ = {isa = PBXBuildFile; fileRef = AAF120E525332FE600CBD0D9 /* racket */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +64,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				AA0E95DE25339532006EDF67 /* Racket.framework in Embed Frameworks */,
 				AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */,
-				AA3BDA3324F9979B00B4137D /* Racket.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA0E95DB25339527006EDF67 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = ../../../build/install/Frameworks/Racket.framework; sourceTree = "<group>"; };
 		AA6DDEF8249276A1009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -98,12 +103,15 @@
 		AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTilingTest.xib; sourceTree = "<group>"; };
 		AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTilingView.swift; sourceTree = "<group>"; };
 		AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AAC1FDCA24E80F23003508CE /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = "../../../third-party/install/Frameworks/Racket.framework"; sourceTree = "<group>"; };
+		AAB801FF25336BC500B843A1 /* collects */ = {isa = PBXFileReference; lastKnownFileType = folder; name = collects; path = "../../../../third-party/racket/racket/collects"; sourceTree = "<group>"; };
+		AAB8020325336BF800B843A1 /* share */ = {isa = PBXFileReference; lastKnownFileType = folder; name = share; path = "../../../../third-party/racket/racket/share"; sourceTree = "<group>"; };
 		AAC1FDCC24E81018003508CE /* RedLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedLib.framework; path = ../../libred/build/RedLib.framework; sourceTree = "<group>"; };
 		AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextScrollView.xib; sourceTree = "<group>"; };
 		AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextScrollView.swift; sourceTree = "<group>"; };
 		AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextPortalView.swift; sourceTree = "<group>"; };
 		AAF120AC252B9D0C00CBD0D9 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
+		AAF120DC253329E500CBD0D9 /* libzmq.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libzmq.5.dylib; path = "../../../third-party/lib/libzmq.5.dylib"; sourceTree = "<group>"; };
+		AAF120E525332FE600CBD0D9 /* racket */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = racket; path = "../../../../third-party/racket/racket/bin/racket"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +119,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA3BDA3224F9979B00B4137D /* Racket.framework in Frameworks */,
 				AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */,
+				AAF120DD253329E500CBD0D9 /* libzmq.5.dylib in Frameworks */,
+				AA0E95DD25339532006EDF67 /* Racket.framework in Frameworks */,
 				AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,6 +150,7 @@
 				AA6DDF0B249276A1009AD2D5 /* RedTests */,
 				AA6DDF16249276A1009AD2D5 /* RedUITests */,
 				AA6DDEF9249276A1009AD2D5 /* Products */,
+				AAF120E425332FBC00CBD0D9 /* Resources */,
 				AA70399C24A2E4F7009FD158 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -208,11 +218,22 @@
 		AA70399C24A2E4F7009FD158 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA0E95DB25339527006EDF67 /* Racket.framework */,
+				AAF120DC253329E500CBD0D9 /* libzmq.5.dylib */,
 				AAC1FDCC24E81018003508CE /* RedLib.framework */,
-				AAC1FDCA24E80F23003508CE /* Racket.framework */,
 				AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AAF120E425332FBC00CBD0D9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AAB8020325336BF800B843A1 /* share */,
+				AAB801FF25336BC500B843A1 /* collects */,
+				AAF120E525332FE600CBD0D9 /* racket */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,14 +342,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAB8020425336BF800B843A1 /* share in Resources */,
 				AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */,
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
 				AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */,
+				AAF120E625332FE600CBD0D9 /* racket in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
 				AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */,
 				AAF120AD252B9D0C00CBD0D9 /* test.txt in Resources */,
 				AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */,
+				AAB8020025336BC500B843A1 /* collects in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,14 +564,15 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Red",
 					"$(PROJECT_DIR)/../../libred/build",
-					"$(PROJECT_DIR)/../../../third-party/install/Frameworks",
+					"$(PROJECT_DIR)/../../../build/install/Frameworks",
 				);
-				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/include";
 				INFOPLIST_FILE = Red/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -573,14 +598,15 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Red",
 					"$(PROJECT_DIR)/../../libred/build",
-					"$(PROJECT_DIR)/../../../third-party/install/Frameworks",
+					"$(PROJECT_DIR)/../../../build/install/Frameworks",
 				);
-				HEADER_SEARCH_PATHS = "\"/Applications/Racket v7.7/include/\"";
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/include";
 				INFOPLIST_FILE = Red/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/lib";
 				PRODUCT_BUNDLE_IDENTIFIER = com.manicmind.Red;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

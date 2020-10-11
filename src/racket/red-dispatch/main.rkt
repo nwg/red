@@ -44,10 +44,12 @@
   ;; http://docs.racket-lang.org/guide/Module_Syntax.html#%28part._main-and-test%29
 
   (require racket/cmdline)
-  (define who (box "world"))
+  ;; (define who (box "world"))
   (command-line
-    #:program "my-program"
-    #:once-each
-    [("-n" "--name") name "Who to say hello to" (set-box! who name)]
-    #:args ()
-    (printf "hello ~a~n" (unbox who))))
+    #:program "red-bufmgr"
+    ;; #:once-each
+    ;; [("-n" "--name") name "Who to say hello to" (set-box! who name)]
+    #:args (socketfn)
+    (file-stream-buffer-mode (current-output-port) 'line)
+    (server-init socketfn)
+    (run-server)))

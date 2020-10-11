@@ -19,21 +19,25 @@ static char recvbuf[MAX_RECV_SIZE];
 #define REMOTE_STATUS_MIN INT_MIN
 #define REMOTE_STATUS_MAX INT_MAX
 
-int mm_client_init(void *shared_ctx) {
-  requester = zmq_socket(shared_ctx, ZMQ_REQ);
-  int status = zmq_connect (requester, "inproc://dispatch");
-  if (status != 0) {
-    return status;
-  }
-    
-    char blah[256];
-    int result = zmq_recv(requester, blah, 256, 0);
+int mm_client_init(void *zmq_socket) {
+  /* requester = zmq_socket(shared_ctx, ZMQ_REQ); */
+  /* int status = zmq_connect (requester, "inproc://dispatch"); */
+  /* if (status != 0) { */
+  /*   return status; */
+  /* } */
+
+  requester = zmq_socket;
+
+  /* char blah[256]; */
+  /* int result = zmq_recv(requester, blah, 256, 0); */
 
   msgpack_sbuffer_init(&sbuf);
   msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
   msgpack_zone_init(&mempool, 4096);
+
+  printf("Initialized client\n");
   
-  return status;
+  return 0;
 }
 
 /*
@@ -70,7 +74,9 @@ static inline void pack_str(const char *str) {
 static inline int synchronous_call(msgpack_object *deserialized) {
 //    const char blah[256] = "hello";
 //    int result = zmq_send(requester, blah, 5, ZMQ_DONTWAIT);
+  printf("Sending %zu bytes\n", sbuf.size);
   int nbytes = zmq_send(requester, sbuf.data, sbuf.size, 0);
+  printf("Sent %zu bytes\n", sbuf.size);
   if (nbytes == -1) {
     perror(__func__);
     return errno;

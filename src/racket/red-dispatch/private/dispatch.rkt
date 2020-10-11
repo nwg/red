@@ -7,28 +7,23 @@
 (require msgpack)
 (require racket/set)
 
-(provide server-ctx server-init run-server)
+(provide server-init run-server)
 
-(define (server-ctx) (zmq-unsafe-get-ctx))
+(define responder #f)
 
-(define holdon-prevent-gc '())
-(define responder '())
-
-(define-ffi-definer define-client #f)
-(define-client
-  server_set_ctx
-  (_fun _zmq_ctx-pointer -> _void))
+;; (define-ffi-definer define-client #f)
+;; (define-client
+;;   server_set_ctx
+;;   (_fun _zmq_ctx-pointer -> _void))
 
 (define bufmgr-cmds
   (set "load-file"))
 
-(define (server-init)
-  (let-values ([(ctx holdon) (server-ctx)])
-    (set! holdon-prevent-gc holdon)
-    (set! responder (zmq-socket 'rep))
-    (zmq-bind responder "inproc://dispatch")
-    (printf "Bound socket -- server initialized\n")
-    (server_set_ctx ctx)))
+(define (server-init socketfn)
+  (printf "Initializing server\n")
+  (set! responder (zmq-socket 'rep))
+  (let ([fn (format "ipc://~a" socketfn)])
+    (zmq-bind responder fn)))
 
 (define (run-server)
   (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)])
