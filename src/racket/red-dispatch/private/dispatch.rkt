@@ -6,10 +6,13 @@
 (require ffi/unsafe/define)
 (require msgpack)
 (require racket/set)
+(require racket/port)
 
 (provide server-init run-server)
 
 (define responder #f)
+(define responder-file #f)
+(define log-file #f)
 
 ;; (define-ffi-definer define-client #f)
 ;; (define-client
@@ -20,14 +23,30 @@
   (set "load-file"))
 
 (define (server-init socketfn)
+  (set! log-file (open-output-file "/tmp/red-dispatch.log" #:mode 'text #:exists 'truncate))
+  (file-stream-buffer-mode log-file 'line)
+  (current-output-port (combine-output log-file (current-output-port)))
+  (current-error-port (combine-output log-file (current-error-port)))
   (printf "Initializing server\n")
   (set! responder (zmq-socket 'rep))
-  (let ([fn (format "ipc://~a" socketfn)])
-    (zmq-bind responder fn)))
+  (set! responder-file socketfn)
+  (printf "Binding socket ~a\n" socketfn)
+  (zmq-bind responder (format "ipc://~a" responder-file)))
+
+(define (server-shutdown)
+  (current-output-port log-file)
+  (current-error-port log-file)
+  (printf "Shutting down\n")
+  
+  (zmq-close responder)
+  (delete-file responder-file)  
+  (set! responder-file #f)
+  (set! responder #f)
+  
+  (printf "Finished shutting down\n"))
 
 (define (run-server)
-  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)]
-        [closed (zmq-closed-evt responder)])
+  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)])
     
     (let loop ()
 
@@ -45,5 +64,7 @@
                [else
                 (zmq-send responder (pack -1))]))
            (loop)]
-          [(? eof-object?) '()])))))
+          [(? eof-object?)
+           (server-shutdown)
+           '()])))))
 
