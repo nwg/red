@@ -60,6 +60,7 @@ void MMSyncRunLoop(CFRunLoopRef runLoop, CFStringRef mode) {
 			^{
 			  pthread_mutex_unlock(waitPtr);
 			});
+  CFRunLoopWakeUp(runLoop);
   pthread_mutex_lock(&wait);			
 }
 

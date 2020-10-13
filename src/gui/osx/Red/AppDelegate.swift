@@ -145,6 +145,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             result = libred_load_file(path)
             if result == 0 {
                 print("Backend load file succeeded")
+            } else {
+                print("Backend load file failed")
             }
         }
         

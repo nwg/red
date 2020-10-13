@@ -10,7 +10,6 @@
 static FSEventStreamRef stream = NULL;
 static const char *currentPath = NULL;
 static fs_monitor_callback_t currentCallback = NULL;
-static void *currentData;
 
 static void eventCallback(
     ConstFSEventStreamRef streamRef,
@@ -33,13 +32,13 @@ static void eventCallback(
 	  printf("Change %llu in %s, flags %lu\n", eventIds[i], paths[i], (unsigned long int)flags);
 	  assert(flags & kFSEventStreamEventFlagItemIsFile);
 	  if (currentCallback != NULL) {
-	    currentCallback(currentPath, currentData);
+	    currentCallback();
 	  }
 	}
    }
 }
 
-int fs_start_watching_file(const char *path, fs_monitor_callback_t callback, void *data) {
+int fs_start_watching_file(const char *path, fs_monitor_callback_t callback) {
   assert(currentPath == NULL);
   
   int fd = open(path, O_RDONLY);
@@ -81,7 +80,6 @@ int fs_start_watching_file(const char *path, fs_monitor_callback_t callback, voi
   FSEventStreamScheduleWithRunLoop(stream, mm_get_runloop(), kCFRunLoopDefaultMode);
 
   currentCallback = callback;
-  currentData = data;
   
   FSEventStreamStart(stream);
 
@@ -99,6 +97,7 @@ int fs_stop_watching_file() {
   FSEventStreamRelease(stream);
   stream = NULL;
   currentPath = NULL;
+  currentCallback = NULL;
 
   return 0;
 }
