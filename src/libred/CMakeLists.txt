@@ -18,6 +18,10 @@ add_library(RedLib SHARED
     src/RedLib.h
     src/libred.h
     src/libred.c
+    src/libred_macos.h
+    src/libred_macos.c
+    src/fsmonitor.h
+    src/fsmonitor.c
     src/module.modulemap
 )
 
@@ -76,7 +80,7 @@ install(TARGETS RedLib
 
 target_include_directories(RedLib PRIVATE src)
 
-target_link_libraries(RedLib "-framework Racket")
+target_link_libraries(RedLib "-framework Racket" "-framework Foundation" "-framework CoreServices")
 target_link_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
 target_compile_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
 
