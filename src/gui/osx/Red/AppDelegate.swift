@@ -20,8 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var clientQueue = DispatchQueue(label: "RedLib client")
     var racketPid : pid_t = 0
 
-    private var ctx : UnsafeMutableRawPointer!
-    private var socket : UnsafeMutableRawPointer!
     private var outputPipe: [Int32] = [-1, -1]
     private var inputPipe: [Int32] = [-1, -1]
 
@@ -59,7 +57,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(),
                                             isDirectory: true)
         let bundleDir = temporaryDirectoryURL.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true)
-        
+        let socketFile = bundleDir.appendingPathComponent(String(pid))
+
         
         do {
             try FileManager.default.createDirectory(at: bundleDir, withIntermediateDirectories: true, attributes: nil)
@@ -69,14 +68,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         
-        let socketFile = bundleDir.appendingPathComponent(String(pid))
-
-        print("Running on socket \(socketFile.path)")
-        
-        ctx = zmq_init(1)
-        socket = zmq_socket(ctx, ZMQ_REQ);
-        zmq_connect(socket, "ipc://".appending(socketFile.path))
-
         let racketPath = Bundle.main.url(forResource: "racket", withExtension: nil)!
 //        let runServer = Bundle.main.url(forResource: "run-server", withExtension: "rkt")!
         let collects = Bundle.main.resourceURL!.appendingPathComponent("collects")
@@ -136,7 +127,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         t.start()
 
         clientQueue.async {
-            var result = mm_client_init(self.socket)
+            print("Running on socket \(socketFile.path)")
+            
+
+            var result = libred_init("ipc://".appending(socketFile.path))
             assert(result == 0)
 
             print("Client running load file");

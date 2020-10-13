@@ -7,6 +7,7 @@
 
 #include "client.h"
 
+static void *ctx;
 static void *requester;
 
 static msgpack_sbuffer sbuf;
@@ -19,14 +20,19 @@ static char recvbuf[MAX_RECV_SIZE];
 #define REMOTE_STATUS_MIN INT_MIN
 #define REMOTE_STATUS_MAX INT_MAX
 
-int mm_client_init(void *zmq_socket) {
+int mm_client_init(const char *socketfn) {
   /* requester = zmq_socket(shared_ctx, ZMQ_REQ); */
   /* int status = zmq_connect (requester, "inproc://dispatch"); */
   /* if (status != 0) { */
   /*   return status; */
   /* } */
 
-  requester = zmq_socket;
+  ctx = zmq_init(1);
+  assert(ctx);
+  requester = zmq_socket(ctx, ZMQ_REQ);
+  assert(requester);
+  printf("Connecting socket %s\n", socketfn);
+  zmq_connect(requester, socketfn);
 
   /* char blah[256]; */
   /* int result = zmq_recv(requester, blah, 256, 0); */

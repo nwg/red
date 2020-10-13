@@ -17,6 +17,7 @@ add_library(RedLib SHARED
     src/client.h
     src/RedLib.h
     src/libred.h
+    src/libred.c
     src/module.modulemap
 )
 
