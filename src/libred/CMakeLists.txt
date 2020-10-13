@@ -22,7 +22,7 @@ add_library(RedLib SHARED
 
 set_property(TARGET RedLib PROPERTY C_STANDARD 11)
 
-SET(THIRD_PARTY_INSTALL "${CMAKE_CURRENT_SOURCE_DIR}/../../third-party/install/")
+SET(THIRD_PARTY_INSTALL "${CMAKE_CURRENT_SOURCE_DIR}/../../build/install/")
 SET(THIRD_PARTY_INCLUDE "${THIRD_PARTY_INSTALL}include/")
 SET(THIRD_PARTY_LIB "${THIRD_PARTY_INSTALL}lib/")
 SET(THIRD_PARTY_FRAMEWORKS "${THIRD_PARTY_INSTALL}Frameworks/")
@@ -51,6 +51,16 @@ set_target_properties(msgpack PROPERTIES
 )
 target_link_libraries(RedLib msgpack)
 
+find_library(FSWATCH_NAME NAMES libfswatch.dylib)
+find_path(FSWATCH_INCLUDE_NAME NAMES libfswatch/c/libfswatch.h)
+
+add_library(fswatch SHARED IMPORTED)
+set_target_properties(fswatch PROPERTIES
+    IMPORTED_LOCATION "${FSWATCH_NAME}"
+    INTERFACE_INCLUDE_DIRECTORIES "${FSWATCH_INCLUDE_NAME}"
+)
+target_link_libraries(RedLib fswatch)
+
 set_target_properties(RedLib PROPERTIES
     SOVERSION 0
     VERSION ${PROJECT_VERSION}
@@ -77,5 +87,6 @@ target_include_directories(RedLib PRIVATE src)
 
 target_link_libraries(RedLib "-framework Racket")
 target_link_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
+target_compile_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
 
 configure_file("src/server.c" "${CMAKE_CURRENT_BINARY_DIR}/server.c" COPYONLY)

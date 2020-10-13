@@ -5,8 +5,8 @@
 #include <assert.h>
 
 #include "server.h"
-#include "chezscheme.h"
-#include "racketcs.h"
+#include <Racket/chezscheme.h>
+#include <Racket/racketcs.h>
 
 static void *ctx = NULL;
 
