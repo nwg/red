@@ -30,8 +30,6 @@
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
-		AAB8020025336BC500B843A1 /* collects in Resources */ = {isa = PBXBuildFile; fileRef = AAB801FF25336BC500B843A1 /* collects */; };
-		AAB8020425336BF800B843A1 /* share in Resources */ = {isa = PBXBuildFile; fileRef = AAB8020325336BF800B843A1 /* share */; };
 		AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */; };
 		AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */; };
 		AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */; };
@@ -103,8 +101,6 @@
 		AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTilingTest.xib; sourceTree = "<group>"; };
 		AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTilingView.swift; sourceTree = "<group>"; };
 		AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AAB801FF25336BC500B843A1 /* collects */ = {isa = PBXFileReference; lastKnownFileType = folder; name = collects; path = "../../../../third-party/racket/racket/collects"; sourceTree = "<group>"; };
-		AAB8020325336BF800B843A1 /* share */ = {isa = PBXFileReference; lastKnownFileType = folder; name = share; path = "../../../../third-party/racket/racket/share"; sourceTree = "<group>"; };
 		AAC1FDCC24E81018003508CE /* RedLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RedLib.framework; path = ../../libred/build/RedLib.framework; sourceTree = "<group>"; };
 		AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextScrollView.xib; sourceTree = "<group>"; };
 		AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextScrollView.swift; sourceTree = "<group>"; };
@@ -229,8 +225,6 @@
 		AAF120E425332FBC00CBD0D9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AAB8020325336BF800B843A1 /* share */,
-				AAB801FF25336BC500B843A1 /* collects */,
 				AAF120E525332FE600CBD0D9 /* racket */,
 			);
 			path = Resources;
@@ -342,7 +336,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAB8020425336BF800B843A1 /* share in Resources */,
 				AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */,
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
 				AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */,
@@ -352,7 +345,6 @@
 				AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */,
 				AAF120AD252B9D0C00CBD0D9 /* test.txt in Resources */,
 				AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */,
-				AAB8020025336BC500B843A1 /* collects in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

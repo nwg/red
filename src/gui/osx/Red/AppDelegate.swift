@@ -70,13 +70,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let racketPath = Bundle.main.url(forResource: "racket", withExtension: nil)!
 //        let runServer = Bundle.main.url(forResource: "run-server", withExtension: "rkt")!
-        let collects = Bundle.main.resourceURL!.appendingPathComponent("collects")
+//        let collects = Bundle.main.resourceURL!.appendingPathComponent("collects")
         
         let home = ProcessInfo.processInfo.environment["HOME"]
         let addon = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/addon")
         let config = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/etc")
+        let collects = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/collects")
 
-        let args = [ racketPath.path, "-X", collects.path, "-A", addon.path, "-G", config.path, "-l", "red-dispatch", "--", socketFile.path ]
+        let args = [
+            racketPath.path,
+            "-X", collects.path,
+            "-A", addon.path,
+            "-G", config.path,
+            "-l", "red-dispatch",
+            "--", socketFile.path
+        ]
 //        let args = [ "/bin/echo", "-t", runServer.absoluteString, "--", socketFile.absoluteString ]
 //        let args = [ "/bin/cat" ]
         let argv: [UnsafeMutablePointer<CChar>?] = args.map{ $0.withCString(strdup) }
