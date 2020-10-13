@@ -29,7 +29,9 @@ static void eventCallback(
         /* flags are unsigned long, IDs are uint64_t */
 
 	if (strcmp(currentPath, paths[i]) == 0) {
-	  printf("Change %llu in %s, flags %lu\n", eventIds[i], paths[i], (unsigned long int)eventFlags[i]);
+	  FSEventStreamEventFlags flags = eventFlags[i];
+	  printf("Change %llu in %s, flags %lu\n", eventIds[i], paths[i], (unsigned long int)flags);
+	  assert(flags & kFSEventStreamEventFlagItemIsFile);
 	  if (currentCallback != NULL) {
 	    currentCallback(currentPath, currentData);
 	  }
@@ -88,8 +90,12 @@ int fs_start_watching_file(const char *path, fs_monitor_callback_t callback, voi
 
 int fs_stop_watching_file() {
   assert(currentPath != NULL);
+  /* CFRunLoopWakeUp(mm_get_runloop()); */
   FSEventStreamFlushSync(stream);
+  MMSyncRunLoop(mm_get_runloop(), kCFRunLoopDefaultMode);
   FSEventStreamStop(stream);
+  FSEventStreamUnscheduleFromRunLoop(stream, mm_get_runloop(), kCFRunLoopDefaultMode);
+  FSEventStreamInvalidate(stream);
   FSEventStreamRelease(stream);
   stream = NULL;
   currentPath = NULL;

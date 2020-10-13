@@ -6,5 +6,6 @@
 int libred_macos_init();
 
 CFRunLoopRef mm_get_runloop();
+void MMSyncRunLoop(CFRunLoopRef runLoop, CFStringRef mode);
 
 #endif

@@ -134,6 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         t.start()
 
+        let path = "/tmp/test.txt"
         clientQueue.async {
             print("Running on socket \(socketFile.path)")
             
@@ -141,14 +142,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var result = libred_init("ipc://".appending(socketFile.path))
             assert(result == 0)
 
-            let path = "/tmp/test.txt"
             result = libred_load_file(path)
             if result == 0 {
                 print("Backend load file succeeded")
             }
         }
         
-
         self.tilingTest = MMTilingTest()
         let bounds = window.contentView!.bounds
         let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)

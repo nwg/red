@@ -26,3 +26,4 @@ int libred_load_file(const char *fn) {
   fs_start_watching_file(fn, file_changed_callback, NULL);
   return 0;
 }
+

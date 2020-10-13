@@ -26,6 +26,7 @@ static void *start_runloop(void *data) {
 
   while (true) {
     CFRunLoopRun();
+    printf("Running runloop again\n");
   }
   printf("Shutting down runloop thread\n");
   pthread_exit(NULL);
@@ -47,3 +48,18 @@ int libred_macos_init() {
 CFRunLoopRef mm_get_runloop() {
   return runLoop;
 }
+
+void MMSyncRunLoop(CFRunLoopRef runLoop, CFStringRef mode) {
+  assert(runLoop != CFRunLoopGetCurrent());
+  pthread_mutex_t wait = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_t *waitPtr = &wait;
+  pthread_mutex_lock(&wait);
+  CFRunLoopPerformBlock(
+			runLoop,
+			mode,
+			^{
+			  pthread_mutex_unlock(waitPtr);
+			});
+  pthread_mutex_lock(&wait);			
+}
+
