@@ -141,9 +141,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var result = libred_init("ipc://".appending(socketFile.path))
             assert(result == 0)
 
-            print("Client running load file");
-            let path = NSString.path(withComponents: [Bundle.main.resourcePath!, "test.txt"])
-            result = mm_client_backend_load_file(path)
+            let path = "/tmp/test.txt"
+            result = libred_load_file(path)
             if result == 0 {
                 print("Backend load file succeeded")
             }

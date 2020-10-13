@@ -52,16 +52,6 @@ set_target_properties(msgpack PROPERTIES
 )
 target_link_libraries(RedLib msgpack)
 
-find_library(FSWATCH_NAME NAMES libfswatch.dylib)
-find_path(FSWATCH_INCLUDE_NAME NAMES libfswatch/c/libfswatch.h)
-
-add_library(fswatch SHARED IMPORTED)
-set_target_properties(fswatch PROPERTIES
-    IMPORTED_LOCATION "${FSWATCH_NAME}"
-    INTERFACE_INCLUDE_DIRECTORIES "${FSWATCH_INCLUDE_NAME}"
-)
-target_link_libraries(RedLib fswatch)
-
 set_target_properties(RedLib PROPERTIES
     SOVERSION 0
     VERSION ${PROJECT_VERSION}
