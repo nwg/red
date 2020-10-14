@@ -6,18 +6,6 @@
 
 (provide place-main)
 
-(define bufmgr-cmds
-  (list
-   'load-file))
-
-(define (run-bufmgr ch)
-  (let main
-      ([cmd (place-channel-get ch)])
-    (if (memq (car cmd) bufmgr-cmds)
-        (apply (car cmd) (cdr cmd))
-        (printf "Received Invalid Command ~s" (car cmd)))
-    (main)))
-
 (define global-records #f)
 
 (struct
@@ -43,6 +31,10 @@
 (define ns (namespace-anchor->namespace a))
 
 (define (place-main pch)
+  (file-stream-buffer-mode (current-output-port) 'line)
+  (file-stream-buffer-mode (current-error-port) 'line)
+
+  (flush-output)
   (let loop ()
     (let* ([exp (place-channel-get pch)]
            [cmd (eval (car exp) ns)]

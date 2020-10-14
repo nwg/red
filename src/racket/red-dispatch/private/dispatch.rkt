@@ -25,8 +25,11 @@
 (define (server-init socketfn)
   (set! log-file (open-output-file "/tmp/red-dispatch.log" #:mode 'text #:exists 'truncate))
   (file-stream-buffer-mode log-file 'line)
+  (file-stream-buffer-mode (current-output-port) 'line)
+  (file-stream-buffer-mode (current-error-port) 'line)
   (current-output-port (combine-output log-file (current-output-port)))
   (current-error-port (combine-output log-file (current-error-port)))
+
   (printf "Initializing server\n")
   (set! responder (zmq-socket 'rep))
   (set! responder-file socketfn)
