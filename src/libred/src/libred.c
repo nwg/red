@@ -35,16 +35,19 @@ void file_changed_callback(const char *path, void *data) {
   printf("File changed\n");
 }
 
-red_buffer_t *libred_load_file(const char *fn) {
+int libred_load_file(const char *fn, red_buffer_t **outbuf) {
   remote_buffer_id_t remote_id = mm_client_backend_load_file(fn);
   if (remote_id < 0) {
-    return NULL;
+    return -1;
   }
 
-  red_buffer_t *outbuf = malloc(sizeof(red_buffer_t));
-  outbuf->remote_id = remote_id;
+  if (outbuf) {
+    red_buffer_t *buf = malloc(sizeof(red_buffer_t));
+    buf->remote_id = remote_id;
+    *outbuf = buf;
+  }
 
-  return outbuf;
+  return 0;
 }
 
 static uint64_t count;
@@ -52,7 +55,7 @@ static inline uint64_t get_unique_shm() {
   return count++;
 }
 
-red_shm_t *libred_create_and_attach_shared_memory(size_t size) {
+int libred_create_and_attach_shared_memory(size_t size, red_shm_t **outshm) {
   remote_shm_id_t remote_id;
   char path[PATH_MAX];
   snprintf(path, PATH_MAX, "com.manicmind.Red-%d-shm-%llu", getpid(), get_unique_shm());
@@ -93,14 +96,17 @@ red_shm_t *libred_create_and_attach_shared_memory(size_t size) {
   }
   result = shm_unlink(path);
   if (result != 0) abort();
-  if (error != 0) return NULL;
+  if (error != 0) return error;
 
-  red_shm_t *outshm = malloc(sizeof(red_shm_t));
-  outshm->remote_id = remote_id;
-  outshm->size = size;
-  outshm->addr = addr;
+  if (outshm) {
+    red_shm_t *shm = malloc(sizeof(red_shm_t));
+    shm->remote_id = remote_id;
+    shm->size = size;
+    shm->addr = addr;
+    *outshm = shm;
+  }
 
-  return outshm;
+  return 0;
 }
 
 int libred_detach_shared_memory(red_shm_t *shm) {

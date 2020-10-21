@@ -139,14 +139,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("Running on socket \(socketFile.path)")
             
 
-            let result = libred_init("ipc://".appending(socketFile.path))
-            assert(result == 0)
+            var result = libred_init("ipc://".appending(socketFile.path))
+            if result != 0 { abort() }
 
-            let buffer = libred_load_file(path)
+            var buf : OpaquePointer?
+            result = libred_load_file(path, &buf)
+            if result != 0 { abort() }
             
-            let shm = libred_create_and_attach_shared_memory(4096)
-            
-            libred_detach_shared_memory(shm)
+            var shm : OpaquePointer?
+            result = libred_create_and_attach_shared_memory(4096, &shm)
+            if result != 0 { abort() }
+
+            result = libred_detach_shared_memory(shm)
+            if result != 0 { abort() }
         }
         
         self.tilingTest = MMTilingTest()
