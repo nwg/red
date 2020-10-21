@@ -65,18 +65,6 @@ void mm_try_client() {
 
 static const char *current_renderer = NULL;
 
-static void unload_current_renderer() {
-  assert(current_renderer != NULL);
-
-  current_renderer = NULL;
-}
-
-static inline void pack_str(const char *str) {
-  int len = strlen(str);
-  msgpack_pack_str(&pk, len);
-  msgpack_pack_str_body(&pk, str, len);  
-}
-
 static inline int synchronous_call(msgpack_object *deserialized) {
 //    const char blah[256] = "hello";
 //    int result = zmq_send(requester, blah, 5, ZMQ_DONTWAIT);
@@ -93,6 +81,7 @@ static inline int synchronous_call(msgpack_object *deserialized) {
     return errno;
   }
 
+  msgpack_zone_clear(&mempool);
   msgpack_unpack_return unpack_result = msgpack_unpack(recvbuf, nbytes, NULL, &mempool, deserialized);
   if (unpack_result != MSGPACK_UNPACK_SUCCESS) {
     return -1;
@@ -123,27 +112,96 @@ static inline int get_remote_status(msgpack_object *obj, bool *valid) {
   }
 }
 
-static int simple_remote(const char *func, const char *cmdname) {
+static int simple_remote_get_status(const char *func, const char *cmdname) {
   msgpack_object deserialized;
   int result = synchronous_call(&deserialized);
   if (result != 0) {
-    printf("%s: Synchronous call to backend-load-renderer failed\n", func);
+    printf("%s: Synchronous call to %s failed\n", func, cmdname);
     return -1;
   }
 
   bool valid;
   result = get_remote_status(&deserialized, &valid);
   if (!valid) {
-    printf("%s: backend-load-renderer remote status invalid\n", func);
+    printf("%s: %s remote status invalid\n", func, cmdname);
     return -1;
   }
 
   if (result != 0) {
-    printf("%s: backend-load-renderer failed\n", func);
+    printf("%s: %s failed\n", func, cmdname);
     return result;
   }
 
   printf("%s: %s succeeded\n", func, cmdname);
+  return 0;
+}
+
+static inline int64_t get_remote_id(msgpack_object *obj) {
+  switch (obj->type) {
+  case MSGPACK_OBJECT_POSITIVE_INTEGER:
+    return (int64_t)obj->via.u64;
+  case MSGPACK_OBJECT_NEGATIVE_INTEGER:
+    return obj->via.i64;
+  default:
+    return -1;
+  }
+}
+
+static uint64_t simple_remote_get_id(const char *func, const char *cmdname) {
+  msgpack_object deserialized;
+  int result = synchronous_call(&deserialized);
+  if (result != 0) {
+    printf("%s: Synchronous call to %s failed\n", func, cmdname);
+    return -1;
+  }
+
+  int64_t id = get_remote_id(&deserialized);
+
+  if (id < 0) {
+    printf("%s: %s failed\n", func, cmdname);
+    return -1;
+  }
+  
+  printf("%s: %s succeeded\n", func, cmdname);
+  return id;  
+}
+
+int mm_client_backend_attach_shared_memory(const char *path, size_t size, remote_shm_id_t *outid) {
+  
+  const char *cmd = "attach-shared-memory";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
+  msgpack_pack_array(&pk, 2);
+  msgpack_pack_str_with_body(&pk, path, strlen(path));
+  msgpack_pack_uint64(&pk, size);
+
+  msgpack_object deserialized;
+  int result = synchronous_call(&deserialized);
+  if (result != 0) {
+    printf("%s: Synchronous call to %s failed\n", __func__, cmd);
+    return -1;
+  }
+
+  int id = get_remote_id(&deserialized);
+  if (id == -1) return -1;
+  
+  if (outid) *outid = id;
+
+  return 0;
+}
+
+int mm_client_detach_shared_memory(remote_shm_id_t id) {
+  const char *cmd = "detach-shared-memory";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
+  msgpack_pack_array(&pk, 1);
+  msgpack_pack_uint64(&pk, id);
+
+  int result = simple_remote_get_status(__func__, cmd);
+  if (result != 0) {
+    return -1;
+  }
+
   return 0;
 }
 
@@ -154,31 +212,35 @@ int mm_client_backend_load_renderer(const char *renderer) {
     }
   }
 
-  pack_str("backend-load-renderer");
+  const char *cmd = "backend-load-renderer";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
   msgpack_pack_array(&pk, 1);
   int len = strlen(renderer);
   msgpack_pack_str(&pk, len);
   msgpack_pack_str_body(&pk, renderer, len);
 
-  int result = simple_remote(__func__, "backend-load-renderer");
+  int result = simple_remote_get_status(__func__, cmd);
   if (result != 0) {
-    return result;
+    return -1;
   }
 
   current_renderer = renderer;  
   return 0;
 }
 
-int mm_client_backend_load_file(const char *filename) {
-  pack_str("load-file");
+remote_buffer_id_t mm_client_backend_load_file(const char *filename) {
+  const char *cmd = "load-file";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
   msgpack_pack_array(&pk, 1);
   int len = strlen(filename);
   msgpack_pack_str(&pk, len);
   msgpack_pack_str_body(&pk, filename, len);
 
-  int result = simple_remote(__func__, "load-file");
+  int result = simple_remote_get_id(__func__, cmd);
   if (result != 0) {
-    return result;
+    return -1;
   }
 
   return 0;

@@ -19,14 +19,13 @@ static void eventCallback(
     const FSEventStreamEventFlags eventFlags[],
     const FSEventStreamEventId eventIds[])
 {
-    int i;
+  (void)streamRef;
+  (void)clientCallBackInfo;
+    size_t i;
     char **paths = eventPaths;
  
     // printf("Callback called\n");
     for (i=0; i<numEvents; i++) {
-        int count;
-        /* flags are unsigned long, IDs are uint64_t */
-
 	if (strcmp(currentPath, paths[i]) == 0) {
 	  FSEventStreamEventFlags flags = eventFlags[i];
 	  printf("Change %llu in %s, flags %lu\n", eventIds[i], paths[i], (unsigned long int)flags);

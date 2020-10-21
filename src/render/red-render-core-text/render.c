@@ -41,3 +41,14 @@ EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_ren
     CFRelease(attr);
     CFRelease(line);
 }
+
+EXPORT void *red_render_create_context(int width, int height, void *data) {
+    CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
+    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast;
+    CGContextRef ctx = CGBitmapContextCreate(data, width, height, 8, width*4, space, bitmapInfo);
+    CGColorSpaceRelease(space);
+    CGContextSetRGBFillColor(ctx, 1.0, 1.0, 1.0, 1.0); // white background
+    CGContextFillRect(ctx, CGRectMake(0.0, 0.0, width, height));
+    
+    return ctx;
+}

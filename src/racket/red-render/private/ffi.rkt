@@ -25,6 +25,7 @@
      v))
 
 (define check-zero? (check zero?))
+(define _ctx-pointer (_cpointer 'ctx))
 
 (define-red-render
   red_render_init
@@ -36,3 +37,7 @@
   (_fun _bytes _int (info : _lineInfo-pointer) -> _void
         -> info))
 
+
+(define-red-render
+  red_render_create_context
+  (_fun _int _int _bytes -> _ctx-pointer))

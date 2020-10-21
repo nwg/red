@@ -2,6 +2,7 @@
 
 (require racket/runtime-path)
 (provide render-reload render-get-func get-line-info
+         create-context
          (struct-out lineInfo))
 (require "params.rkt")
 (require "ffi-types.rkt")
@@ -43,3 +44,5 @@
          [info (make-lineInfo 0.0 0.0 0.0 0.0)])
     ((render-get-func 'red_render_get_line_info) bs (bytes-length bs) info)))
     
+(define (create-context width height buf)
+  ((render-get-func 'red_render_create_context) width height buf))

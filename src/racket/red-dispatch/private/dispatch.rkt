@@ -20,7 +20,8 @@
 ;;   (_fun _zmq_ctx-pointer -> _void))
 
 (define bufmgr-cmds
-  (set "load-file"))
+  (set "load-file" "attach-shared-memory"
+       "detach-shared-memory"))
 
 (define (server-init socketfn)
   (set! log-file (open-output-file "/tmp/red-dispatch.log" #:mode 'text #:exists 'truncate))

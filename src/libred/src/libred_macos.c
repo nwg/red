@@ -9,6 +9,7 @@ static CFRunLoopRef runLoop;
 static pthread_mutex_t waitInit = PTHREAD_MUTEX_INITIALIZER;
 
 static void *start_runloop(void *data) {
+  (void)data;
   CFMachPortRef port = CFMachPortCreate(NULL, NULL, NULL, NULL);
   assert(port);
   CFRunLoopSourceRef source = CFMachPortCreateRunLoopSource(NULL, port, 0);

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA0E95EB253752F6006EDF67 /* libred-render-core-text.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA5A210524BE195400F4584E /* libred-render-core-text.dylib */; };
 		AA5A210E24BE199A00F4584E /* render.h in Headers */ = {isa = PBXBuildFile; fileRef = AA5A210C24BE199A00F4584E /* render.h */; };
 		AA5A210F24BE199A00F4584E /* render.c in Sources */ = {isa = PBXBuildFile; fileRef = AA5A210D24BE199A00F4584E /* render.c */; };
 		AA5A211724BE19DE00F4584E /* red_render_core_text_tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5A211624BE19DE00F4584E /* red_render_core_text_tests.swift */; };
@@ -23,7 +24,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AA0E95EA253752C1006EDF67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${PROJECT_DIR}/../../racket/red-render/lib";
+			dstSubfolderSpec = 0;
+			files = (
+				AA0E95EB253752F6006EDF67 /* libred-render-core-text.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		AA0E95EF25375377006EDF67 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		AA10125324BE2B6600226448 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		AA5A210524BE195400F4584E /* libred-render-core-text.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libred-render-core-text.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA5A210C24BE199A00F4584E /* render.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = render.h; sourceTree = "<group>"; };
@@ -34,13 +49,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AA5A210324BE195400F4584E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		AA5A211124BE19DE00F4584E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,6 +60,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA0E95EE25375377006EDF67 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AA0E95EF25375377006EDF67 /* Accelerate.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AA5A20FC24BE195400F4584E = {
 			isa = PBXGroup;
 			children = (
@@ -59,6 +75,7 @@
 				AA5A210D24BE199A00F4584E /* render.c */,
 				AA5A211524BE19DE00F4584E /* red-render-core-text-tests */,
 				AA5A210624BE195400F4584E /* Products */,
+				AA0E95EE25375377006EDF67 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,7 +118,8 @@
 			buildPhases = (
 				AA5A210124BE195400F4584E /* Headers */,
 				AA5A210224BE195400F4584E /* Sources */,
-				AA5A210324BE195400F4584E /* Frameworks */,
+				AA0E95E925375290006EDF67 /* ShellScript */,
+				AA0E95EA253752C1006EDF67 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -137,7 +155,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1160;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = ManicMind;
 				TargetAttributes = {
 					AA5A210424BE195400F4584E = {
@@ -176,6 +194,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AA0E95E925375290006EDF67 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AA5A210224BE195400F4584E /* Sources */ = {
@@ -231,6 +269,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -289,6 +328,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

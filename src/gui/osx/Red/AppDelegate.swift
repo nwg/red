@@ -139,15 +139,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("Running on socket \(socketFile.path)")
             
 
-            var result = libred_init("ipc://".appending(socketFile.path))
+            let result = libred_init("ipc://".appending(socketFile.path))
             assert(result == 0)
 
-            result = libred_load_file(path)
-            if result == 0 {
-                print("Backend load file succeeded")
-            } else {
-                print("Backend load file failed")
-            }
+            let buffer = libred_load_file(path)
+            
+            let shm = libred_create_and_attach_shared_memory(4096)
+            
+            libred_detach_shared_memory(shm)
         }
         
         self.tilingTest = MMTilingTest()
