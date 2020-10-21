@@ -8,8 +8,8 @@
 
 (provide place-main)
 
-(struct portal (id buffer memory width height))
-(struct buffer (id records portals))
+(struct portal (id context width height))
+(struct buffer (id records))
 (struct line-record (info data))
 (struct shared-memory (id size addr))
 
@@ -48,17 +48,37 @@
     (hash-remove! attached-shared-memory id)
     0))
 
-(define (open-portal bufid shmid width height)
+(define (open-portal shmid width height)
   (let* ([id (get-portal-id)]
-         [buffer (hash-ref buffers bufid)]
          [memory (hash-ref attached-shared-memory shmid)]
-         [portal (portal id buffer memory width height)])
+         [addr (shared-memory-addr memory)]
+         [context (render-context-create addr width height)]
+         [portal (portal id context width height)])
     (hash-set! portals id portal)
     id))
 
 (define (close-portal pid)
-  (hash-remove! portals pid)
-  0)
+  (let ([portal (hash-ref portals pid)]
+        [context (portal-context portal)])
+    (render-context-destroy context)
+    (hash-remove! portals pid)
+    0))
+
+(define (draw-buffer-in-portal bufid pid)
+  (let* ([buffer (hash-ref buffers bufid)]
+         [records (buffer-records buffer)]
+         [portal (hash-ref portals pid)]
+         [context (portal-context portal)]
+         [total-height (portal-height portal)])
+    (define y total-height)
+    (for ([record records])
+      (let* ([info (line-record-info record)]
+             [line-height (+ (lineInfo-ascent info) (lineInfo-descent info))]
+             [leading (lineInfo-leading info)])
+        (set! y (- y line-height))
+        (render-draw-line-in-context context (point leading y) info)))
+    0))
+
 
 (define (load-file fn)
   (with-input-from-file fn
@@ -71,7 +91,7 @@
               (in-lines))]
             [recordsv (list->vector (sequence->list records))]
             [id (get-buffer-id)]
-            [buf (buffer id recordsv (make-hasheqv))])
+            [buf (buffer id recordsv)])
        (hash-set! buffers id buf)
        (printf "Loaded ~s lines from ~s\n" (vector-length recordsv) fn)
        id))))

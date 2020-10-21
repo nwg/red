@@ -11,11 +11,11 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" customClass="MMTextScrollView" customModule="Red" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="397" height="371"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mPK-Y7-Hqm">
                     <rect key="frame" x="0.0" y="-6" width="397" height="377"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <clipView key="contentView" id="tO5-yL-HiT">
                         <rect key="frame" x="1" y="1" width="395" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,11 +35,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
-                <customView id="rN8-fO-5Vi" customClass="MMTextPortalView" customModule="Red" customModuleProvider="target">
+                <customView id="rN8-fO-5Vi" userLabel="Portal Content View">
                     <rect key="frame" x="0.0" y="0.0" width="397" height="371"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 </customView>
             </subviews>
+            <connections>
+                <outlet property="portalContentView" destination="rN8-fO-5Vi" id="H0g-Cj-QQu"/>
+            </connections>
             <point key="canvasLocation" x="-213.5" y="170.5"/>
         </customView>
     </objects>

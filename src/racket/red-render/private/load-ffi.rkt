@@ -2,8 +2,10 @@
 
 (require racket/runtime-path)
 (provide render-reload render-get-func get-line-info
-         create-context
+         context-create
+         draw-line
          (struct-out lineInfo))
+
 (require "params.rkt")
 (require "ffi-types.rkt")
 
@@ -40,9 +42,12 @@
       #f))
 
 (define (get-line-info s)
-  (let* ([bs (string->bytes/utf-8 "something")]
-         [info (make-lineInfo 0.0 0.0 0.0 0.0)])
+  (let* ([bs (string->bytes/utf-8 s)]
+         [info (empty-lineInfo)])
     ((render-get-func 'red_render_get_line_info) bs (bytes-length bs) info)))
     
-(define (create-context width height buf)
+(define (context-create width height buf)
   ((render-get-func 'red_render_create_context) width height buf))
+
+(define (draw-line ctx info x y)
+  ((render-get-func 'red_render_draw_line) ctx info x y))

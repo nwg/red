@@ -205,6 +205,62 @@ int mm_client_detach_shared_memory(remote_shm_id_t id) {
   return 0;
 }
 
+int mm_client_draw_buffer_in_portal(remote_buffer_id_t bufid, remote_portal_id_t pid) {
+  const char *cmd = "draw-buffer-in-portal";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
+  msgpack_pack_array(&pk, 2);
+  msgpack_pack_uint64(&pk, bufid);
+  msgpack_pack_uint64(&pk, pid);
+
+  int result = simple_remote_get_status(__func__, cmd);
+  if (result != 0) {
+    return -1;
+  }
+
+  return 0;
+}
+
+int mm_client_open_portal(remote_shm_id_t shmid, int width, int height, remote_portal_id_t *outid) {
+
+  const char *cmd = "open-portal";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
+  msgpack_pack_array(&pk, 3);
+  msgpack_pack_uint64(&pk, shmid);
+  msgpack_pack_int32(&pk, width);
+  msgpack_pack_int32(&pk, height);
+
+  msgpack_object deserialized;
+  int result = synchronous_call(&deserialized);
+  if (result != 0) {
+    printf("%s: Synchronous call to %s failed\n", __func__, cmd);
+    return -1;
+  }
+
+  int id = get_remote_id(&deserialized);
+  if (id == -1) return -1;
+
+  if (outid) *outid = id;
+
+  return 0;
+}
+
+int mm_client_close_portal(remote_portal_id_t pid) {
+  const char *cmd = "close-portal";
+  msgpack_sbuffer_clear(&sbuf);
+  msgpack_pack_str_with_body(&pk, cmd, strlen(cmd));
+  msgpack_pack_array(&pk, 1);
+  msgpack_pack_uint64(&pk, pid);
+
+  int result = simple_remote_get_status(__func__, cmd);
+  if (result != 0) {
+    return -1;
+  }
+
+  return 0;
+}
+					       
 int mm_client_backend_load_renderer(const char *renderer) {
   if (current_renderer != NULL) {
     if (strcmp(renderer, current_renderer) == 0) {

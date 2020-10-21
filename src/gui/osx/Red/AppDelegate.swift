@@ -23,10 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var outputPipe: [Int32] = [-1, -1]
     private var inputPipe: [Int32] = [-1, -1]
 
-//    var scrollVC : ScrollViewController!
-//    var textVC : MMTextViewController!
-
-    var tilingTest : MMTilingTest!
+    var textScrollView : MMTextScrollView!
     
     static func main() {
         var sigs : sigset_t = 0
@@ -39,6 +36,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
+        self.textScrollView = MMTextScrollView.createFromNib()
+        let bounds = window.contentView!.bounds
+        let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
+        self.textScrollView.frame = frame
+        window.contentView?.addSubview(self.textScrollView)
+
+
 //        scrollVC!.view.frame = window.contentView!.frame
         //        let frameSize = window.contentRect(forFrameRect: window.frame)
 //        scrollVC = ScrollViewController(menu: mainMenu, frame: window.contentView!.frame)
@@ -126,6 +131,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     let s = String(format: "%s", buf)
                     print(s, terminator: "")
                 } else if nbytes == 0 {
+                    print("Received EOF; Closing down thread")
                     return
                 } else {
                     perror("Could not read bytes")
@@ -146,24 +152,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             result = libred_load_file(path, &buf)
             if result != 0 { abort() }
             
+            let width = 800
+            let height = 600
+            let size = width * height * 4
+            
             var shm : OpaquePointer?
-            result = libred_create_and_attach_shared_memory(4096, &shm)
+            result = libred_create_and_attach_shared_memory(size, &shm)
             if result != 0 { abort() }
+            
+            var portal : OpaquePointer?
+            result = libred_open_portal(shm, Int32(width), Int32(height), &portal)
+            if result != 0 { abort() }
+            
+            result = libred_draw_buffer_in_portal(buf, portal)
+            if result != 0 { abort() }
+            
 
-            result = libred_detach_shared_memory(shm)
-            if result != 0 { abort() }
+            DispatchQueue.main.async {
+                let addr = libred_shm_get_addr(shm)
+                let bytes = addr?.bindMemory(to: UInt8.self, capacity: size)
+                let data = CFDataCreateWithBytesNoCopy(nil, bytes, size, nil)
+                self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+            }
         }
-        
-        self.tilingTest = MMTilingTest()
-        let bounds = window.contentView!.bounds
-        let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
-        tilingTest.view.frame = frame
-        window.contentView?.addSubview(self.tilingTest.view)
-        
-        print("Content view frame is \(window.contentView!.frame)")
-        
-        let blah = NSString()
-        takePointer(bridgeRetained(obj: blah))
         
 //        racketThread = Thread(block: {
 //            let racketBundle = Bundle(identifier: "org.racket-lang.Racket")

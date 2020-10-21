@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		AA0E95DD25339532006EDF67 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; };
 		AA0E95DE25339532006EDF67 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA0E95FA2540E68C006EDF67 /* MMTextPortalView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E95F92540E68C006EDF67 /* MMTextPortalView.xib */; };
+		AA0E95FE2540ED1C006EDF67 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */; };
 		AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
 		AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */; };
@@ -71,6 +73,8 @@
 
 /* Begin PBXFileReference section */
 		AA0E95DB25339527006EDF67 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = ../../../build/install/Frameworks/Racket.framework; sourceTree = "<group>"; };
+		AA0E95F92540E68C006EDF67 /* MMTextPortalView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextPortalView.xib; sourceTree = "<group>"; };
+		AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		AA6DDEF8249276A1009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 				AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */,
 				AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */,
 				AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */,
+				AA0E95F92540E68C006EDF67 /* MMTextPortalView.xib */,
+				AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */,
 				AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */,
 				AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */,
 				AA6DDF02249276A1009AD2D5 /* Info.plist */,
@@ -338,6 +344,7 @@
 				AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */,
 				AAF120E625332FE600CBD0D9 /* racket in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
+				AA0E95FA2540E68C006EDF67 /* MMTextPortalView.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
 				AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */,
 				AA6DDF33249A3621009AD2D5 /* MMTextViewController.xib in Resources */,
@@ -376,6 +383,7 @@
 				AA703993249AC87C009FD158 /* MMClipView.swift in Sources */,
 				AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */,
 				AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */,
+				AA0E95FE2540ED1C006EDF67 /* NibLoadable.swift in Sources */,
 				AA70399624A28C0D009FD158 /* test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

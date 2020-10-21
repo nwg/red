@@ -20,12 +20,15 @@ typedef struct {
     float64_t descent;
     float64_t leading;
     float64_t width;
+    CTLineRef line;
 } red_render_line_info_t;
 
 #define EXPORT __attribute__((visibility("default")))
 
 EXPORT int red_render_init(void);
 EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_render_line_info_t *outInfo);
-EXPORT void *red_render_create_context(int width, int height, void *data);
+EXPORT void red_render_free_line_info(red_render_line_info_t *lineInfo);
+EXPORT CGContextRef red_render_create_context(int width, int height, void *data);
+EXPORT void red_render_draw_line(CGContextRef ctx, red_render_line_info_t *lineInfo, double xStart, double yStart);
 
 #endif /* render_h */

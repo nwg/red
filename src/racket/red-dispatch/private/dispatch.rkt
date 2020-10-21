@@ -21,7 +21,7 @@
 
 (define bufmgr-cmds
   (set "load-file" "attach-shared-memory"
-       "detach-shared-memory"))
+       "detach-shared-memory" "open-portal" "close-portal" "draw-buffer-in-portal"))
 
 (define (server-init socketfn)
   (set! log-file (open-output-file "/tmp/red-dispatch.log" #:mode 'text #:exists 'truncate))

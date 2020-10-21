@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="MMTextPortalView" customModule="Red" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <box boxType="custom" borderType="none" title="Box" titlePosition="noTitle" id="Lxm-DL-lFn">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <view key="contentView" id="Vya-lN-yeK">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <color key="fillColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                </box>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FjD-rb-tj5">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="301"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="MzW-qf-ohR"/>
+                </imageView>
+            </subviews>
+            <connections>
+                <outlet property="boxView" destination="Lxm-DL-lFn" id="Jlp-VA-5cq"/>
+                <outlet property="imageView" destination="FjD-rb-tj5" id="Sn5-Po-ef1"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="105.5"/>
+        </customView>
+    </objects>
+</document>

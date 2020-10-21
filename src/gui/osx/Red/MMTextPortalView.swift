@@ -8,24 +8,29 @@
 
 import Cocoa
 
-class MMTextPortalView: NSView, CALayerDelegate {
-    var directImageLayer : CALayer!
-    var directImage : CGImage!
-
-//    override func makeBackingLayer() -> CALayer {
-//        self.directImageLayer = CALayer()
-//        self.directImageLayer.delegate = self
-//        // renderer_set_new_size(width, height)
-//        // let data = renderer_
-//        let provider = CGDataProvider(data: <#T##CFData#>)
-//        self.directImage = CGImage(width: self.frame.width, height: self.frame.height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: self.frame.width * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGBitmapInfo.byteOrder32Little, provider: <#T##CGDataProvider#>, decode: <#T##UnsafePointer<CGFloat>?#>, shouldInterpolate: <#T##Bool#>, intent: <#T##CGColorRenderingIntent#>)
-//        return self.directImageLayer
-//    }
+class MMTextPortalView: NSView, CALayerDelegate, NibLoadable {
+    var directImageLayer : CALayer? = .none
+    var directImage : CGImage?
+    
+    @IBOutlet weak var boxView: NSBox!
+    @IBOutlet weak var imageView: NSImageView!
 
     override func resize(withOldSuperviewSize oldSize: NSSize) {
         super.resize(withOldSuperviewSize: oldSize)
-        
-        
     }
-    
+
+    public func setupImage(data : CFData, width: Int, height: Int) -> Void {
+        let provider = CGDataProvider(data: data)
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue).union(.byteOrder32Little)
+        self.directImage = CGImage(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: bitmapInfo, provider: provider!, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
+
+        self.imageView?.removeFromSuperview()
+        let image = NSImage(cgImage: self.directImage!, size: NSSize(width: width, height: height))
+        
+        let imageView = NSImageView(image: image)
+        imageView.frame = self.bounds
+        self.imageView = imageView
+        self.addSubview(imageView)
+    }
+
 }

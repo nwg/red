@@ -10,7 +10,9 @@
 ;;   [lineInfo-ascent Real])
 
 (provide red_render_init
-         red_render_get_line_info)
+         red_render_get_line_info
+         red_render_create_context
+         red_render_draw_line)
 
 (define-ffi-definer
   define-red-render
@@ -40,4 +42,8 @@
 
 (define-red-render
   red_render_create_context
-  (_fun _int _int _bytes -> _ctx-pointer))
+  (_fun _int _int _pointer -> _ctx-pointer))
+
+(define-red-render
+  red_render_draw_line
+  (_fun _ctx-pointer _lineInfo-pointer _double* _double* -> _void))

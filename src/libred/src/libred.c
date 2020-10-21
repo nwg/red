@@ -18,6 +18,11 @@ typedef struct red_buffer_s {
   remote_buffer_id_t remote_id;
 } red_buffer_t;
 
+typedef struct red_portal_s {
+  remote_portal_id_t remote_id;
+  red_shm_t *shm;
+} red_portal_t;
+
 int libred_init(const char *client_socket_fn) {
   printf("libred_init\n");
   int status = libred_macos_init();
@@ -110,11 +115,45 @@ int libred_create_and_attach_shared_memory(size_t size, red_shm_t **outshm) {
 }
 
 int libred_detach_shared_memory(red_shm_t *shm) {
-  mm_client_detach_shared_memory(shm->remote_id);
-  int status = munmap(shm->addr, shm->size);
-  if (status != 0) abort();
+  int status = mm_client_detach_shared_memory(shm->remote_id);
+  if (status != 0) return -1;
+  status = munmap(shm->addr, shm->size);
+  if (status != 0) return -1;
 
   free(shm);
 
   return 0;
 }
+
+LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_t *portal) {
+  return mm_client_draw_buffer_in_portal(buffer->remote_id, portal->remote_id);
+}
+
+LIBRED_EXPORT int libred_open_portal(red_shm_t *shm, int width, int height, red_portal_t **outportal) {
+  remote_portal_id_t pid;
+  int status = mm_client_open_portal(shm->remote_id, width, height, &pid);
+  if (status != 0) return -1;
+
+  if (outportal) {
+    red_portal_t *portal = malloc(sizeof(portal));
+    portal->remote_id = pid;
+    portal->shm = shm;
+    *outportal = portal;
+  }
+
+  return 0;
+}
+
+LIBRED_EXPORT void *libred_shm_get_addr(red_shm_t *shm) {
+  return shm->addr;
+}
+
+LIBRED_EXPORT int libred_close_portal(red_portal_t *portal) {
+  int status = mm_client_close_portal(portal->remote_id);
+  if (status != 0) return -1;
+
+  free(portal);
+
+  return 0;
+}
+
