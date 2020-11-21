@@ -11,7 +11,6 @@ set_property(SOURCE src/module.modulemap
     PROPERTY MACOSX_PACKAGE_LOCATION "Modules")
 
 add_library(RedLib SHARED
-    #${CMAKE_CURRENT_BINARY_DIR}/libred.c
     src/main.c
     src/main.h
     src/client.c
@@ -82,5 +81,3 @@ target_include_directories(RedLib PRIVATE src)
 target_link_libraries(RedLib "-framework Racket" "-framework Foundation" "-framework CoreServices")
 target_link_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
 target_compile_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}" -Wall -Wextra -pedantic -Werror)
-
-#configure_file("src/server.c" "${CMAKE_CURRENT_BINARY_DIR}/server.c" COPYONLY)
