@@ -3,31 +3,45 @@
 (require ffi/unsafe)
 (require racket/place)
 (require "ffi.rkt")
+(require syntax/location)
 
-(provide dispatch-init dispatch-run)
+(provide dispatch-init dispatch-run test-dispatch)
 
-(define run-client-place #f)
+(printf "loading module on thread ~X\n" (pthread_self))
 
-(define (put-wrapper pch . args)
-  (printf "put on thread ~X\n" (pthread_self))
-  (apply place-channel-put pch args))
+(module myplace racket/base
+  (provide place-main)
+  (require "ffi.rkt")
+  (require syntax/location)
 
-(define client-place
-  (place
-   ch
-   (printf "In client-place\n")
-   (red_client_run_from_racket ch put-wrapper place-channel-get)
-   (error "Should not get here")))
+  (module stash racket/base
+    (provide client-channel)
+    (define client-channel (make-parameter #f)))
+
+  (require 'stash)
   
-(define client-place-wrapped
-  (wrap-evt
-   client-place
-   (λ (v) (values client-place v))))
+  (define (place-main ch)
+    (client-channel ch)
+    (red_client_run_from_racket (quote-module-path stash))
+    (error "Should not get here")))
+
+(define client-place #f)
+(define client-place-wrapped #f)
   
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
   (printf "dispatch-init on thread ~X\n" (pthread_self))
+
+  (set!
+   client-place
+   (dynamic-place (quote-module-path myplace) 'place-main))
+
+  (set!
+   client-place-wrapped
+   (wrap-evt
+    client-place
+    (λ (v) (values client-place v))))
+
   (define rdy (place-channel-get client-place))
-  (printf "Got ready ~s\n" rdy)
   (when (not (eq? rdy 'ready))
     (error "Client place not initialized properly -- got" rdy))
   

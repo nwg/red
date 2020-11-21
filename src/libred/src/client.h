@@ -7,7 +7,7 @@ typedef int64_t remote_buffer_id_t;
 typedef int64_t remote_shm_id_t;
 typedef int64_t remote_portal_id_t;
 
-__attribute__((noreturn)) int red_client_run_from_racket(ptr ch, ptr put, ptr get);
+__attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path);
 
 int red_client_test_call();
 

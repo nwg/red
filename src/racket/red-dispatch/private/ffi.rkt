@@ -8,7 +8,7 @@
 
 (define-red-dispatch
   red_client_run_from_racket
-  (_fun _racket _racket _racket -> _int))
+  (_fun #:blocking? #t _racket -> _int))
 
 (define-red-dispatch
   pthread_self

@@ -1,6 +1,6 @@
 #lang info
 (define collection "red-dispatch")
-(define deps '("base" "msgpack" "zeromq-r-lib"))
+(define deps '("base"))
 (define build-deps '())
 (define scribblings '())
 (define pkg-desc "Red Racket Dispatch Server")

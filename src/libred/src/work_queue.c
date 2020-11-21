@@ -6,6 +6,7 @@ static CFRunLoopRef runLoop = NULL;
 
 int work_queue_init() {
   runLoop = libred_macos_create_runloop();
+  printf("initialized runLoop %p\n", (void*)runLoop);
   return 0;
 }
 

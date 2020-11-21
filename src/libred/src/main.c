@@ -49,7 +49,7 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     ptr args = Scons(Sunsigned((uint64_t)red_client_run_from_racket),
 		     Scons(Sinteger(interpreter_stdin_pipe[0]),
 			   Scons(Sinteger(interpreter_stdout_pipe[1]),
-				 Snil)));		      
+				 Snil)));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
 
@@ -58,9 +58,9 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
 
 LIBRED_EXPORT __attribute__((noreturn)) void libred_run(void) {
   ptr proc = Scar(racket_eval(Sstring_to_symbol("dispatch-run")));
-  racket_apply(proc, Snil);
-  
-  __builtin_unreachable();
+  while (1) {
+    racket_apply(proc, Snil);
+  }
 }
 
 LIBRED_EXPORT int libred_test(void) {

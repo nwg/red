@@ -5,23 +5,20 @@
 #include "client.h"
 #include "work_queue.h"
 
-static ptr client_place_channel = NULL;
-static ptr place_channel_put = NULL;
-static ptr place_channel_get = NULL;
-
-__attribute__((noreturn)) int red_client_run_from_racket(ptr ch, ptr put, ptr get) {
-  client_place_channel = ch;
-  place_channel_put = put;
-  place_channel_get = get;
+__attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
   work_queue_init();
 
-  /* racket_namespace_require(Sstring_to_symbol("racket/place")); */
-  ptr args = Scons(client_place_channel,
+  racket_namespace_require(Sstring_to_symbol("racket/place"));
+  racket_namespace_require(stash_path);
+  
+  ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
+  ptr ch = Scar(racket_apply(param, Snil));
+  ptr args = Scons(ch,
 		   Scons(Sstring_to_symbol("ready"),
 			 Snil));
-  racket_apply(place_channel_put, args);
-  Sdeactivate_thread();
-  
+  ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
+  racket_apply(put, args);
+
   work_queue_start();
 }
 
@@ -39,12 +36,18 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
 	arglist = Scons(args[i], arglist);
       }
 
+      ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
+      ptr ch = Scar(racket_apply(param, Snil));
+		    
+      /* ptr ch = Scar(racket_eval(Sstring_to_symbol("ch"))); */
       arglist = Scons(Sstring_to_symbol(cmd), arglist);
-      arglist = Scons(client_place_channel, Scons(arglist, Snil));
+      arglist = Scons(ch, Scons(arglist, Snil));
 
-      racket_apply(place_channel_put, arglist);
+      ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
+      racket_apply(put, arglist);
 
-      ptr result = racket_apply(place_channel_get, Scons(client_place_channel, Snil));
+      ptr get = Scar(racket_eval(Sstring_to_symbol("place-channel-get")));
+      ptr result = racket_apply(get, Scons(ch, Snil));
       result = Scar(result);
       if (!Sfixnump(result)) {
 	r = -1;
