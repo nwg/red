@@ -47,9 +47,9 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     pipe(interpreter_stdout_pipe);
     ptr proc = Scar(racket_eval(Sstring_to_symbol("dispatch-init")));
     ptr args = Scons(Sunsigned((uint64_t)red_client_run_from_racket),
-		     Scons(Sinteger(interpreter_stdin_pipe[0]),
-			   Scons(Sinteger(interpreter_stdout_pipe[1]),
-				 Snil)));
+                     Scons(Sinteger(interpreter_stdin_pipe[0]),
+                           Scons(Sinteger(interpreter_stdout_pipe[1]),
+                                 Snil)));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
 

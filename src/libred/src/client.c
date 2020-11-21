@@ -14,8 +14,8 @@ __attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
   ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
   ptr ch = Scar(racket_apply(param, Snil));
   ptr args = Scons(ch,
-		   Scons(Sstring_to_symbol("ready"),
-			 Snil));
+                   Scons(Sstring_to_symbol("ready"),
+                         Snil));
   ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
   racket_apply(put, args);
 
@@ -33,12 +33,12 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
       Sactivate_thread();
       ptr arglist = Snil;
       for (int i = nargs - 1; i >= 0; i--) {
-	arglist = Scons(args[i], arglist);
+        arglist = Scons(args[i], arglist);
       }
 
       ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
       ptr ch = Scar(racket_apply(param, Snil));
-		    
+                    
       /* ptr ch = Scar(racket_eval(Sstring_to_symbol("ch"))); */
       arglist = Scons(Sstring_to_symbol(cmd), arglist);
       arglist = Scons(ch, Scons(arglist, Snil));
@@ -50,9 +50,9 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
       ptr result = racket_apply(get, Scons(ch, Snil));
       result = Scar(result);
       if (!Sfixnump(result)) {
-	r = -1;
+        r = -1;
       } else {
-	r = Sinteger_value(result);
+        r = Sinteger_value(result);
       }
 
       pthread_mutex_unlock(waitPtr);

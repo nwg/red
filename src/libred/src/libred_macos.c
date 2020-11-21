@@ -21,9 +21,9 @@ __attribute__((noreturn)) void libred_macos_run_runloop() {
 
 void libred_macos_runloop_perform_block(CFRunLoopRef runLoop, void (^blk)(void)) {
     CFRunLoopPerformBlock(
-			runLoop,
-			kCFRunLoopDefaultMode,
-			blk);
+                        runLoop,
+                        kCFRunLoopDefaultMode,
+                        blk);
 
     CFRunLoopWakeUp(runLoop);
 }
