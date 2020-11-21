@@ -9,7 +9,4 @@
 #ifndef bridge_h
 #define bridge_h
 
-#import "test.h"
-#import "zmq.h"
-
 #endif /* bridge_h */

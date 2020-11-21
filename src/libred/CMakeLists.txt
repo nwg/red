@@ -11,17 +11,16 @@ set_property(SOURCE src/module.modulemap
     PROPERTY MACOSX_PACKAGE_LOCATION "Modules")
 
 add_library(RedLib SHARED
-    ${CMAKE_CURRENT_BINARY_DIR}/server.c
-    src/server.h
+    #${CMAKE_CURRENT_BINARY_DIR}/libred.c
+    src/main.c
+    src/main.h
     src/client.c
     src/client.h
-    src/RedLib.h
-    src/libred.h
-    src/libred.c
-    src/libred_macos.h
+    src/work_queue.c
+    src/work_queue.h
     src/libred_macos.c
-    src/fsmonitor.h
-    src/fsmonitor.c
+    src/libred_macos.h
+    src/RedLib.h
     src/module.modulemap
 )
 
@@ -64,7 +63,7 @@ set_target_properties(RedLib PROPERTIES
     MACOSX_FRAMEWORK_IDENTIFIER com.manicmind.RedLib
     PUBLIC_HEADER RedLib.h
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "None"
-    PUBLIC_HEADER "src/RedLib.h;src/server.h;src/libred.h;src/client.h"
+    PUBLIC_HEADER "src/RedLib.h;src/main.h"
 )
 
 add_custom_command(TARGET RedLib POST_BUILD
@@ -84,4 +83,4 @@ target_link_libraries(RedLib "-framework Racket" "-framework Foundation" "-frame
 target_link_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}")
 target_compile_options(RedLib PRIVATE "-F" "${THIRD_PARTY_FRAMEWORKS}" -Wall -Wextra -pedantic -Werror)
 
-configure_file("src/server.c" "${CMAKE_CURRENT_BINARY_DIR}/server.c" COPYONLY)
+#configure_file("src/server.c" "${CMAKE_CURRENT_BINARY_DIR}/server.c" COPYONLY)

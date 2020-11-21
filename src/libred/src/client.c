@@ -4,10 +4,13 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
+#include <Racket/chezscheme.h>
+#include <Racket/racketcs.h>
+#include <pthread/pthread.h>
 
 #include "client.h"
+#include "work_queue.h"
 
-static void *ctx;
 static void *requester;
 
 static msgpack_sbuffer sbuf;
@@ -17,52 +20,68 @@ static msgpack_zone mempool;
 #define MAX_RECV_SIZE 4096
 static char recvbuf[MAX_RECV_SIZE];
 
+static ptr client_place_channel = NULL;
+static ptr place_channel_put = NULL;
+static ptr place_channel_get = NULL;
+
 #define REMOTE_STATUS_MIN INT_MIN
 #define REMOTE_STATUS_MAX INT_MAX
 
-int mm_client_init(const char *socketfn) {
-  /* requester = zmq_socket(shared_ctx, ZMQ_REQ); */
-  /* int status = zmq_connect (requester, "inproc://dispatch"); */
-  /* if (status != 0) { */
-  /*   return status; */
-  /* } */
+__attribute__((noreturn)) int red_client_run_from_racket(ptr ch, ptr put, ptr get) {
+  client_place_channel = ch;
+  place_channel_put = put;
+  place_channel_get = get;
+  work_queue_init();
 
-  ctx = zmq_init(1);
-  assert(ctx);
-  requester = zmq_socket(ctx, ZMQ_REQ);
-  assert(requester);
-  printf("Connecting socket %s\n", socketfn);
-  zmq_connect(requester, socketfn);
-
-  /* char blah[256]; */
-  /* int result = zmq_recv(requester, blah, 256, 0); */
-
-  msgpack_sbuffer_init(&sbuf);
-  msgpack_packer_init(&pk, &sbuf, msgpack_sbuffer_write);
-  msgpack_zone_init(&mempool, 4096);
-
-  printf("Initialized client\n");
+  /* racket_namespace_require(Sstring_to_symbol("racket/place")); */
+  ptr args = Scons(client_place_channel,
+		   Scons(Sstring_to_symbol("ready"),
+			 Snil));
+  racket_apply(place_channel_put, args);
+  Sdeactivate_thread();
   
-  return 0;
+  work_queue_start();
 }
 
-/*
-void mm_try_client() {
-  assert(ctx != NULL);
-  void *requester = zmq_socket(ctx, ZMQ_REQ);
-  zmq_connect (requester, "inproc://dispatch");
-  int request_nbr;
-  for (request_nbr = 0; request_nbr != 10; request_nbr++) {
-    char buffer [10];
-    printf ("Sending Hello %d…\n", request_nbr);
-    zmq_send (requester, "Hello", 5, 0);
-    zmq_recv (requester, buffer, 10, 0);
-    buffer[9] = '\0';
-    printf ("Received World %d (%s)\n", request_nbr, buffer);
-  }
-}
-*/
+static int run_standard_command(const char *cmd, ptr args[], int nargs) {
+  pthread_mutex_t wait = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_t *waitPtr = &wait;
+  pthread_mutex_lock(waitPtr);
 
+  __block int r;
+  
+  work_queue_submit(^{
+      Sactivate_thread();
+      ptr arglist = Snil;
+      for (int i = nargs - 1; i >= 0; i--) {
+	arglist = Scons(args[i], arglist);
+      }
+
+      arglist = Scons(Sstring_to_symbol(cmd), arglist);
+      arglist = Scons(client_place_channel, Scons(arglist, Snil));
+
+      racket_apply(place_channel_put, arglist);
+
+      ptr result = racket_apply(place_channel_get, Scons(client_place_channel, Snil));
+      result = Scar(result);
+      if (!Sfixnump(result)) {
+	r = -1;
+      } else {
+	r = Sinteger_value(result);
+      }
+
+      pthread_mutex_unlock(waitPtr);
+    });
+  pthread_mutex_lock(waitPtr);
+  pthread_mutex_unlock(waitPtr);
+
+  return r;
+}
+
+int red_client_test_call() {
+  return run_standard_command("test-dispatch", NULL, 0);
+}
+			       
 static const char *current_renderer = NULL;
 
 static inline int synchronous_call(msgpack_object *deserialized) {

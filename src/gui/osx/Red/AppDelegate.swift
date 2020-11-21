@@ -8,6 +8,7 @@
 
 import Cocoa
 import RedLib
+import Racket
 
 
 //@NSApplicationMain
@@ -58,123 +59,123 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
 ////        scrollVC.view.frame = window.contentView!.bounds
 
-        let pid = String(ProcessInfo.processInfo.processIdentifier)
-        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(),
-                                            isDirectory: true)
-        let bundleDir = temporaryDirectoryURL.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true)
-        let socketFile = bundleDir.appendingPathComponent(String(pid))
-
-        
-        do {
-            try FileManager.default.createDirectory(at: bundleDir, withIntermediateDirectories: true, attributes: nil)
-        } catch {
-            print("Error creating socket")
-            NSApplication.shared.terminate(self)
-        }
-        
-        
-        let racketPath = Bundle.main.url(forResource: "racket", withExtension: nil)!
-//        let runServer = Bundle.main.url(forResource: "run-server", withExtension: "rkt")!
-//        let collects = Bundle.main.resourceURL!.appendingPathComponent("collects")
-        
-        let home = ProcessInfo.processInfo.environment["HOME"]
-        let addon = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/addon")
-        let config = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/etc")
-        let collects = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/collects")
-
-        let args = [
-            racketPath.path,
-            "-X", collects.path,
-            "-A", addon.path,
-            "-G", config.path,
-            "-l", "red-dispatch",
-            "--", socketFile.path
-        ]
-//        let args = [ "/bin/echo", "-t", runServer.absoluteString, "--", socketFile.absoluteString ]
-//        let args = [ "/bin/cat" ]
-        let argv: [UnsafeMutablePointer<CChar>?] = args.map{ $0.withCString(strdup) }
-        defer { for case let arg? in argv { free(arg) } }
-        
-        assert(pipe(&outputPipe) == 0)
-        assert(pipe(&inputPipe) == 0)
-
-        var childFDActions : posix_spawn_file_actions_t?
-        posix_spawn_file_actions_init(&childFDActions)
-        
-        posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 1)
-        posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 2)
-        posix_spawn_file_actions_addclose(&childFDActions, outputPipe[0])
-        posix_spawn_file_actions_addclose(&childFDActions, outputPipe[1])
-
-        posix_spawn_file_actions_adddup2(&childFDActions, inputPipe[0], 0)
-        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[0])
-        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[1])
-
-        let result = posix_spawn(&racketPid, argv[0], &childFDActions, nil, argv + [nil], nil)
-        if result != 0 {
-            let error = String(format: "%s", strerror(result))
-            print("spawn failed: \(error)")
-            NSApplication.shared.terminate(self)
-        }
-
-        close(outputPipe[1])
-        close(inputPipe[0])
-
-        let t = Thread {
-
-            let buf = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
-            while true {
-                let nbytes = read(self.outputPipe[0], buf, 4096 - 1)
-                assert(nbytes >= 0)
-                buf[nbytes] = UInt8(0)
-                if (nbytes > 0) {
-                    let s = String(format: "%s", buf)
-                    print(s, terminator: "")
-                } else if nbytes == 0 {
-                    print("Received EOF; Closing down thread")
-                    return
-                } else {
-                    perror("Could not read bytes")
-                }
-            }
-        }
-        t.start()
-
-        let path = "/tmp/test.txt"
-        clientQueue.async {
-            print("Running on socket \(socketFile.path)")
+//        let pid = String(ProcessInfo.processInfo.processIdentifier)
+//        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(),
+//                                            isDirectory: true)
+//        let bundleDir = temporaryDirectoryURL.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true)
+//        let socketFile = bundleDir.appendingPathComponent(String(pid))
+//
+//
+//        do {
+//            try FileManager.default.createDirectory(at: bundleDir, withIntermediateDirectories: true, attributes: nil)
+//        } catch {
+//            print("Error creating socket")
+//            NSApplication.shared.terminate(self)
+//        }
+//
+//
+//        let racketPath = Bundle.main.url(forResource: "racket", withExtension: nil)!
+////        let runServer = Bundle.main.url(forResource: "run-server", withExtension: "rkt")!
+////        let collects = Bundle.main.resourceURL!.appendingPathComponent("collects")
+//
+//        let home = ProcessInfo.processInfo.environment["HOME"]
+//        let addon = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/addon")
+//        let config = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/etc")
+//        let collects = URL(fileURLWithPath: home!).appendingPathComponent(".red/Racket/collects")
+//
+//        let args = [
+//            racketPath.path,
+//            "-X", collects.path,
+//            "-A", addon.path,
+//            "-G", config.path,
+//            "-l", "red-dispatch",
+//            "--", socketFile.path
+//        ]
+////        let args = [ "/bin/echo", "-t", runServer.absoluteString, "--", socketFile.absoluteString ]
+////        let args = [ "/bin/cat" ]
+//        let argv: [UnsafeMutablePointer<CChar>?] = args.map{ $0.withCString(strdup) }
+//        defer { for case let arg? in argv { free(arg) } }
+//
+//        assert(pipe(&outputPipe) == 0)
+//        assert(pipe(&inputPipe) == 0)
+//
+//        var childFDActions : posix_spawn_file_actions_t?
+//        posix_spawn_file_actions_init(&childFDActions)
+//
+//        posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 1)
+//        posix_spawn_file_actions_adddup2(&childFDActions, outputPipe[1], 2)
+//        posix_spawn_file_actions_addclose(&childFDActions, outputPipe[0])
+//        posix_spawn_file_actions_addclose(&childFDActions, outputPipe[1])
+//
+//        posix_spawn_file_actions_adddup2(&childFDActions, inputPipe[0], 0)
+//        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[0])
+//        posix_spawn_file_actions_addclose(&childFDActions, inputPipe[1])
+//
+//        let result = posix_spawn(&racketPid, argv[0], &childFDActions, nil, argv + [nil], nil)
+//        if result != 0 {
+//            let error = String(format: "%s", strerror(result))
+//            print("spawn failed: \(error)")
+//            NSApplication.shared.terminate(self)
+//        }
+//
+//        close(outputPipe[1])
+//        close(inputPipe[0])
+//
+//        let t = Thread {
+//
+//            let buf = UnsafeMutablePointer<UInt8>.allocate(capacity: 4096)
+//            while true {
+//                let nbytes = read(self.outputPipe[0], buf, 4096 - 1)
+//                assert(nbytes >= 0)
+//                buf[nbytes] = UInt8(0)
+//                if (nbytes > 0) {
+//                    let s = String(format: "%s", buf)
+//                    print(s, terminator: "")
+//                } else if nbytes == 0 {
+//                    print("Received EOF; Closing down thread")
+//                    return
+//                } else {
+//                    perror("Could not read bytes")
+//                }
+//            }
+//        }
+//        t.start()
+//
+//        let path = "/tmp/test.txt"
+//        clientQueue.async {
+//            print("Running on socket \(socketFile.path)")
+//
+//
+//            var result = libred_init("ipc://".appending(socketFile.path))
+//            if result != 0 { abort() }
+//
+//            var buf : OpaquePointer?
+//            result = libred_load_file(path, &buf)
+//            if result != 0 { abort() }
+            
+//            let width = 800
+//            let height = 600
+//            let size = width * height * 4
+//
+//            var shm : OpaquePointer?
+//            result = libred_create_and_attach_shared_memory(size, &shm)
+//            if result != 0 { abort() }
+//
+//            var portal : OpaquePointer?
+//            result = libred_open_portal(shm, Int32(width), Int32(height), &portal)
+//            if result != 0 { abort() }
+//
+//            result = libred_draw_buffer_in_portal(buf, portal)
+//            if result != 0 { abort() }
             
 
-            var result = libred_init("ipc://".appending(socketFile.path))
-            if result != 0 { abort() }
-
-            var buf : OpaquePointer?
-            result = libred_load_file(path, &buf)
-            if result != 0 { abort() }
-            
-            let width = 800
-            let height = 600
-            let size = width * height * 4
-            
-            var shm : OpaquePointer?
-            result = libred_create_and_attach_shared_memory(size, &shm)
-            if result != 0 { abort() }
-            
-            var portal : OpaquePointer?
-            result = libred_open_portal(shm, Int32(width), Int32(height), &portal)
-            if result != 0 { abort() }
-            
-            result = libred_draw_buffer_in_portal(buf, portal)
-            if result != 0 { abort() }
-            
-
-            DispatchQueue.main.async {
-                let addr = libred_shm_get_addr(shm)
-                let bytes = addr?.bindMemory(to: UInt8.self, capacity: size)
-                let data = CFDataCreateWithBytesNoCopy(nil, bytes, size, nil)
-                self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
-            }
-        }
+//            DispatchQueue.main.async {
+//                let addr = libred_shm_get_addr(shm)
+//                let bytes = addr?.bindMemory(to: UInt8.self, capacity: size)
+//                let data = CFDataCreateWithBytesNoCopy(nil, bytes, size, nil)
+//                self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+//            }
+//        }
         
 //        racketThread = Thread(block: {
 //            let racketBundle = Bundle(identifier: "org.racket-lang.Racket")
@@ -198,6 +199,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        })
 //        racketThread.start()
         
+        let bundle = Bundle(identifier: "org.racket-lang.Racket")!
+        let petite = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/petite.boot")
+        let scheme = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/scheme.boot")
+        let racket = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/racket.boot")
+        
+        let initialized = DispatchSemaphore(value: 1)
+        initialized.wait()
+        
+        let t = Thread {
+            libred_init("Red", petite.path, scheme.path, racket.path)
+            initialized.signal()
+            libred_run()
+        }
+        
+        t.start()
+
+        initialized.wait()
+        let client_queue = DispatchQueue(label: "Client")
+
+        client_queue.async {
+            let result = libred_test()
+            print("Result was \(result)")
+
+            let result2 = libred_test()
+            print("Result2 was \(result2)")
+        }
     }
     
     func applicationDidUpdate(_ notification: Notification) {

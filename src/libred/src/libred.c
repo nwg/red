@@ -23,7 +23,7 @@ typedef struct red_portal_s {
   red_shm_t *shm;
 } red_portal_t;
 
-int libred_init(const char *client_socket_fn) {
+LIBRED_EXPORT int libred_init() {
   printf("libred_init\n");
   int status = libred_macos_init();
   if (status != 0) {

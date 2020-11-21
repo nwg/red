@@ -1,74 +1,53 @@
-#lang racket
+#lang racket/base
 
-(require racket/pretty)
-(require zeromq)
 (require ffi/unsafe)
-(require ffi/unsafe/define)
-(require msgpack)
-(require racket/set)
-(require racket/port)
+(require racket/place)
+(require "ffi.rkt")
 
-(provide server-init run-server)
+(provide dispatch-init dispatch-run)
 
-(define responder #f)
-(define responder-file #f)
-(define log-file #f)
+(define run-client-place #f)
 
-;; (define-ffi-definer define-client #f)
-;; (define-client
-;;   server_set_ctx
-;;   (_fun _zmq_ctx-pointer -> _void))
+(define (put-wrapper pch . args)
+  (printf "put on thread ~X\n" (pthread_self))
+  (apply place-channel-put pch args))
 
-(define bufmgr-cmds
-  (set "load-file" "attach-shared-memory"
-       "detach-shared-memory" "open-portal" "close-portal" "draw-buffer-in-portal"))
-
-(define (server-init socketfn)
-  (set! log-file (open-output-file "/tmp/red-dispatch.log" #:mode 'text #:exists 'truncate))
-  (file-stream-buffer-mode log-file 'line)
-  (file-stream-buffer-mode (current-output-port) 'line)
-  (file-stream-buffer-mode (current-error-port) 'line)
-  (current-output-port (combine-output log-file (current-output-port)))
-  (current-error-port (combine-output log-file (current-error-port)))
-
-  (printf "Initializing server\n")
-  (set! responder (zmq-socket 'rep))
-  (set! responder-file socketfn)
-  (printf "Binding socket ~a\n" socketfn)
-  (zmq-bind responder (format "ipc://~a" responder-file)))
-
-(define (server-shutdown)
-  (current-output-port log-file)
-  (current-error-port log-file)
-  (printf "Shutting down\n")
+(define client-place
+  (place
+   ch
+   (printf "In client-place\n")
+   (red_client_run_from_racket ch put-wrapper place-channel-get)
+   (error "Should not get here")))
   
-  (zmq-close responder)
-  (delete-file responder-file)  
-  (set! responder-file #f)
-  (set! responder #f)
+(define client-place-wrapped
+  (wrap-evt
+   client-place
+   (λ (v) (values client-place v))))
   
-  (printf "Finished shutting down\n"))
+(define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
+  (printf "dispatch-init on thread ~X\n" (pthread_self))
+  (define rdy (place-channel-get client-place))
+  (printf "Got ready ~s\n" rdy)
+  (when (not (eq? rdy 'ready))
+    (error "Client place not initialized properly -- got" rdy))
+  
+  0)
 
-(define (run-server)
-  (let ([bufmgr (dynamic-place 'red-bufmgr 'place-main)])
-    
-    (let loop ()
+(define (test-dispatch)
+  (printf "test-dispatch on thread ~X\n" (pthread_self))
+  0)
 
-      (let ([evt (sync responder (eof-evt (current-input-port)))])
-        (match evt
-          [(zmq-message frames)             
-           (define msg (car frames))
-           (let-values ([(cmd rest) (unpack/rest msg)])
-             (printf "Server received: ~s / ~s\n" cmd (unpack rest))
-             (cond
-               [(set-member? bufmgr-cmds cmd)
-                (place-channel-put bufmgr (cons (string->symbol cmd) (vector->list (unpack rest))))
-                (let ([result (place-channel-get bufmgr)])
-                  (zmq-send responder (pack result)))]
-               [else
-                (zmq-send responder (pack -1))]))
-           (loop)]
-          [(? eof-object?)
-           (server-shutdown)
-           '()])))))
+(define-namespace-anchor anchor)
+(define ns (namespace-anchor->namespace anchor))
 
+(define (dispatch-run)
+  (let loop ()
+    (printf "Looping\n")
+    (let-values ([(p msg) (sync client-place-wrapped)])
+      (let* ([cmd (eval (car msg) ns)]
+             [args (cdr msg)])
+        (printf "Applying ~s to ~s\n" args cmd)
+        (let ([result (apply cmd args)])
+          (printf "Putting\n")
+          (place-channel-put p result))))
+    (loop)))

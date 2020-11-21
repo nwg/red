@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA0E95DD25339532006EDF67 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; };
-		AA0E95DE25339532006EDF67 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AA0E95FA2540E68C006EDF67 /* MMTextPortalView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0E95F92540E68C006EDF67 /* MMTextPortalView.xib */; };
 		AA0E95FE2540ED1C006EDF67 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */; };
 		AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
@@ -27,16 +25,16 @@
 		AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF36249A365F009AD2D5 /* MMTextView.swift */; };
 		AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */; };
 		AA703993249AC87C009FD158 /* MMClipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA703992249AC87C009FD158 /* MMClipView.swift */; };
-		AA70399624A28C0D009FD158 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = AA70399524A28C0D009FD158 /* test.c */; };
 		AAA8173B24B59EC200A770A1 /* MMTilingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173924B59EC200A770A1 /* MMTilingTest.swift */; };
 		AAA8173C24B59EC200A770A1 /* MMTilingTest.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */; };
 		AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8173D24B59EEF00A770A1 /* MMTilingView.swift */; };
 		AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA8173F24B5A17F00A770A1 /* CoreGraphics.framework */; };
+		AAAB550E256166D500E60B36 /* Racket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; };
+		AAAB550F256166D500E60B36 /* Racket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AA0E95DB25339527006EDF67 /* Racket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE6D6342525BD4F00235FEC /* MMTextScrollView.xib */; };
 		AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */; };
 		AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */; };
 		AAF120DD253329E500CBD0D9 /* libzmq.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAF120DC253329E500CBD0D9 /* libzmq.5.dylib */; };
-		AAF120E625332FE600CBD0D9 /* racket in Resources */ = {isa = PBXBuildFile; fileRef = AAF120E525332FE600CBD0D9 /* racket */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,7 +61,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				AA0E95DE25339532006EDF67 /* Racket.framework in Embed Frameworks */,
+				AAAB550F256166D500E60B36 /* Racket.framework in Embed Frameworks */,
 				AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -97,8 +95,6 @@
 		AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bridge.swift; sourceTree = "<group>"; };
 		AA703991249A6D21009FD158 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		AA703992249AC87C009FD158 /* MMClipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMClipView.swift; sourceTree = "<group>"; };
-		AA70399424A28C0D009FD158 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
-		AA70399524A28C0D009FD158 /* test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		AA70399724A28D4D009FD158 /* bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bridge.h; sourceTree = "<group>"; };
 		AAA8173924B59EC200A770A1 /* MMTilingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTilingTest.swift; sourceTree = "<group>"; };
 		AAA8173A24B59EC200A770A1 /* MMTilingTest.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTilingTest.xib; sourceTree = "<group>"; };
@@ -109,7 +105,6 @@
 		AAE6D6382525BD6C00235FEC /* MMTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextScrollView.swift; sourceTree = "<group>"; };
 		AAE6D63C2525BE7300235FEC /* MMTextPortalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMTextPortalView.swift; sourceTree = "<group>"; };
 		AAF120DC253329E500CBD0D9 /* libzmq.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libzmq.5.dylib; path = "../../../third-party/lib/libzmq.5.dylib"; sourceTree = "<group>"; };
-		AAF120E525332FE600CBD0D9 /* racket */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = racket; path = "../../../../third-party/racket/racket/bin/racket"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +114,7 @@
 			files = (
 				AAA8174024B5A18000A770A1 /* CoreGraphics.framework in Frameworks */,
 				AAF120DD253329E500CBD0D9 /* libzmq.5.dylib in Frameworks */,
-				AA0E95DD25339532006EDF67 /* Racket.framework in Frameworks */,
+				AAAB550E256166D500E60B36 /* Racket.framework in Frameworks */,
 				AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -189,8 +184,6 @@
 				AA6DDF03249276A1009AD2D5 /* Red.entitlements */,
 				AA6DDF38249A3A5F009AD2D5 /* Bridge.swift */,
 				AA703991249A6D21009FD158 /* MyPlayground.playground */,
-				AA70399424A28C0D009FD158 /* test.h */,
-				AA70399524A28C0D009FD158 /* test.c */,
 				AA70399724A28D4D009FD158 /* bridge.h */,
 			);
 			path = Red;
@@ -228,7 +221,6 @@
 		AAF120E425332FBC00CBD0D9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AAF120E525332FE600CBD0D9 /* racket */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -297,7 +289,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1210;
 				ORGANIZATIONNAME = ManicMind;
 				TargetAttributes = {
 					AA6DDEF7249276A1009AD2D5 = {
@@ -342,7 +334,6 @@
 				AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */,
 				AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */,
 				AAE6D6352525BD4F00235FEC /* MMTextScrollView.xib in Resources */,
-				AAF120E625332FE600CBD0D9 /* racket in Resources */,
 				AA6DDF2824927973009AD2D5 /* PanelViewController.xib in Resources */,
 				AA0E95FA2540E68C006EDF67 /* MMTextPortalView.xib in Resources */,
 				AA6DDF2C24969A2E009AD2D5 /* ScrollViewController.xib in Resources */,
@@ -384,7 +375,6 @@
 				AAA8173E24B59EEF00A770A1 /* MMTilingView.swift in Sources */,
 				AA6DDF37249A365F009AD2D5 /* MMTextView.swift in Sources */,
 				AA0E95FE2540ED1C006EDF67 /* NibLoadable.swift in Sources */,
-				AA70399624A28C0D009FD158 /* test.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +447,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -517,6 +508,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -561,6 +553,7 @@
 					"$(PROJECT_DIR)/Red",
 					"$(PROJECT_DIR)/../../libred/build",
 					"$(PROJECT_DIR)/../../../build/install/Frameworks",
+					"\"$(SRCROOT)/../../../build/install/Frameworks\"",
 				);
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/include";
 				INFOPLIST_FILE = Red/Info.plist;
@@ -595,6 +588,7 @@
 					"$(PROJECT_DIR)/Red",
 					"$(PROJECT_DIR)/../../libred/build",
 					"$(PROJECT_DIR)/../../../build/install/Frameworks",
+					"\"$(SRCROOT)/../../../build/install/Frameworks\"",
 				);
 				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../../../third-party/include";
 				INFOPLIST_FILE = Red/Info.plist;

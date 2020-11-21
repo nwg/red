@@ -12,7 +12,7 @@ typedef struct red_buffer_s red_buffer_t;
 typedef struct red_shm_s red_shm_t;
 typedef struct red_portal_s red_portal_t;
 
-LIBRED_EXPORT int libred_init(const char *client_socket_fn);
+LIBRED_EXPORT int libred_init();
 LIBRED_EXPORT int libred_load_file(const char *fn, red_buffer_t **outbuf);
 LIBRED_EXPORT int libred_create_and_attach_shared_memory(size_t size, red_shm_t **outshm);
 

@@ -1,7 +1,7 @@
 #lang racket/base
 
 (require "private/dispatch.rkt")
-(provide server-init run-server)
+(provide (all-from-out "private/dispatch.rkt"))
 
 (module+ test
   (require rackunit))
@@ -37,19 +37,19 @@
 
   (check-equal? (+ 2 2) 4))
 
-(module+ main
-  ;; (Optional) main submodule. Put code here if you need it to be executed when
-  ;; this file is run using DrRacket or the `racket` executable.  The code here
-  ;; does not run when this file is required by another module. Documentation:
-  ;; http://docs.racket-lang.org/guide/Module_Syntax.html#%28part._main-and-test%29
+;; (module+ main
+;;   ;; (Optional) main submodule. Put code here if you need it to be executed when
+;;   ;; this file is run using DrRacket or the `racket` executable.  The code here
+;;   ;; does not run when this file is required by another module. Documentation:
+;;   ;; http://docs.racket-lang.org/guide/Module_Syntax.html#%28part._main-and-test%29
 
-  (require racket/cmdline)
-  ;; (define who (box "world"))
-  (command-line
-    #:program "red-bufmgr"
-    ;; #:once-each
-    ;; [("-n" "--name") name "Who to say hello to" (set-box! who name)]
-    #:args (socketfn)
-    (file-stream-buffer-mode (current-output-port) 'line)
-    (server-init socketfn)
-    (run-server)))
+;;   (require racket/cmdline)
+;;   ;; (define who (box "world"))
+;;   (command-line
+;;     #:program "red-bufmgr"
+;;     ;; #:once-each
+;;     ;; [("-n" "--name") name "Who to say hello to" (set-box! who name)]
+;;     #:args (socketfn)
+;;     (file-stream-buffer-mode (current-output-port) 'line)
+;;     (server-init socketfn)
+;;     (run-server)))
