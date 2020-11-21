@@ -53,6 +53,8 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
       }
 
       pthread_mutex_unlock(waitPtr);
+
+      Sdeactivate_thread();
     });
   pthread_mutex_lock(waitPtr);
   pthread_mutex_unlock(waitPtr);
