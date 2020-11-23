@@ -32,28 +32,6 @@ SET(THIRD_PARTY_FRAMEWORKS "${THIRD_PARTY_INSTALL}Frameworks/")
 target_include_directories(RedLib PRIVATE "${THIRD_PARTY_INCLUDE}")
 target_link_directories(RedLib PRIVATE "${THIRD_PARTY_LIB}")
 
-find_library(ZMQ_NAME NAMES libzmq.5.dylib libzmq.dylib)
-find_path(ZMQ_INCLUDE_NAME NAMES zmq.h)
-
-message("Zmq at ${ZMQ_NAME} ${ZMQ_INCLUDE_NAME}")
-
-add_library(zmq SHARED IMPORTED)
-set_target_properties(zmq PROPERTIES
-    IMPORTED_LOCATION "${ZMQ_NAME}"
-    INTERFACE_INCLUDE_DIRECTORIES "${ZMQ_INCLUDE_NAME}"
-)
-target_link_libraries(RedLib zmq)
-
-find_library(MSGPACK_NAME NAMES libmsgpackc.dylib)
-find_path(MSGPACK_INCLUDE_NAME NAMES msgpack.h)
-
-add_library(msgpack SHARED IMPORTED)
-set_target_properties(msgpack PROPERTIES
-    IMPORTED_LOCATION "${MSGPACK_NAME}"
-    INTERFACE_INCLUDE_DIRECTORIES "${MSGPACK_INCLUDE_NAME}"
-)
-target_link_libraries(RedLib msgpack)
-
 set_target_properties(RedLib PROPERTIES
     SOVERSION 0
     VERSION ${PROJECT_VERSION}
