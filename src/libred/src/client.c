@@ -2,6 +2,8 @@
 #include <Racket/racketcs.h>
 #include <pthread/pthread.h>
 #include <stdint.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 #include "client.h"
 #include "work_queue.h"
@@ -26,13 +28,37 @@ __attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
   work_queue_start();
 }
 
-static ptr args_to_list(ptr args[], int nargs) {
-  ptr arglist = Snil;
-  for (int i = nargs - 1; i >= 0; i--) {
-    arglist = Scons(args[i], arglist);
+static ptr racket_reverse_list(ptr args) {
+  if (Snullp(args)) return Snil;
+  
+  ptr reversed = Snil;
+  while (!Snullp(args)) {
+    reversed = Scons(Scar(args), reversed);
+    args = Scdr(args);
   }
 
-  return arglist;
+  return reversed;
+}
+
+static ptr racket_list(ptr arg1, ...) {
+  va_list argp;
+
+  if (Snullp(arg1)) {
+    return Snil;
+  }
+  
+  va_start(argp, arg1);
+  ptr args = Scons(arg1, Snil);
+
+  ptr next = va_arg(argp, void*);
+  while (!Snullp(next)) {
+    args = Scons(next, args);
+    next = va_arg(argp, void*);
+  }
+
+  va_end(argp);
+
+  return racket_reverse_list(args);
 }
 
 static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
@@ -88,9 +114,7 @@ int red_client_test_call() {
 
 int red_client_register_memory(void *addr, size_t size, remote_memory_id_t *outid) {
   argsBlock blk = ^{
-    ptr args[] = { Sunsigned64((uint64_t)addr), Sunsigned64(size) };
-    int argc = sizeof(args) / sizeof(args[0]);
-    return args_to_list(args, argc);
+    return racket_list(Sunsigned64((uint64_t)addr), Sunsigned64(size), Snil);
   };
 
   iptr id_or_status = run_iptr_command("register-memory", blk);
@@ -105,9 +129,7 @@ int red_client_register_memory(void *addr, size_t size, remote_memory_id_t *outi
 
 int red_client_open_portal(remote_memory_id_t memory_id, int width, int height, remote_portal_id_t *outid) {
   argsBlock blk = ^{
-    ptr args[] = { Sunsigned64(memory_id), Sunsigned64(width), Sunsigned64(height) };
-    int argc = sizeof(args) / sizeof(args[0]);
-    return args_to_list(args, argc);
+    return racket_list(Sunsigned64(memory_id), Sunsigned64(width), Sunsigned64(height), Snil);
   };
 
   iptr id_or_status = run_iptr_command("open-portal", blk);
@@ -133,9 +155,7 @@ int red_client_create_buffer(remote_buffer_id_t *outid) {
 
 int red_client_buffer_open_file(remote_buffer_id_t buffer_id, const char *filename) {
   argsBlock blk = ^{
-    ptr args[] = { Sunsigned64(buffer_id), Sstring(filename) };
-    int argc = sizeof(args) / sizeof(args[0]);
-    return args_to_list(args, argc);
+    return racket_list(Sunsigned64(buffer_id), Sstring(filename), Snil);
   };
 
   iptr id_or_status = run_iptr_command("buffer-open-file", blk);
@@ -149,9 +169,7 @@ int red_client_buffer_open_file(remote_buffer_id_t buffer_id, const char *filena
 
 int red_client_draw_buffer_in_portal(remote_buffer_id_t buffer_id, remote_portal_id_t portal_id) {
   argsBlock blk = ^{
-    ptr args[] = { Sunsigned64(buffer_id), Sunsigned64(portal_id) };
-    int argc = sizeof(args) / sizeof(args[0]);
-    return args_to_list(args, argc);
+    return racket_list(Sunsigned64(buffer_id), Sunsigned64(portal_id), Snil);
   };
 
   iptr status = run_iptr_command("draw-buffer-in-portal", blk);
