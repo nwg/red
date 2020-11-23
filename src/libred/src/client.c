@@ -22,12 +22,12 @@ __attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
   work_queue_start();
 }
 
-static int run_standard_command(const char *cmd, ptr args[], int nargs) {
+static ptr run_standard_command(const char *cmd, ptr args[], int nargs) {
   pthread_mutex_t wait = PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_t *waitPtr = &wait;
   pthread_mutex_lock(waitPtr);
 
-  __block int r;
+  __block ptr result;
   
   work_queue_submit(^{
       Sactivate_thread();
@@ -47,14 +47,7 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
       racket_apply(put, arglist);
 
       ptr get = Scar(racket_eval(Sstring_to_symbol("place-channel-get")));
-      ptr result = racket_apply(get, Scons(ch, Snil));
-      result = Scar(result);
-      if (!Sfixnump(result)) {
-        r = -1;
-      } else {
-        r = Sinteger_value(result);
-      }
-
+      result = racket_apply(get, Scons(ch, Snil));
       pthread_mutex_unlock(waitPtr);
 
       Sdeactivate_thread();
@@ -62,9 +55,20 @@ static int run_standard_command(const char *cmd, ptr args[], int nargs) {
   pthread_mutex_lock(waitPtr);
   pthread_mutex_unlock(waitPtr);
 
-  return r;
+  return result;
+}
+
+static int run_status_command(const char *cmd, ptr args[], int nargs) {
+  ptr result = run_standard_command(cmd, args, nargs);
+  result = Scar(result);
+  int status = -1;
+  if (Sfixnump(result)) {
+    status = Sinteger_value(result);
+  }
+  
+  return status;
 }
 
 int red_client_test_call() {
-  return run_standard_command("test-dispatch", NULL, 0);
+  return run_status_command("test-dispatch", NULL, 0);
 }
