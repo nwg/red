@@ -18,5 +18,8 @@ LIBRED_EXPORT __attribute__((noreturn)) void libred_run(void);
 LIBRED_EXPORT int libred_test(void);
 LIBRED_EXPORT int libred_register_memory(void *addr, size_t size, red_memory_t **outmemory);
 LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height, red_portal_t **outportal);
+LIBRED_EXPORT int libred_create_buffer(red_buffer_t **outbuffer);
+LIBRED_EXPORT int libred_buffer_open_file(red_buffer_t *buffer, const char *filename);
+LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_t *portal);
 
 #endif

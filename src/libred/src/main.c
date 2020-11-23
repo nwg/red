@@ -112,3 +112,37 @@ LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height
 
   return 0;
 }
+
+LIBRED_EXPORT int libred_create_buffer(red_buffer_t **outbuffer) {
+  remote_buffer_id_t id;
+  int status = red_client_create_buffer(&id);
+  if (status != 0) {
+    return -1;
+  }
+
+  if (outbuffer) {
+    red_buffer_t *buffer = malloc(sizeof(red_buffer_t));
+    buffer->remote_id = id;
+    *outbuffer = buffer;
+  }
+
+  return 0;
+}
+
+LIBRED_EXPORT int libred_buffer_open_file(red_buffer_t *buffer, const char *filename) {
+  int status = red_client_buffer_open_file(buffer->remote_id, filename);
+  if (status != 0) {
+    return -1;
+  }
+
+  return 0;
+}
+
+LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_t *portal) {
+  int status = red_client_draw_buffer_in_portal(buffer->remote_id, portal->remote_id);
+  if (status != 0) {
+    return -1;
+  }
+
+  return 0;
+}

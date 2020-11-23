@@ -9,7 +9,7 @@
 (provide place-main)
 
 (struct portal (id context width height))
-(struct buffer (id records))
+(struct buffer (id [records #:mutable]))
 (struct line-record (info data))
 (struct memory (id size addr))
 
@@ -59,37 +59,44 @@
     (hash-remove! portals pid)
     0))
 
-;; (define (draw-buffer-in-portal bufid pid)
-;;   (let* ([buffer (hash-ref buffers bufid)]
-;;          [records (buffer-records buffer)]
-;;          [portal (hash-ref portals pid)]
-;;          [context (portal-context portal)]
-;;          [total-height (portal-height portal)])
-;;     (define y total-height)
-;;     (for ([record records])
-;;       (let* ([info (line-record-info record)]
-;;              [line-height (+ (lineInfo-ascent info) (lineInfo-descent info))]
-;;              [leading (lineInfo-leading info)])
-;;         (set! y (- y line-height))
-;;         (render-draw-line-in-context context (point leading y) info)))
-;;     0))
+(define (draw-buffer-in-portal bufid pid)
+  (let* ([buffer (hash-ref buffers bufid)]
+         [records (buffer-records buffer)]
+         [portal (hash-ref portals pid)]
+         [context (portal-context portal)]
+         [total-height (portal-height portal)])
+    (define y total-height)
+    (for ([record records])
+      (let* ([info (line-record-info record)]
+             [line-height (+ (lineInfo-ascent info) (lineInfo-descent info))]
+             [leading (lineInfo-leading info)])
+        (set! y (- y line-height))
+        (render-draw-line-in-context context (point leading y) info)))
+    0))
 
+(define (create-buffer)
+  (let* ([id (get-buffer-id)]
+         [buffer (buffer id '())])
+    (hash-set! buffers id buffer)
+    id))
 
-;; (define (load-file fn)
-;;   (with-input-from-file fn
-;;     (thunk
-;;      (let* ([records
-;;              (sequence-map
-;;               (λ (data)
-;;                 (let ([info (get-line-info data)])
-;;                   (line-record info data)))
-;;               (in-lines))]
-;;             [recordsv (list->vector (sequence->list records))]
-;;             [id (get-buffer-id)]
-;;             [buf (buffer id recordsv)])
-;;        (hash-set! buffers id buf)
-;;        (printf "Loaded ~s lines from ~s\n" (vector-length recordsv) fn)
-;;        id))))
+(define (load-records-from-file fn)
+  (with-input-from-file fn
+    (λ ()
+      (let ([records
+             (sequence-map
+              (λ (data)
+                (let ([info (get-line-info data)])
+                  (line-record info data)))
+              (in-lines))])
+
+        (list->vector (sequence->list records))))))
+
+(define (buffer-open-file bufid fn)
+  (let ([buffer (hash-ref buffers bufid)]
+        [recordsv (load-records-from-file fn)])
+    (set-buffer-records! buffer recordsv)
+    0))
 
 (define-namespace-anchor a)
 (define ns (namespace-anchor->namespace a))

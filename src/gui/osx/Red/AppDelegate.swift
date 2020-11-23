@@ -120,8 +120,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             result = libred_open_portal(memory, Int32(width), Int32(height), &portal)
             if result != 0 { abort() }
 
-//            result = libred_draw_buffer_in_portal(buf, portal)
-//            if result != 0 { abort() }
+            var buffer : OpaquePointer?
+            result = libred_create_buffer(&buffer)
+            if result != 0 { abort() }
+            
+            result = libred_buffer_open_file(buffer, "/tmp/test.txt")
+            if result != 0 { abort() }
+
+            result = libred_draw_buffer_in_portal(buffer, portal)
+            if result != 0 { abort() }
             
             
             DispatchQueue.main.async {
