@@ -16,22 +16,21 @@
 (module myplace racket/base
   (provide place-main)
   (require "ffi.rkt")
-  (require syntax/location)
+  (require racket/place)
 
-  (module stash racket/base
-    (provide client-channel)
-    (define client-channel (make-parameter #f)))
-
-  (require 'stash)
-  
   (define (place-main ch)
-    (client-channel ch)
-    (red_client_run_from_racket (quote-module-path stash))
+    (define (getproc)
+      (place-channel-get ch))
+    (define (putproc v)
+      (place-channel-put ch v))
+    
+    (red_client_run_from_racket getproc putproc)
     (error "Should not get here")))
 
 (module bufmgr-place-module racket/base
   (provide place-main)
   (require red-bufmgr))
+
 
 (define client-place #f)
 (define client-place-wrapped #f)

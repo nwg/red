@@ -10,19 +10,16 @@
 
 typedef ptr (^argsBlock)(void);
 
-__attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
+static getproc_t get;
+static putproc_t put;
+
+__attribute__((noreturn)) void red_client_run_from_racket(getproc_t getproc, putproc_t putproc) {
   work_queue_init();
 
-  racket_namespace_require(Sstring_to_symbol("racket/place"));
-  racket_namespace_require(stash_path);
+  get = getproc;
+  put = putproc;
   
-  ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
-  ptr ch = Scar(racket_apply(param, Snil));
-  ptr args = Scons(ch,
-                   Scons(Sstring_to_symbol("ready"),
-                         Snil));
-  ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
-  racket_apply(put, args);
+  put(Sstring_to_symbol("ready"));
 
   Sdeactivate_thread();
   work_queue_start();
@@ -76,19 +73,13 @@ static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
 	arglist = argsBlk();
       }
 
-      ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
-      ptr ch = Scar(racket_apply(param, Snil));
-                    
       arglist = Scons(Sstring_to_symbol(cmd), arglist);
-      arglist = Scons(ch, Scons(arglist, Snil));
 
-      ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
-      racket_apply(put, arglist);
-
-      ptr get = Scar(racket_eval(Sstring_to_symbol("place-channel-get")));
-      result = racket_apply(get, Scons(ch, Snil));
+      put(arglist);
+      result = get();
+      
       pthread_mutex_unlock(waitPtr);
-
+      
       Sdeactivate_thread();
     });
   pthread_mutex_lock(waitPtr);
@@ -99,7 +90,6 @@ static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
 
 static iptr run_iptr_command(const char *cmd, argsBlock argsBlk) {
   ptr result = run_standard_command(cmd, argsBlk);
-  result = Scar(result);
   iptr status = -1;
   if (Sfixnump(result)) {
     status = Sinteger_value(result);
