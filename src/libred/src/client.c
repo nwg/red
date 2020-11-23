@@ -19,9 +19,12 @@ __attribute__((noreturn)) void red_client_run_from_racket(getproc_t getproc, put
   get = getproc;
   put = putproc;
   
-  put(Sstring_to_symbol("ready"));
-
   Sdeactivate_thread();
+
+  work_queue_submit(^{
+      put(Sstring_to_symbol("ready"));
+    });
+  
   work_queue_start();
 }
 
