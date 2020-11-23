@@ -2,14 +2,10 @@
 
 (require ffi/unsafe ffi/unsafe/define)
 
-(provide red_client_run_from_racket pthread_self)
+(provide red_client_run_from_racket)
 
 (define-ffi-definer define-red-dispatch (ffi-lib #f))
 
 (define-red-dispatch
   red_client_run_from_racket
   (_fun #:blocking? #t _racket -> _int))
-
-(define-red-dispatch
-  pthread_self
-  (_fun -> _uintptr))

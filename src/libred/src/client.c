@@ -39,7 +39,6 @@ static ptr run_standard_command(const char *cmd, ptr args[], int nargs) {
       ptr param = Scar(racket_eval(Sstring_to_symbol("client-channel")));
       ptr ch = Scar(racket_apply(param, Snil));
                     
-      /* ptr ch = Scar(racket_eval(Sstring_to_symbol("ch"))); */
       arglist = Scons(Sstring_to_symbol(cmd), arglist);
       arglist = Scons(ch, Scons(arglist, Snil));
 

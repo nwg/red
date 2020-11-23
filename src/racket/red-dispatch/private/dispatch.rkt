@@ -7,8 +7,6 @@
 
 (provide dispatch-init dispatch-run test-dispatch)
 
-(printf "loading module on thread ~X\n" (pthread_self))
-
 (module myplace racket/base
   (provide place-main)
   (require "ffi.rkt")
@@ -29,8 +27,6 @@
 (define client-place-wrapped #f)
   
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
-  (printf "dispatch-init on thread ~X\n" (pthread_self))
-
   (set!
    client-place
    (dynamic-place (quote-module-path myplace) 'place-main))
@@ -48,7 +44,6 @@
   0)
 
 (define (test-dispatch)
-  (printf "test-dispatch on thread ~X\n" (pthread_self))
   0)
 
 (define-namespace-anchor anchor)
@@ -56,12 +51,9 @@
 
 (define (dispatch-run)
   (let loop ()
-    (printf "Looping\n")
     (let-values ([(p msg) (sync client-place-wrapped)])
       (let* ([cmd (eval (car msg) ns)]
              [args (cdr msg)])
-        (printf "Applying ~s to ~s\n" args cmd)
         (let ([result (apply cmd args)])
-          (printf "Putting\n")
           (place-channel-put p result))))
     (loop)))
