@@ -23,6 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var outputPipe: [Int32] = [-1, -1]
     private var inputPipe: [Int32] = [-1, -1]
+    
+    private var bytes : UnsafeMutableRawPointer?
 
     var textScrollView : MMTextScrollView!
     
@@ -103,10 +105,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         client_queue.async {
-            let bytes = UnsafeMutableRawPointer.allocate(byteCount: 4096, alignment: 4096)
+
+            let width = 800
+            let height = 600
+            let size = width * height * 4
+            
+            self.bytes = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 4096)
             var memory : OpaquePointer?
-            let result = libred_register_memory(bytes, 10, &memory)
+            var result = libred_register_memory(self.bytes, 10, &memory)
             print("Result was \(result)")
+            if result != 0 { abort() }
+            
+            var portal : OpaquePointer?
+            result = libred_open_portal(memory, Int32(width), Int32(height), &portal)
+            if result != 0 { abort() }
+
+//            result = libred_draw_buffer_in_portal(buf, portal)
+//            if result != 0 { abort() }
+            
+            
+            DispatchQueue.main.async {
+                let bound = self.bytes?.bindMemory(to: UInt8.self, capacity: size)
+                let data = CFDataCreateWithBytesNoCopy(nil, bound, size, nil)
+                self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+            }
+
         }
     }
     

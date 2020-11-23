@@ -17,5 +17,6 @@ LIBRED_EXPORT int libred_init(const char *execname, const char *petite, const ch
 LIBRED_EXPORT __attribute__((noreturn)) void libred_run(void);
 LIBRED_EXPORT int libred_test(void);
 LIBRED_EXPORT int libred_register_memory(void *addr, size_t size, red_memory_t **outmemory);
+LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height, red_portal_t **outportal);
 
 #endif

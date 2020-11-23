@@ -10,7 +10,7 @@
 
 (define client-bufmgr-cmds
   (seteq
-   'register-memory 'unregister-memory))
+   'register-memory 'unregister-memory 'open-portal 'close-portal))
 
 (module myplace racket/base
   (provide place-main)

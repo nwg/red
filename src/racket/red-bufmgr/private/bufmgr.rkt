@@ -43,21 +43,21 @@
     (hash-remove! registered-memory id)
     0)))
 
-;; (define (open-portal shmid width height)
-;;   (let* ([id (get-portal-id)]
-;;          [memory (hash-ref registered-memory shmid)]
-;;          [addr (shared-memory-addr memory)]
-;;          [context (render-context-create addr width height)]
-;;          [portal (portal id context width height)])
-;;     (hash-set! portals id portal)
-;;     id))
+(define (open-portal shmid width height)
+  (let* ([id (get-portal-id)]
+         [memory (hash-ref registered-memory shmid)]
+         [addr (memory-addr memory)]
+         [context (render-context-create addr width height)]
+         [portal (portal id context width height)])
+    (hash-set! portals id portal)
+    id))
 
-;; (define (close-portal pid)
-;;   (let ([portal (hash-ref portals pid)]
-;;         [context (portal-context portal)])
-;;     (render-context-destroy context)
-;;     (hash-remove! portals pid)
-;;     0))
+(define (close-portal pid)
+  (let ([portal (hash-ref portals pid)]
+        [context (portal-context portal)])
+    (render-context-destroy context)
+    (hash-remove! portals pid)
+    0))
 
 ;; (define (draw-buffer-in-portal bufid pid)
 ;;   (let* ([buffer (hash-ref buffers bufid)]

@@ -87,3 +87,17 @@ int red_client_register_memory(void *addr, size_t size, remote_memory_id_t *outi
   if (outid) *outid = id_or_status;
   return 0;
 }
+
+int red_client_open_portal(remote_memory_id_t memory_id, int width, int height, remote_portal_id_t *outid) {
+  ptr args[] = { Sunsigned64(memory_id), Sunsigned64(width), Sunsigned64(height) };
+  int argc = sizeof(args) / sizeof(args[0]);
+
+  iptr id_or_status = run_iptr_command("open-portal", args, argc);
+
+  if (id_or_status < 0) {
+    return -1;
+  }
+
+  if (outid) *outid = id_or_status;
+  return 0;
+}

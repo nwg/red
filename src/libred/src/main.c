@@ -23,7 +23,7 @@ typedef struct red_buffer_s {
 
 typedef struct red_portal_s {
   remote_portal_id_t remote_id;
-  red_memory_t *shm;
+  red_memory_t *memory;
 } red_portal_t;
 
 static int interpreter_stdin_pipe[2];
@@ -91,6 +91,23 @@ LIBRED_EXPORT int libred_register_memory(void *addr, size_t size, red_memory_t *
     memory->size = size;
     memory->remote_id = id;
     *outmemory = memory;
+  }
+
+  return 0;
+}
+
+LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height, red_portal_t **outportal) {
+  remote_portal_id_t id;
+  int status = red_client_open_portal(memory->remote_id, width, height, &id);
+  if (status != 0) {
+    return -1;
+  }
+
+  if (outportal) {
+    red_portal_t *portal = malloc(sizeof(red_portal_t));
+    portal->remote_id = id;
+    portal->memory = memory;
+    *outportal = portal;
   }
 
   return 0;
