@@ -1,6 +1,7 @@
 #include <Racket/chezscheme.h>
 #include <Racket/racketcs.h>
 #include <pthread/pthread.h>
+#include <stdint.h>
 
 #include "client.h"
 #include "work_queue.h"
@@ -19,6 +20,7 @@ __attribute__((noreturn)) void red_client_run_from_racket(ptr stash_path) {
   ptr put = Scar(racket_eval(Sstring_to_symbol("place-channel-put")));
   racket_apply(put, args);
 
+  Sdeactivate_thread();
   work_queue_start();
 }
 
@@ -57,10 +59,10 @@ static ptr run_standard_command(const char *cmd, ptr args[], int nargs) {
   return result;
 }
 
-static int run_status_command(const char *cmd, ptr args[], int nargs) {
+static iptr run_iptr_command(const char *cmd, ptr args[], int nargs) {
   ptr result = run_standard_command(cmd, args, nargs);
   result = Scar(result);
-  int status = -1;
+  iptr status = -1;
   if (Sfixnump(result)) {
     status = Sinteger_value(result);
   }
@@ -69,5 +71,19 @@ static int run_status_command(const char *cmd, ptr args[], int nargs) {
 }
 
 int red_client_test_call() {
-  return run_status_command("test-dispatch", NULL, 0);
+  return (int)run_iptr_command("test-dispatch", NULL, 0);
+}
+
+int red_client_register_memory(void *addr, size_t size, remote_memory_id_t *outid) {
+  ptr args[] = { Sunsigned64((uint64_t)addr), Sunsigned64(size) };
+  int argc = sizeof(args) / sizeof(args[0]);
+
+  iptr id_or_status = run_iptr_command("register-memory", args, argc);
+
+  if (id_or_status < 0) {
+    return -1;
+  }
+
+  if (outid) *outid = id_or_status;
+  return 0;
 }

@@ -3,12 +3,28 @@
 #include <stdio.h>
 #include <assert.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "main.h"
 #include <Racket/chezscheme.h>
 #include <Racket/racketcs.h>
 
 #include "client.h"
+
+typedef struct red_memory_s {
+  void *addr;
+  size_t size;
+  remote_memory_id_t remote_id;
+} red_memory_t;
+
+typedef struct red_buffer_s {
+  remote_buffer_id_t remote_id;
+} red_buffer_t;
+
+typedef struct red_portal_s {
+  remote_portal_id_t remote_id;
+  red_memory_t *shm;
+} red_portal_t;
 
 static int interpreter_stdin_pipe[2];
 static int interpreter_stdout_pipe[2];
@@ -24,7 +40,6 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     ba.collects_dir = "/Users/griswold/.red/collects";
     ba.config_dir = "/Users/griswold/.red/etc";
 
-    ba.argc = 9;
     char *argv[] = {
         "-n",
 //"--no-user-path",
@@ -34,9 +49,10 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
         "/Users/griswold/.red/Racket/addon",
         "-X",
         "/Users/griswold/.red/Racket/collects",
-        "-W",
-        "debug@ffi-lib",
+        /* "-W", */
+        /* "error debug@GC", */
     };
+    ba.argc = sizeof(argv) / sizeof(argv[0]);
     ba.argv = argv;
 
     racket_boot(&ba);
@@ -65,4 +81,22 @@ LIBRED_EXPORT __attribute__((noreturn)) void libred_run(void) {
 
 LIBRED_EXPORT int libred_test(void) {
   return red_client_test_call();
+}
+
+LIBRED_EXPORT int libred_register_memory(void *addr, size_t size, red_memory_t **outmemory) {
+  remote_memory_id_t id;
+  int status = red_client_register_memory(addr, size, &id);
+  if (status != 0) {
+    return -1;
+  }
+
+  if (outmemory) {
+    red_memory_t *memory = malloc(sizeof(red_memory_t));
+    memory->addr = addr;
+    memory->size = size;
+    memory->remote_id = id;
+    *outmemory = memory;
+  }
+
+  return 0;
 }

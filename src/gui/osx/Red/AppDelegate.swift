@@ -86,8 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let scheme = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/scheme.boot")
         let racket = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/racket.boot")
         
-        let initialized = DispatchSemaphore(value: 1)
-        initialized.wait()
+        let initialized = DispatchSemaphore(value: 0)
         
         let t = Thread {
             libred_init("Red", petite.path, scheme.path, racket.path)
@@ -97,15 +96,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         t.start()
 
-        initialized.wait()
         let client_queue = DispatchQueue(label: "Client")
 
         client_queue.async {
-            let result = libred_test()
-            print("Result was \(result)")
+            initialized.wait()
+        }
 
-            let result2 = libred_test()
-            print("Result2 was \(result2)")
+        client_queue.async {
+            let bytes = UnsafeMutableRawPointer.allocate(byteCount: 4096, alignment: 4096)
+            var memory : OpaquePointer?
+            let result = libred_register_memory(bytes, 10, &memory)
+            print("Result was \(result)")
         }
     }
     

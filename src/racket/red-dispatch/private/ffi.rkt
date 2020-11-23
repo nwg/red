@@ -8,4 +8,4 @@
 
 (define-red-dispatch
   red_client_run_from_racket
-  (_fun #:blocking? #t _racket -> _int))
+  (_fun _racket -> _int))

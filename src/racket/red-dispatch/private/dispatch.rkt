@@ -4,8 +4,13 @@
 (require racket/place)
 (require "ffi.rkt")
 (require syntax/location)
+(require racket/set)
 
 (provide dispatch-init dispatch-run test-dispatch)
+
+(define client-bufmgr-cmds
+  (seteq
+   'register-memory 'unregister-memory))
 
 (module myplace racket/base
   (provide place-main)
@@ -23,9 +28,15 @@
     (red_client_run_from_racket (quote-module-path stash))
     (error "Should not get here")))
 
+(module bufmgr-place-module racket/base
+  (provide place-main)
+  (require red-bufmgr))
+
 (define client-place #f)
 (define client-place-wrapped #f)
-  
+
+(define bufmgr-place #f)
+
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
   (set!
    client-place
@@ -37,11 +48,21 @@
     client-place
     (λ (v) (values client-place v))))
 
+  (set! bufmgr-place (dynamic-place (quote-module-path bufmgr-place-module) 'place-main))
+
   (define rdy (place-channel-get client-place))
   (when (not (eq? rdy 'ready))
     (error "Client place not initialized properly -- got" rdy))
   
   0)
+
+(define (target-place-for-cmd source-place cmd)
+  (cond
+    [(eq? source-place client-place)
+      (cond
+        [(set-member? client-bufmgr-cmds cmd) bufmgr-place]
+        [else (error "Not a valid command" cmd)])]
+    [else (error "Not a valid source-place")]))
 
 (define (test-dispatch)
   0)
@@ -52,8 +73,10 @@
 (define (dispatch-run)
   (let loop ()
     (let-values ([(p msg) (sync client-place-wrapped)])
-      (let* ([cmd (eval (car msg) ns)]
-             [args (cdr msg)])
-        (let ([result (apply cmd args)])
+      (let* ([cmd (car msg)]
+             [args (cdr msg)]
+             [target-place (target-place-for-cmd p cmd)])
+        (place-channel-put target-place (cons cmd args))
+        (let ([result (place-channel-get target-place)])
           (place-channel-put p result))))
     (loop)))
