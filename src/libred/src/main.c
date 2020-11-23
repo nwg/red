@@ -38,19 +38,14 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
 
     ba.exec_file = execname;
     ba.collects_dir = "/Users/griswold/.red/collects";
-    ba.config_dir = "/Users/griswold/.red/etc";
+    ba.config_dir = "/Users/griswold/.red/Racket/etc";
 
     char *argv[] = {
         "-n",
-//"--no-user-path",
-        "-G",
-        "/Users/griswold/.red/Racket/etc",
         "-A",
         "/Users/griswold/.red/Racket/addon",
         "-X",
         "/Users/griswold/.red/Racket/collects",
-        /* "-W", */
-        /* "error debug@GC", */
     };
     ba.argc = sizeof(argv) / sizeof(argv[0]);
     ba.argv = argv;
