@@ -2,7 +2,7 @@
 
 (require ffi/unsafe ffi/unsafe/define)
 
-(provide red_client_run_from_racket _clientproc)
+(provide _clientproc)
 
 (define-ffi-definer define-red-dispatch (ffi-lib #f))
 
