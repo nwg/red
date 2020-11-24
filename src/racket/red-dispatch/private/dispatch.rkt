@@ -14,7 +14,6 @@
    'create-buffer 'buffer-open-file 'draw-buffer-in-portal))
 
 (module myplace racket/base
-  (printf "In module load of client-place\n")
   (provide place-main)
   (require "ffi.rkt")
   (require ffi/unsafe)
@@ -43,9 +42,6 @@
 (define bufmgr-place #f)
 
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
-  (printf "In dispatch-init\n")
-
-  (printf "Starting client place\n")
   (set!
    client-place
    (dynamic-place (quote-module-path myplace) 'place-main))

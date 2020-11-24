@@ -34,7 +34,6 @@ EXPORT int red_render_init(void) {
 EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_render_line_info_t *outInfo) {
     assert(outInfo);
     
-    printf("Getting line info for %s\n", lineText);
     CFStringRef str = CFStringCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8*)lineText, numBytes, kCFStringEncodingUTF8, false, kCFAllocatorNull);
     CFAttributedStringRef attr = CFAttributedStringCreate(kCFAllocatorDefault, str, attributes);
     CTLineRef line = CTLineCreateWithAttributedString(attr);

@@ -112,6 +112,5 @@
     (let* ([exp (place-channel-get pch)]
            [cmd (eval (car exp) ns)]
            [args (cdr exp)])
-      (place-channel-put pch (apply cmd args))
-      (printf "Finished command ~s\n" cmd))
+      (place-channel-put pch (apply cmd args)))
     (loop)))

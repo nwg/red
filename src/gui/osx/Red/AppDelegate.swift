@@ -77,7 +77,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.bytes = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 4096)
             var memory : OpaquePointer?
             var result = libred_register_memory(self.bytes, size, &memory)
-            print("Result was \(result)")
             if result != 0 { abort() }
             
             var portal : OpaquePointer?
