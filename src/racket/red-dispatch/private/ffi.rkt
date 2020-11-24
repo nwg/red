@@ -2,7 +2,7 @@
 
 (require ffi/unsafe ffi/unsafe/define)
 
-(provide red_client_run_from_racket)
+(provide red_client_run_from_racket _clientproc)
 
 (define-ffi-definer define-red-dispatch (ffi-lib #f))
 
@@ -12,6 +12,5 @@
 (define _getproc
   (_cprocedure '() _racket))
 
-(define-red-dispatch
-  red_client_run_from_racket
-  (_fun _getproc _putproc -> _int))
+(define _clientproc
+  (_cprocedure (list _getproc _putproc) _void))

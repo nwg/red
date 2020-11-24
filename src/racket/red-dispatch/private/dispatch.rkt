@@ -14,8 +14,10 @@
    'create-buffer 'buffer-open-file 'draw-buffer-in-portal))
 
 (module myplace racket/base
+  (printf "In module load of client-place\n")
   (provide place-main)
   (require "ffi.rkt")
+  (require ffi/unsafe)
   (require racket/place)
 
   (define (place-main ch)
@@ -23,8 +25,11 @@
       (place-channel-get ch))
     (define (putproc v)
       (place-channel-put ch v))
+
+    (define client-run-fp (place-channel-get ch))
+    (define run-client-fn (cast client-run-fp _uintptr _clientproc))
     
-    (red_client_run_from_racket getproc putproc)
+    (run-client-fn getproc putproc)
     (error "Should not get here")))
 
 (module bufmgr-place-module racket/base
@@ -38,9 +43,13 @@
 (define bufmgr-place #f)
 
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
+  (printf "In dispatch-init\n")
+
+  (printf "Starting client place\n")
   (set!
    client-place
    (dynamic-place (quote-module-path myplace) 'place-main))
+  (place-channel-put client-place client-run-fp)
 
   (set!
    client-place-wrapped
@@ -49,7 +58,6 @@
     (λ (v) (values client-place v))))
 
   (set! bufmgr-place (dynamic-place (quote-module-path bufmgr-place-module) 'place-main))
-
   (define rdy (place-channel-get client-place))
   (when (not (eq? rdy 'ready))
     (error "Client place not initialized properly -- got" rdy))
