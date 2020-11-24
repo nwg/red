@@ -1,45 +1,47 @@
 #lang racket/base
 
 (require racket/runtime-path)
-(provide render-reload render-get-func get-line-info
-         context-create
-         draw-line
-         (struct-out lineInfo))
+(provide
+ render-init
+ get-line-info
+ context-create
+ draw-line
+ (struct-out lineInfo))
 
 (require "params.rkt")
 (require "ffi-types.rkt")
 
-;; (define ffi (make-resolved-module-path (path->complete-path (string->path "private/ffi.rkt"))))
+(define libname "libred-render-core-text")
 
 (define-runtime-module-path ffi "ffi.rkt")
 (define-runtime-module-path params "params.rkt")
 
-
 (define-namespace-anchor a)
 
-;; (define abc 'hello)
-;; (namespace-variable-value 'abc)
-
-(define ns #f)
-
 (define (render-reload name)
-  (printf "Shutting down custodian\n")
-  (custodian-shutdown-all (current-render-custodian))
+  (when (current-render-custodian)
+    (custodian-shutdown-all (current-render-custodian)))
 
   (current-render-lib name)
   (current-render-custodian (make-custodian))
 
-  (set! ns (make-empty-namespace))
-  (namespace-attach-module (namespace-anchor->empty-namespace a)
-                           params
-                           ns)
-  (parameterize ([current-namespace ns])
-    (namespace-require ffi)))
+  (let ([ns (make-empty-namespace)])
+    (namespace-attach-module (namespace-anchor->empty-namespace a)
+                             params
+                             ns)
+    (parameterize ([current-namespace ns])
+      (namespace-require ffi))
+    (current-render-ffi-ns ns)))
 
+(define (render-init)
+  (render-reload libname)
+  ((render-get-func 'red_render_init)))
+  
 (define (render-get-func sym)
-  (if ns
-      (namespace-variable-value sym #t #f ns)
-      #f))
+  (let ([ns (current-render-ffi-ns)])
+    (if ns
+        (namespace-variable-value sym #t #f ns)
+        #f)))
 
 (define (get-line-info s)
   (let* ([bs (string->bytes/utf-8 s)]

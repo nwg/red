@@ -104,8 +104,10 @@
 (define (place-main pch)
   (file-stream-buffer-mode (current-output-port) 'line)
   (file-stream-buffer-mode (current-error-port) 'line)
-
   (flush-output)
+
+  (render-init)
+
   (let loop ()
     (let* ([exp (place-channel-get pch)]
            [cmd (eval (car exp) ns)]

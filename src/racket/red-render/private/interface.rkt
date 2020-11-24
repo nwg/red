@@ -3,19 +3,17 @@
 ;; (provide get-line-info)
 
 (require "load-ffi.rkt")
-(provide get-line-info
-         render-context-create
-         render-context-destroy
-         render-draw-line-in-context
-         (struct-out point))
+(provide
+ render-init
+ get-line-info
+ render-context-create
+ render-context-destroy
+ render-draw-line-in-context
+ (struct-out point))
 
 
 (struct render-context (width height ctx))
 (struct point (x y))
-
-(render-reload "libred-render-core-text")
-
-((render-get-func 'red_render_init))
 
 (define (render-context-create addr width height)
   (let* ([ctx (context-create width height addr)]
