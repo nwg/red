@@ -20,27 +20,17 @@
 (define-runtime-path bufmgr-place-module "bufmgr-place.rkt")
 
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
-  (printf "dispatch-init\n")
-  (printf "creating client-place\n")
 
-  (time
   (set!
    client-place
-   (dynamic-place client-place-module 'place-main)))
+   (dynamic-place client-place-module 'place-main))
+  
   (place-channel-put client-place client-run-fp)
-  (printf "created client-place\n")
-
-  ;; (define rdy (place-channel-get client-place))
-  ;; (printf "got client-place ready\n")
-  ;; (when (not (eq? rdy 'ready))
-  ;;   (error "Client place not initialized properly -- got" rdy))
 
   (define client-sync
     (thread
      (λ ()
-       (printf "waiting for client-place ready\n")
        (define rdy (place-channel-get client-place))
-       (printf "got client-place ready\n")
        (when (not (eq? rdy 'ready))
          (error "Client place not initialized properly -- got" rdy)))))
   
@@ -51,11 +41,9 @@
     (λ (v) (values client-place v))))
 
     
-  (printf "creating bufmgr-place\n")
   (set! bufmgr-place (dynamic-place bufmgr-place-module 'place-main))
-  (printf "created bufmgr-place\n")
-
- (thread-wait client-sync)
+  
+  (thread-wait client-sync)
   
   0)
 
