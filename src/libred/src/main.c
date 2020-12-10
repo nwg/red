@@ -9,6 +9,7 @@
 #include <Racket/chezscheme.h>
 #include <Racket/racketcs.h>
 
+#include "libred_macos.h"
 #include "client.h"
 
 typedef struct red_memory_s {
@@ -50,9 +51,14 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     ba.argc = sizeof(argv) / sizeof(argv[0]);
     ba.argv = argv;
 
+    int time = libred_macos_uptime_ms();
     racket_boot(&ba);
+    int boot_time = libred_macos_uptime_ms();
+    printf("boot took %dms\n", boot_time - time);
 
     racket_namespace_require(Sstring_to_symbol("red-dispatch"));
+    int import_time = libred_macos_uptime_ms();
+    printf("import took %dms\n", import_time - boot_time);
 
     pipe(interpreter_stdin_pipe);
     pipe(interpreter_stdout_pipe);
@@ -63,7 +69,11 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
                                  Snil)));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
+    int init_time = libred_macos_uptime_ms();
+    printf("init took %dms\n", init_time - import_time);
 
+    printf("total init took %dms\n", init_time - time);
+    
     return 0;
 }
 

@@ -1,3 +1,5 @@
+#include <mach/mach_time.h>
+
 #include "libred_macos.h"
 
 CFRunLoopRef libred_macos_create_runloop() {
@@ -26,4 +28,18 @@ void libred_macos_runloop_perform_block(CFRunLoopRef runLoop, void (^blk)(void))
                         blk);
 
     CFRunLoopWakeUp(runLoop);
+}
+
+int libred_macos_uptime_ms() {
+    const int64_t kOneMillion = 1000 * 1000;
+    static mach_timebase_info_data_t s_timebase_info;
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        (void) mach_timebase_info(&s_timebase_info);
+    });
+
+    // mach_absolute_time() returns billionth of seconds,
+    // so divide by one million to get milliseconds
+    return (int)((mach_absolute_time() * s_timebase_info.numer) / (kOneMillion * s_timebase_info.denom));
 }

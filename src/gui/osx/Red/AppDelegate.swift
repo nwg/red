@@ -39,18 +39,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
         self.textScrollView = MMTextScrollView.createFromNib()
         let bounds = window.contentView!.bounds
         let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
         self.textScrollView.frame = frame
-        window.contentView?.addSubview(self.textScrollView)
         
                 
         let bundle = Bundle(identifier: "org.racket-lang.Racket")!
         let petite = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/petite.boot")
         let scheme = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/scheme.boot")
         let racket = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/racket.boot")
+        
+        let startTime = DispatchTime.now()
         
         let initialized = DispatchSemaphore(value: 0)
         
@@ -66,6 +66,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         client_queue.async {
             initialized.wait()
+            let elapsed = DispatchTime.now().uptimeNanoseconds - startTime.uptimeNanoseconds
+            print("Startup took \(elapsed/1000000)ms")
         }
 
         client_queue.async {
@@ -98,6 +100,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let bound = self.bytes?.bindMemory(to: UInt8.self, capacity: size)
                 let data = CFDataCreateWithBytesNoCopy(nil, bound, size, nil)
                 self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+                self.window.contentView?.addSubview(self.textScrollView)
+                self.window.makeKeyAndOrderFront(self)
+                NSApplication.shared.activate(ignoringOtherApps: true)
             }
 
         }

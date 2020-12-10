@@ -1,10 +1,8 @@
 #lang racket/base
 
-(require ffi/unsafe)
-(require racket/place)
-(require "ffi.rkt")
-(require syntax/location)
+(require racket/place/dynamic)
 (require racket/set)
+(require racket/runtime-path)
 
 (provide dispatch-init dispatch-run test-dispatch)
 
@@ -13,50 +11,51 @@
    'register-memory 'unregister-memory 'open-portal 'close-portal
    'create-buffer 'buffer-open-file 'draw-buffer-in-portal))
 
-(module myplace racket/base
-  (provide place-main)
-  (require "ffi.rkt")
-  (require ffi/unsafe)
-  (require racket/place)
-
-  (define (place-main ch)
-    (define (getproc)
-      (place-channel-get ch))
-    (define (putproc v)
-      (place-channel-put ch v))
-
-    (define client-run-fp (place-channel-get ch))
-    (define run-client-fn (cast client-run-fp _uintptr _clientproc))
-    
-    (run-client-fn getproc putproc)
-    (error "Should not get here")))
-
-(module bufmgr-place-module racket/base
-  (provide place-main)
-  (require red-bufmgr))
-
-
 (define client-place #f)
 (define client-place-wrapped #f)
 
 (define bufmgr-place #f)
 
+(define-runtime-path client-place-module "client-place.rkt")
+(define-runtime-path bufmgr-place-module "bufmgr-place.rkt")
+
 (define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
+  (printf "dispatch-init\n")
+  (printf "creating client-place\n")
+
+  (time
   (set!
    client-place
-   (dynamic-place (quote-module-path myplace) 'place-main))
+   (dynamic-place client-place-module 'place-main)))
   (place-channel-put client-place client-run-fp)
+  (printf "created client-place\n")
 
+  ;; (define rdy (place-channel-get client-place))
+  ;; (printf "got client-place ready\n")
+  ;; (when (not (eq? rdy 'ready))
+  ;;   (error "Client place not initialized properly -- got" rdy))
+
+  (define client-sync
+    (thread
+     (λ ()
+       (printf "waiting for client-place ready\n")
+       (define rdy (place-channel-get client-place))
+       (printf "got client-place ready\n")
+       (when (not (eq? rdy 'ready))
+         (error "Client place not initialized properly -- got" rdy)))))
+  
   (set!
    client-place-wrapped
    (wrap-evt
     client-place
     (λ (v) (values client-place v))))
 
-  (set! bufmgr-place (dynamic-place (quote-module-path bufmgr-place-module) 'place-main))
-  (define rdy (place-channel-get client-place))
-  (when (not (eq? rdy 'ready))
-    (error "Client place not initialized properly -- got" rdy))
+    
+  (printf "creating bufmgr-place\n")
+  (set! bufmgr-place (dynamic-place bufmgr-place-module 'place-main))
+  (printf "created bufmgr-place\n")
+
+ (thread-wait client-sync)
   
   0)
 
@@ -70,9 +69,6 @@
 
 (define (test-dispatch)
   0)
-
-(define-namespace-anchor anchor)
-(define ns (namespace-anchor->namespace anchor))
 
 (define (dispatch-run)
   (let loop ()
