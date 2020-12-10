@@ -9,6 +9,7 @@
  render-context-create
  render-context-destroy
  render-draw-line-in-context
+ (rename-out [get-line-height render-get-line-height])
  (struct-out point))
 
 

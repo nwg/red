@@ -6,6 +6,7 @@
  get-line-info
  context-create
  draw-line
+ get-line-height
  (struct-out lineInfo))
 
 (require "params.rkt")
@@ -53,3 +54,6 @@
 
 (define (draw-line ctx info x y)
   ((render-get-func 'red_render_draw_line) ctx info x y))
+
+(define (get-line-height)
+  ((render-get-func 'red_render_get_line_height)))

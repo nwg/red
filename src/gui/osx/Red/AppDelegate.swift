@@ -91,7 +91,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             result = libred_buffer_open_file(buffer, "/tmp/test.txt")
             if result != 0 { abort() }
-
             result = libred_draw_buffer_in_portal(buffer, portal)
             if result != 0 { abort() }
             

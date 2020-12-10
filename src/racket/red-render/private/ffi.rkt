@@ -12,7 +12,8 @@
 (provide red_render_init
          red_render_get_line_info
          red_render_create_context
-         red_render_draw_line)
+         red_render_draw_line
+         red_render_get_line_height)
 
 (define-ffi-definer
   define-red-render
@@ -47,3 +48,7 @@
 (define-red-render
   red_render_draw_line
   (_fun _ctx-pointer _lineInfo-pointer _double* _double* -> _void))
+
+(define-red-render
+  red_render_get_line_height
+  (_fun -> _double))

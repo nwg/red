@@ -64,14 +64,18 @@
          [records (buffer-records buffer)]
          [portal (hash-ref portals pid)]
          [context (portal-context portal)]
-         [total-height (portal-height portal)])
+         [total-height (portal-height portal)]
+         [empty-line-height (render-get-line-height)])
     (define y total-height)
     (for ([record records])
-      (let* ([info (line-record-info record)]
-             [line-height (+ (lineInfo-ascent info) (lineInfo-descent info))]
-             [leading (lineInfo-leading info)])
-        (set! y (- y line-height))
-        (render-draw-line-in-context context (point leading y) info)))
+      (if record
+          (let* ([info (line-record-info record)]
+                 [line-height (+ (lineInfo-ascent info) (lineInfo-descent info) (lineInfo-leading info))]
+                 [leading (lineInfo-leading info)])
+            (printf "Drawing record with data ~a\n" (line-record-data record))        
+            (set! y (- y line-height))
+            (render-draw-line-in-context context (point leading y) info))
+          (set! y (- y empty-line-height))))
     0))
 
 (define (create-buffer)
@@ -86,8 +90,10 @@
       (let ([records
              (sequence-map
               (λ (data)
-                (let ([info (get-line-info data)])
-                  (line-record info data)))
+                (if (> (string-length data) 0)
+                    (let ([info (get-line-info data)])
+                      (line-record info data))
+                    #f))
               (in-lines))])
 
         (list->vector (sequence->list records))))))

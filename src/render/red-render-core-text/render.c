@@ -37,10 +37,10 @@ EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_ren
     CFStringRef str = CFStringCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8*)lineText, numBytes, kCFStringEncodingUTF8, false, kCFAllocatorNull);
     CFAttributedStringRef attr = CFAttributedStringCreate(kCFAllocatorDefault, str, attributes);
     CTLineRef line = CTLineCreateWithAttributedString(attr);
-    
+
     outInfo->width = CTLineGetTypographicBounds(line, &outInfo->ascent, &outInfo->descent, &outInfo->leading);
     outInfo->line = line;
-    
+
     CFRelease(str);
     CFRelease(attr);
 }
@@ -60,6 +60,10 @@ EXPORT CGContextRef red_render_create_context(int width, int height, void *data)
     CGContextFillRect(ctx, CGRectMake(0.0, 0.0, width, height));
     
     return ctx;
+}
+
+EXPORT CGFloat red_render_get_line_height(void) {
+    return CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font);
 }
 
 EXPORT void red_render_draw_line(CGContextRef ctx, red_render_line_info_t *lineInfo, double xStart, double yStart) {
