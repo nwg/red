@@ -73,7 +73,7 @@
                  [line-height (+ (lineInfo-ascent info) (lineInfo-descent info) (lineInfo-leading info))]
                  [leading (lineInfo-leading info)])
             (printf "Drawing record with data ~a\n" (line-record-data record))        
-            (set! y (- y line-height))
+            (set! y (- y line-height 10))
             (render-draw-line-in-context context (point leading y) info))
           (set! y (- y empty-line-height))))
     0))
