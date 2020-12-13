@@ -72,8 +72,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         client_queue.async {
 
-            let width = 800
-            let height = 600
+            let width = 1600
+            let height = 1200
             let size = width * height * 4
             
             self.bytes = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 4096)
@@ -89,7 +89,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             result = libred_create_buffer(&buffer)
             if result != 0 { abort() }
             
-            result = libred_buffer_open_file(buffer, "/tmp/test.txt")
+            result = libred_buffer_open_file(buffer, "/tmp/big-file.txt")
             if result != 0 { abort() }
             result = libred_draw_buffer_in_portal(buffer, portal)
             if result != 0 { abort() }
@@ -99,6 +99,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let bound = self.bytes?.bindMemory(to: UInt8.self, capacity: size)
                 let data = CFDataCreateWithBytesNoCopy(nil, bound, size, nil)
                 self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+                self.textScrollView.frame = CGRect(x: 0, y: 0, width: width/2, height: height/2)
+                var frame = self.window.frame
+                frame.size = CGSize(width: width/2, height: height/2)
+                frame = NSWindow.frameRect(forContentRect: frame, styleMask: self.window.styleMask)
+                self.window.setFrame(frame, display: true)
                 self.window.contentView?.addSubview(self.textScrollView)
                 self.window.makeKeyAndOrderFront(self)
                 NSApplication.shared.activate(ignoringOtherApps: true)

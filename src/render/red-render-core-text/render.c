@@ -18,9 +18,10 @@ static CFDictionaryRef attributes;
 static CGColorRef defaultColor;
 
 EXPORT int red_render_init(void) {
-    font = CTFontCreateWithName(CFSTR("Helvetica"), 14.f, NULL);
+    CGAffineTransform t = CGAffineTransformScale(CGAffineTransformIdentity, 2.0, 2.0);
+    font = CTFontCreateWithName(CFSTR("SF Mono Medium"), 12.f, &t);
     
-    CGFloat colors[] = { 0.0, 0.0, 1.0, 1.0 };
+    CGFloat colors[] = { 108.f/255, 121.f/255, 134.f/255, 1.0 };
     defaultColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), colors);
     int ligatureValue = 1;
     const void *keys[] = { kCTFontAttributeName, kCTLigatureAttributeName, kCTForegroundColorAttributeName };
@@ -56,7 +57,7 @@ EXPORT CGContextRef red_render_create_context(int width, int height, void *data)
     CGColorSpaceRelease(space);
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
     CGContextSetTextDrawingMode(ctx, kCGTextFill);
-    CGContextSetRGBFillColor(ctx, 1.0, 1.0, 1.0, 1.0); // white background
+    CGContextSetRGBFillColor(ctx, 37/255.f, 38/255.f, 45/255.f, 1.0); // white background
     CGContextFillRect(ctx, CGRectMake(0.0, 0.0, width, height));
     
     return ctx;
