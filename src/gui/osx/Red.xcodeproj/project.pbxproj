@@ -11,6 +11,7 @@
 		AA0E95FE2540ED1C006EDF67 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */; };
 		AA3BDA3424F9987200B4137D /* RedLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; };
 		AA3BDA3524F9987200B4137D /* RedLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AAC1FDCC24E81018003508CE /* RedLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AA5DB0B92588515F00B99859 /* LibRedGlue.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5DB0B82588515F00B99859 /* LibRedGlue.swift */; };
 		AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */; };
 		AA6DDEFE249276A1009AD2D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */; };
 		AA6DDF01249276A1009AD2D5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA6DDEFF249276A1009AD2D5 /* MainMenu.xib */; };
@@ -73,6 +74,7 @@
 		AA0E95DB25339527006EDF67 /* Racket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Racket.framework; path = ../../../build/install/Frameworks/Racket.framework; sourceTree = "<group>"; };
 		AA0E95F92540E68C006EDF67 /* MMTextPortalView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MMTextPortalView.xib; sourceTree = "<group>"; };
 		AA0E95FD2540ED1C006EDF67 /* NibLoadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
+		AA5DB0B82588515F00B99859 /* LibRedGlue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibRedGlue.swift; sourceTree = "<group>"; };
 		AA6DDEF8249276A1009AD2D5 /* Red.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Red.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA6DDEFD249276A1009AD2D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				AA6DDEFB249276A1009AD2D5 /* AppDelegate.swift */,
+				AA5DB0B82588515F00B99859 /* LibRedGlue.swift */,
 				AA6DDF2524927973009AD2D5 /* PanelViewController.swift */,
 				AA6DDF2624927973009AD2D5 /* PanelViewController.xib */,
 				AA6DDF2924969A2E009AD2D5 /* ScrollViewController.swift */,
@@ -367,6 +370,7 @@
 				AAE6D63D2525BE7300235FEC /* MMTextPortalView.swift in Sources */,
 				AA6DDEFC249276A1009AD2D5 /* AppDelegate.swift in Sources */,
 				AA6DDF2B24969A2E009AD2D5 /* ScrollViewController.swift in Sources */,
+				AA5DB0B92588515F00B99859 /* LibRedGlue.swift in Sources */,
 				AA6DDF39249A3A5F009AD2D5 /* Bridge.swift in Sources */,
 				AAE6D6392525BD6C00235FEC /* MMTextScrollView.swift in Sources */,
 				AA6DDF2724927973009AD2D5 /* PanelViewController.swift in Sources */,

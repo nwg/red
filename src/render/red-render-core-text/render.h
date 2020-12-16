@@ -29,7 +29,9 @@ EXPORT int red_render_init(void);
 EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_render_line_info_t *outInfo);
 EXPORT void red_render_free_line_info(red_render_line_info_t *lineInfo);
 EXPORT CGContextRef red_render_create_context(int width, int height, void *data);
+EXPORT void red_render_destroy_context(CGContextRef ctx);
 EXPORT CGFloat red_render_get_line_height(void);
 EXPORT void red_render_draw_line(CGContextRef ctx, red_render_line_info_t *lineInfo, double xStart, double yStart);
+EXPORT void red_render_clear_rect(CGContextRef ctx, int x, int y, int width, int height);
 
 #endif /* render_h */

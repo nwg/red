@@ -74,31 +74,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             let width = 1600
             let height = 1200
-            let size = width * height * 4
-            
-            self.bytes = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 4096)
-            var memory : OpaquePointer?
-            var result = libred_register_memory(self.bytes, size, &memory)
-            if result != 0 { abort() }
-            
-            var portal : OpaquePointer?
-            result = libred_open_portal(memory, Int32(width), Int32(height), &portal)
-            if result != 0 { abort() }
 
+            var result : Int32
             var buffer : OpaquePointer?
             result = libred_create_buffer(&buffer)
             if result != 0 { abort() }
             
+            var portal : OpaquePointer?
+            result = libred_open_portal(buffer, Int32(width), Int32(height), &portal)
+            if result != 0 { abort() }
+
             result = libred_buffer_open_file(buffer, "/tmp/big-file.txt")
             if result != 0 { abort() }
-            result = libred_draw_buffer_in_portal(buffer, portal)
-            if result != 0 { abort() }
             
+            var info = RedRenderInfo()
+            result = libred_get_render_info(portal, &info)
+            let dataSource = RenderInfoScrollViewDataSource(info)
             
+            let b = RedBounds(x:0, y:0, w: UInt64(width), h: UInt64(height))
+            result = libred_set_current_bounds(buffer, b)
+                
             DispatchQueue.main.async {
-                let bound = self.bytes?.bindMemory(to: UInt8.self, capacity: size)
-                let data = CFDataCreateWithBytesNoCopy(nil, bound, size, nil)
-                self.textScrollView!.textPortalView!.setupImage(data: data!, width: width, height: height)
+                self.textScrollView!.dataSource = dataSource
+                self.textScrollView!.reloadData()
                 self.textScrollView.frame = CGRect(x: 0, y: 0, width: width/2, height: height/2)
                 var frame = self.window.frame
                 frame.size = CGSize(width: width/2, height: height/2)
@@ -108,7 +106,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.window.makeKeyAndOrderFront(self)
                 NSApplication.shared.activate(ignoringOtherApps: true)
             }
-
         }
     }
     

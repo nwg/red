@@ -18,9 +18,10 @@ static CFDictionaryRef attributes;
 static CGColorRef defaultColor;
 
 EXPORT int red_render_init(void) {
-    CGAffineTransform t = CGAffineTransformScale(CGAffineTransformIdentity, 2.0, 2.0);
-    font = CTFontCreateWithName(CFSTR("SF Mono Medium"), 12.f, &t);
-    
+    CGAffineTransform t = CGAffineTransformScale(CGAffineTransformIdentity, 2.0, -2.0);
+    CFStringRef fontString = CFStringCreateWithCString(NULL, "SF Mono", kCFStringEncodingUnicode);
+    font = CTFontCreateWithName(fontString, 12.f, &t);
+    CFRelease(fontString);
     CGFloat colors[] = { 108.f/255, 121.f/255, 134.f/255, 1.0 };
     defaultColor = CGColorCreate(CGColorSpaceCreateDeviceRGB(), colors);
     int ligatureValue = 1;
@@ -57,20 +58,29 @@ EXPORT CGContextRef red_render_create_context(int width, int height, void *data)
     CGColorSpaceRelease(space);
     CGContextSetBlendMode(ctx, kCGBlendModeNormal);
     CGContextSetTextDrawingMode(ctx, kCGTextFill);
-    CGContextSetRGBFillColor(ctx, 37/255.f, 38/255.f, 45/255.f, 1.0); // white background
+    CGContextSetRGBFillColor(ctx, 37/255.f, 38/255.f, 45/255.f, 1.0);
     CGContextFillRect(ctx, CGRectMake(0.0, 0.0, width, height));
+    CGContextScaleCTM(ctx, 1., -1.);
+    CGContextTranslateCTM(ctx, 0., -(CGFloat)height);
     
     return ctx;
+}
+
+EXPORT void red_render_destroy_context(CGContextRef ctx) {
+    CFRelease(ctx);
 }
 
 EXPORT CGFloat red_render_get_line_height(void) {
     return CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font);
 }
 
+EXPORT void red_render_clear_rect(CGContextRef ctx, int x, int y, int width, int height) {
+    CGContextSetRGBFillColor(ctx, 255/255.f, 38/255.f, 255/255.f, 1.0); // white background
+    CGContextFillRect(ctx, CGRectMake(x, y, width, height));
+}
+
 EXPORT void red_render_draw_line(CGContextRef ctx, red_render_line_info_t *lineInfo, double xStart, double yStart) {
-    CGFloat x = xStart;
-    CGFloat y = yStart + lineInfo->descent;
-    CGContextSetTextPosition(ctx, x, y);
+    CGContextSetTextPosition(ctx, xStart, yStart);
 
     CTLineRef line = lineInfo->line;
     CTLineDraw(line, ctx);

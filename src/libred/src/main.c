@@ -24,7 +24,7 @@ typedef struct red_buffer_s {
 
 typedef struct red_portal_s {
   remote_portal_id_t remote_id;
-  red_memory_t *memory;
+  red_buffer_t *buffer;
 } red_portal_t;
 
 static int interpreter_stdin_pipe[2];
@@ -97,9 +97,9 @@ LIBRED_EXPORT int libred_register_memory(void *addr, size_t size, red_memory_t *
   return 0;
 }
 
-LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height, red_portal_t **outportal) {
+LIBRED_EXPORT int libred_open_portal(red_buffer_t *buffer, int width, int height, red_portal_t **outportal) {
   remote_portal_id_t id;
-  int status = red_client_open_portal(memory->remote_id, width, height, &id);
+  int status = red_client_open_portal(buffer->remote_id, width, height, &id);
   if (status != 0) {
     return -1;
   }
@@ -107,7 +107,7 @@ LIBRED_EXPORT int libred_open_portal(red_memory_t *memory, int width, int height
   if (outportal) {
     red_portal_t *portal = malloc(sizeof(red_portal_t));
     portal->remote_id = id;
-    portal->memory = memory;
+    portal->buffer = buffer;
     *outportal = portal;
   }
 
@@ -146,4 +146,39 @@ LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_
   }
 
   return 0;
+}
+
+LIBRED_EXPORT int libred_set_current_bounds(red_buffer_t *buffer, red_bounds_t bounds) {
+  int status = red_client_set_current_bounds(buffer->remote_id, bounds);
+  if (status != 0) {
+    return -1;
+  }
+
+  return 0;
+}
+
+LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t *destinfo) {
+  assert(destinfo);
+  destinfo->rows = RED_RENDER_ROWS;
+  destinfo->cols = RED_RENDER_COLS;
+
+  render_info_item_t items[RED_RENDER_ROWS][RED_RENDER_COLS];
+  
+  int status = red_client_get_render_info(portal->remote_id, items);
+
+  for (int i = 0; i < RED_RENDER_ROWS; i++) {
+    for (int j = 0; j < RED_RENDER_COLS; j++) {
+      red_tile_t *tile = &destinfo->tiles[i][j];
+      render_info_item_t *item = &items[i][j];
+      tile->data = item->data;
+      tile->i = item->i;
+      tile->j = item->j;
+      tile->x = item->x;
+      tile->y = item->y;
+      tile->w = item->w;
+      tile->h = item->h;
+    }
+  }
+
+  return status;
 }

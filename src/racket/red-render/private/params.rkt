@@ -5,7 +5,7 @@
  current-render-custodian
  current-render-ffi-ns)
 
-(define current-render-lib (make-parameter #f))
-(define current-render-custodian (make-parameter #f))
-(define current-render-ffi-ns (make-parameter #f))
+(define current-render-lib (box #f))
+(define current-render-custodian (box #f))
+(define current-render-ffi-ns (box #f))
 

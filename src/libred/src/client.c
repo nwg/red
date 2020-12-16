@@ -7,8 +7,11 @@
 
 #include "client.h"
 #include "work_queue.h"
+#include "common.h"
 
 typedef ptr (^argsBlock)(void);
+
+typedef void (^resultBlock)(ptr result);
 
 static getproc_t get;
 static putproc_t put;
@@ -61,13 +64,11 @@ static ptr racket_list(ptr arg1, ...) {
   return racket_reverse_list(args);
 }
 
-static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
+static void run_standard_command(const char *cmd, argsBlock argsBlk, resultBlock resultBlk) {
   pthread_mutex_t wait = PTHREAD_MUTEX_INITIALIZER;
   pthread_mutex_t *waitPtr = &wait;
   pthread_mutex_lock(waitPtr);
 
-  __block ptr result;
-  
   work_queue_submit(^{
       Sactivate_thread();
 
@@ -79,7 +80,9 @@ static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
       arglist = Scons(Sstring_to_symbol(cmd), arglist);
 
       put(arglist);
-      result = get();
+      ptr result = get();
+
+      resultBlk(result);
       
       pthread_mutex_unlock(waitPtr);
       
@@ -87,17 +90,15 @@ static ptr run_standard_command(const char *cmd, argsBlock argsBlk) {
     });
   pthread_mutex_lock(waitPtr);
   pthread_mutex_unlock(waitPtr);
-
-  return result;
 }
 
 static iptr run_iptr_command(const char *cmd, argsBlock argsBlk) {
-  ptr result = run_standard_command(cmd, argsBlk);
-  iptr status = -1;
-  if (Sfixnump(result)) {
+  __block iptr status = -1;
+  resultBlock resultBlk = ^(ptr result) {
     status = Sinteger_value(result);
-  }
+  };
   
+  run_standard_command(cmd, argsBlk, resultBlk);
   return status;
 }
 
@@ -170,6 +171,56 @@ int red_client_draw_buffer_in_portal(remote_buffer_id_t buffer_id, remote_portal
   if (status != 0) {
     return -1;
   }
+
+  return 0;
+}
+
+int red_client_set_current_bounds(remote_buffer_id_t buffer_id, red_bounds_t bounds) {
+  argsBlock blk = ^{
+    return racket_list(Sunsigned64(buffer_id), Sunsigned64(bounds.x),
+		       Sunsigned64(bounds.y), Sunsigned64(bounds.w),
+		       Sunsigned64(bounds.h), Snil);
+  };
+
+  iptr status = run_iptr_command("set-current-bounds", blk);
+  if (status != 0) {
+    return -1;
+  }
+
+  return 0;
+}
+
+int red_client_get_render_info(remote_portal_id_t portal_id, render_info_item_t items[RED_RENDER_ROWS][RED_RENDER_COLS]) {
+
+  argsBlock argsBlk = ^{
+    return racket_list(Sunsigned64(portal_id), Snil);
+  };
+
+  resultBlock resultBlk = ^(ptr result) {
+    for (int i = 0; i < RED_RENDER_ROWS; i++) {
+      ptr col = Svector_ref(result, i);
+      for (int j = 0; j < RED_RENDER_COLS; j++) {
+	ptr v = Svector_ref(col, j);
+	iptr data = Sinteger_value(Svector_ref(v, 0));
+	iptr i = Sinteger_value(Svector_ref(v, 1));
+	iptr j = Sinteger_value(Svector_ref(v, 2));
+	iptr x = Sinteger_value(Svector_ref(v, 3));
+	iptr y = Sinteger_value(Svector_ref(v, 4));
+	iptr w = Sinteger_value(Svector_ref(v, 5));
+	iptr h = Sinteger_value(Svector_ref(v, 6));
+	render_info_item_t *item = &items[i][j];
+	item->data = (void*)data;
+	item->i = i;
+	item->j = j;
+	item->x = x;
+	item->y = y;
+	item->w = w;
+	item->h = h;
+      }
+    }
+  };
+
+  run_standard_command("get-render-info", argsBlk, resultBlk);
 
   return 0;
 }

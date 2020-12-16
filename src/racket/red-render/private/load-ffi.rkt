@@ -2,29 +2,30 @@
 
 (require racket/runtime-path)
 (provide
- render-init
+ lib-init
+ lib-reload
  get-line-info
  context-create
+ context-destroy
  draw-line
- get-line-height
+ clear-rect
+ get-empty-line-height
  (struct-out lineInfo))
 
 (require "params.rkt")
 (require "ffi-types.rkt")
-
-(define libname "libred-render-core-text")
 
 (define-runtime-module-path ffi "ffi.rkt")
 (define-runtime-module-path params "params.rkt")
 
 (define-namespace-anchor a)
 
-(define (render-reload name)
-  (when (current-render-custodian)
-    (custodian-shutdown-all (current-render-custodian)))
+(define (lib-reload name)
+  (when (unbox current-render-custodian)
+    (custodian-shutdown-all (unbox current-render-custodian)))
 
-  (current-render-lib name)
-  (current-render-custodian (make-custodian))
+  (set-box! current-render-lib name)
+  (set-box! current-render-custodian (make-custodian))
 
   (let ([ns (make-empty-namespace)])
     (namespace-attach-module (namespace-anchor->empty-namespace a)
@@ -32,14 +33,13 @@
                              ns)
     (parameterize ([current-namespace ns])
       (namespace-require ffi))
-    (current-render-ffi-ns ns)))
+    (set-box! current-render-ffi-ns ns)))
 
-(define (render-init)
-  (render-reload libname)
+(define (lib-init)
   ((render-get-func 'red_render_init)))
   
 (define (render-get-func sym)
-  (let ([ns (current-render-ffi-ns)])
+  (let ([ns (unbox current-render-ffi-ns)])
     (if ns
         (namespace-variable-value sym #t #f ns)
         #f)))
@@ -52,8 +52,14 @@
 (define (context-create width height buf)
   ((render-get-func 'red_render_create_context) width height buf))
 
+(define (context-destroy ctx)
+  ((render-get-func 'red_render_destroy_context) ctx))
+
 (define (draw-line ctx info x y)
   ((render-get-func 'red_render_draw_line) ctx info x y))
 
-(define (get-line-height)
+(define (clear-rect ctx x y w h)
+  ((render-get-func 'red_render_clear_rect) ctx x y w h))
+
+(define (get-empty-line-height)
   ((render-get-func 'red_render_get_line_height)))

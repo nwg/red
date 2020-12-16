@@ -19,6 +19,8 @@ add_library(RedLib SHARED
     src/work_queue.h
     src/libred_macos.c
     src/libred_macos.h
+    src/types.h
+    src/common.h
     src/RedLib.h
     src/module.modulemap
 )
@@ -40,7 +42,7 @@ set_target_properties(RedLib PROPERTIES
     MACOSX_FRAMEWORK_IDENTIFIER com.manicmind.RedLib
     PUBLIC_HEADER RedLib.h
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "None"
-    PUBLIC_HEADER "src/RedLib.h;src/main.h"
+    PUBLIC_HEADER "src/RedLib.h;src/main.h;src/types.h;src/common.h"
 )
 
 add_custom_command(TARGET RedLib POST_BUILD

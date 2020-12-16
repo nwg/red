@@ -12,14 +12,16 @@
 (provide red_render_init
          red_render_get_line_info
          red_render_create_context
+         red_render_destroy_context
          red_render_draw_line
-         red_render_get_line_height)
+         red_render_get_line_height
+         red_render_clear_rect)
 
 (define-ffi-definer
   define-red-render
   (ffi-lib
-   (current-render-lib)
-   #:custodian (current-render-custodian)))
+   (unbox current-render-lib)
+   #:custodian (unbox current-render-custodian)))
 
 (define (check f)
  (λ (v who)
@@ -50,5 +52,13 @@
   (_fun _ctx-pointer _lineInfo-pointer _double* _double* -> _void))
 
 (define-red-render
+  red_render_clear_rect
+  (_fun _ctx-pointer _int _int _int _int -> _void))
+
+(define-red-render
   red_render_get_line_height
   (_fun -> _double))
+
+(define-red-render
+  red_render_destroy_context
+  (_fun _ctx-pointer -> _void))

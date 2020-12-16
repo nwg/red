@@ -1,4 +1,4 @@
 #lang racket/base
 
-(require "private/bufmgr.rkt")
+(require red-render)
 (provide place-main)
