@@ -22,7 +22,7 @@ typedef int64_t remote_portal_id_t;
 typedef void (*putproc_t)(ptr);
 typedef ptr (*getproc_t)(void);
 
-__attribute__((noreturn)) void red_client_run_from_racket(getproc_t get, putproc_t put);
+__attribute__((noreturn)) void red_client_run_from_racket(putproc_t rdyproc, getproc_t getproc, putproc_t putproc);
 
 int red_client_test_call();
 int red_client_register_memory(void *addr, size_t size, remote_memory_id_t *outid);

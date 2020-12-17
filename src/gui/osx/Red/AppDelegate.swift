@@ -35,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         pthread_sigmask(SIG_BLOCK, &sigs, nil)
         
+        InitializeRedGlue()
         _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
     }
     
@@ -91,8 +92,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             result = libred_get_render_info(portal, &info)
             let dataSource = RenderInfoScrollViewDataSource(info)
             
-            let b = RedBounds(x:0, y:0, w: UInt64(width), h: UInt64(height))
-            result = libred_set_current_bounds(buffer, b)
+            self.clientQueue.asyncAfter(deadline: .now() + 1) {
+                let b = RedBounds(x:0, y:0, w: UInt64(width), h: UInt64(height))
+                result = libred_set_current_bounds(buffer, b)
+            }
                 
             DispatchQueue.main.async {
                 self.textScrollView!.dataSource = dataSource

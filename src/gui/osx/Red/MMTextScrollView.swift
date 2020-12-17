@@ -28,14 +28,12 @@ class MMTextScrollView: NSView, NibLoadable {
     var dataViews : [[MMTextPortalView]]?
     var documentView : NSView?
     
-    func dataDidChange() {
-        for col in self.dataViews! {
-            for view in col {
-                view.reload()
-            }
-        }
+    func dataDidChange(_ i : Int, _ j : Int) {
+        let view = self.dataViews![i][j]
+        print("Reloading view")
+        view.reload()
     }
-
+    
     func reloadData() {
         var contentSize = self.dataSource!.contentSize()
         contentSize = CGSize(width: contentSize.width/2, height: contentSize.height/2)

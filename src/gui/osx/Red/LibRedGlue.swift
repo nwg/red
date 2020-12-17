@@ -6,12 +6,27 @@
 //  Copyright © 2020 ManicMind. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 import RedLib
 
 public typealias RedRenderInfo = red_render_info_t
 public typealias RedTile = red_tile_t
 public typealias RedBounds = red_bounds_t
+
+func tileDidChange(_ tile : UnsafeMutablePointer<RedTile>?) {
+    if let theTile = tile?.pointee {
+        DispatchQueue.main.async {
+            let delegate = NSApplication.shared.delegate as? AppDelegate
+            let view = delegate?.textScrollView
+            print("Tile did change \(theTile)")
+            view?.dataDidChange(Int(theTile.i), Int(theTile.j))
+        }
+    }
+}
+
+func InitializeRedGlue() {
+    libred_set_tile_did_change_callback(tileDidChange)
+}
 
 class RenderInfoScrollViewDataSource : MMTextScrollViewDataSource {
     var tiles = [UnsafeBufferPointer<RedTile>]()

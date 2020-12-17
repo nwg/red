@@ -16,16 +16,16 @@ typedef void (^resultBlock)(ptr result);
 static getproc_t get;
 static putproc_t put;
 
-__attribute__((noreturn)) void red_client_run_from_racket(getproc_t getproc, putproc_t putproc) {
+__attribute__((noreturn)) void red_client_run_from_racket(putproc_t rdyproc, getproc_t getproc, putproc_t putproc) {
   work_queue_init();
 
   get = getproc;
   put = putproc;
-  
+
   Sdeactivate_thread();
 
   work_queue_submit(^{
-      put(Sstring_to_symbol("ready"));
+      rdyproc(Sstring_to_symbol("ready"));
     });
   
   work_queue_start();

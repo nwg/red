@@ -3,18 +3,11 @@
 (require racket/place/dynamic)
 (require racket/set)
 (require racket/runtime-path)
+(require "callbacks.rkt")
 
-(provide dispatch-init dispatch-run test-dispatch)
-
-(define client-bufmgr-cmds
-  (seteq
-   'register-memory 'unregister-memory 'open-portal 'close-portal
-   'create-buffer 'buffer-open-file 'draw-buffer-in-portal 'set-current-bounds
-   'get-render-info))
+(provide dispatch-init dispatch-run)
 
 (define client-place #f)
-(define client-place-wrapped #f)
-
 (define bufmgr-place #f)
 (define render-place #f)
 
@@ -24,69 +17,60 @@
 (define-runtime-path bufmgr-place-module "bufmgr-place.rkt")
 (define-runtime-path render-place-module "render-place.rkt")
 
-(define (dispatch-init client-run-fp interp-stdin-fd interp-stdout-fd)
+(define (dispatch-init client-run-fp tile-did-change-fp interp-stdin-fd interp-stdout-fd)
 
+  (define-values (c2b b2c) (place-channel))
+  
   (set!
    client-place
    (dynamic-place client-place-module 'place-main))
   
+  (set! bufmgr-place (dynamic-place bufmgr-place-module 'place-main))
+  
+  (place-channel-put client-place c2b)
   (place-channel-put client-place client-run-fp)
-
+  
   (define client-sync
     (thread
      (λ ()
        (define rdy (place-channel-get client-place))
        (when (not (eq? rdy 'ready))
          (error "Client place not initialized properly -- got" rdy)))))
-  
-  (set!
-   client-place-wrapped
-   (wrap-evt
-    client-place
-    (λ (v) (values client-place v))))
 
-  (thread-wait client-sync)  
-    
-  (set! render-place (dynamic-place render-place-module 'place-main))
   (set! init-completion
    (thread
     (λ ()
+      (callbacks-init tile-did-change-fp)
+  
+      (set! render-place (dynamic-place render-place-module 'place-main))
       (let-values ([(render-to-bufmgr bufmgr-to-render) (place-channel)])
-      (place-channel-put render-place `(render-init ,render-to-bufmgr))
-      (let ([init-result (place-channel-get render-place)])
-        (when (not (= 0 init-result))
-          (error "Bad init from render\n")))
-      (set! bufmgr-place (dynamic-place bufmgr-place-module 'place-main))
-      (place-channel-put bufmgr-place `(bufmgr-init ,bufmgr-to-render))
-      (let ([init-result (place-channel-get bufmgr-place)])
-        (printf "Got init from bufmgr\n")
-        (when (not (= 0 init-result))
-          (error "Bad init from bufmgr\n")))))))
+        (place-channel-put render-place `(render-init ,render-to-bufmgr))
+        (let ([init-result (place-channel-get render-place)])
+          (when (not (= 0 init-result))
+            (error "Bad init from render\n")))
+      
+        (place-channel-put bufmgr-place bufmgr-to-render)
+        (place-channel-put bufmgr-place b2c)
+        (let ([result (place-channel-get bufmgr-place)])
+          (when (not (eq? result 'ok))
+            (error "bufmgr failed to initialize\n")))))))
 
+  (thread-wait client-sync)
+    
   0)
 
 (define (wait-for-full-init)
   (thread-wait init-completion))
 
-(define (target-place-for-cmd source-place cmd)
-  (cond
-    [(eq? source-place client-place)
-      (cond
-        [(set-member? client-bufmgr-cmds cmd) bufmgr-place]
-        [else (error "Not a valid command" cmd)])]
-    [else (error "Not a valid source-place")]))
-
-(define (test-dispatch)
-  0)
+(define (handle-msg pch msg)
+  (let* ([cmd (car msg)]
+         [args (cdr msg)]
+         [result (callbacks-handle cmd args)])
+    (place-channel-put pch result)))
 
 (define (dispatch-run)
   (wait-for-full-init)
   (let loop ()
-    (let-values ([(p msg) (sync client-place-wrapped)])
-      (let* ([cmd (car msg)]
-             [args (cdr msg)]
-             [target-place (target-place-for-cmd p cmd)])
-        (place-channel-put target-place (cons cmd args))
-        (let ([result (place-channel-get target-place)])
-          (place-channel-put p result))))
+    (sync
+     (wrap-evt bufmgr-place (λ (msg) (handle-msg bufmgr-place msg))))    
     (loop)))

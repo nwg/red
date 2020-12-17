@@ -30,6 +30,8 @@ typedef struct red_render_info_s {
   int cols;
 } red_render_info_t;
 
+typedef void (*tile_did_change_callback_t)(red_tile_t *tile);
+
 LIBRED_EXPORT int libred_init(const char *execname, const char *petite, const char *scheme, const char *racket);
 
 LIBRED_EXPORT __attribute__((noreturn)) void libred_run(void);
@@ -41,5 +43,6 @@ LIBRED_EXPORT int libred_buffer_open_file(red_buffer_t *buffer, const char *file
 LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_t *portal);
 LIBRED_EXPORT int libred_set_current_bounds(red_buffer_t *buffer, red_bounds_t bounds);
 LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t *destinfo);
+LIBRED_EXPORT void libred_set_tile_did_change_callback(tile_did_change_callback_t callback);
 
 #endif

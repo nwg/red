@@ -10,7 +10,7 @@
 
 (provide place-main)
 
-(struct portal (id bufid width height tile-matrix [bounds #:mutable]))
+(struct portal (id bufid width height tile-matrix [render-info #:mutable] [bounds #:mutable]))
 (struct buffer (id [records #:mutable] [height #:mutable]))
 (struct line-record (line-id data [position #:mutable] [info #:mutable] [height #:mutable]))
 (struct memory (id size addr))
@@ -19,7 +19,9 @@
 (define portals (make-hasheqv))
 (define registered-memory (make-hasheqv))
 
-(define render-place (box #f))
+(define render-place #f)
+(define client-place #f)
+(define callback-place #f)
 
 (define (sequence-generator)
   (let ([nextid 0])
@@ -32,18 +34,25 @@
 (define get-portal-id (sequence-generator))
 (define get-memory-id (sequence-generator))
 
-(define (bufmgr-init render-pch)
-  (set-box! render-place render-pch)
+(define (bufmgr-init render-pch client-pch)
+  ;; (set-box! render-place render-pch)
+  ;; (set-box! client-place client-pch)
   0)
 
 (define (render-call msg)
-  (place-channel-put (unbox render-place) msg)
-  (place-channel-get (unbox render-place)))
+  (place-channel-put render-place msg)
+  (place-channel-get render-place))
+
+(define (callback-call msg)
+  (place-channel-put callback-place msg)
+  (place-channel-get callback-place))
 
 (define (open-portal bufid width height)
   (let* ([id (get-portal-id)]
          [matrix (create-render-matrix bufid width height 3 3)]
-         [portal (portal id bufid width height matrix #f)])
+         [render-info (make-render-info matrix)]
+         [portal (portal id bufid width height matrix render-info #f)])
+    (send matrix set-attribute! 'portalid id)
     (hash-set! portals id portal)
     id))
 
@@ -60,7 +69,6 @@
     (for ([tile (send m get-all-tiles)])
       (let ([cid (render-call `(render-context-create ,width ,height))])
         (send tile set-attribute! 'cid cid)))
-    (send m set-attribute! 'bufid bufid)
     m))
 
 (define (destroy-render-matrix m)
@@ -70,8 +78,7 @@
 
 (define (tile-needs-draw m tile)
   (send tile set-attribute! 'dirty #t)
-  (let* ([pos (get-field pos tile)]
-         [bnds (get-field bnds tile)]
+  (let* ([bnds (get-field bnds tile)]
          [origin (bounds-origin bnds)]
          [x-start (point-x origin)]
          [y-start (point-y origin)]
@@ -79,7 +86,9 @@
          [tile-height (size-height extents)])
 
     (let* ([cid (send tile get-attribute 'cid)]
-           [bufid (send m get-attribute 'bufid)]
+           [portalid (send m get-attribute 'portalid)]
+           [portal (hash-ref portals portalid)]
+           [bufid (portal-bufid portal)]
            [buffer (hash-ref buffers bufid)]
            [all-records (buffer-records buffer)]
            [visible-records (records-in-range all-records y-start (+ y-start tile-height))]
@@ -95,6 +104,13 @@
             (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start (render-line-info-descent line-info))))
             )))
 
+      (let* ([pos (get-field pos tile)]
+             [i (position-i pos)]
+             [j (position-j pos)]
+             [info (get-render-info portalid)]
+             [pos-info (vector-ref (vector-ref info i) j)])
+        (callback-call `(tile-did-change ,pos-info)))
+
       0)))
   
 (define (make-2d-vector rows cols)
@@ -106,12 +122,14 @@
     (vector-set! col j val)))
 
 (define (get-render-info portalid)
-  (let* ([portal (hash-ref portals portalid)]
-         [m (portal-tile-matrix portal)]
-         [rows (get-field rows m)]
-         [cols (get-field cols m)]
+  (let ([p (hash-ref portals portalid)])
+    (portal-render-info p)))
+
+(define (make-render-info tile-matrix)
+  (let* ([rows (get-field rows tile-matrix)]
+         [cols (get-field cols tile-matrix)]
          [info-matrix (make-2d-vector rows cols)])
-    (for ([tile (send m get-all-tiles)])
+    (for ([tile (send tile-matrix get-all-tiles)])
       (let* ([pos (get-field pos tile)]
              [i (position-i pos)]
              [j (position-j pos)]
@@ -255,16 +273,25 @@
   (let* ([p (hash-ref portals portalid)]
         [m (portal-tile-matrix p)])
     (set-portal-bounds! p (bounds (point x y) (size w h)))
-    (send m reload-data)
+    (thread
+     (λ ()
+       (printf "Reloading data\n")
+       (send m reload-data)))
     0))
 
 (define-namespace-anchor a)
 (define ns (namespace-anchor->namespace a))
 
 (define (place-main pch)
+  (set! render-place (place-channel-get pch))
+  (set! client-place (place-channel-get pch))
+  (set! callback-place pch)
+
+  (place-channel-put pch 'ok)
+  
   (let loop ()
-    (let* ([exp (place-channel-get pch)]
+    (let* ([exp (place-channel-get client-place)]
            [cmd (eval (car exp) ns)]
            [args (cdr exp)])
-      (place-channel-put pch (apply cmd args)))
+      (place-channel-put client-place (apply cmd args)))
     (loop)))

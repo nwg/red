@@ -30,6 +30,32 @@ typedef struct red_portal_s {
 static int interpreter_stdin_pipe[2];
 static int interpreter_stdout_pipe[2];
 
+static tile_did_change_callback_t tile_did_change_callback = NULL;
+
+LIBRED_EXPORT void libred_set_tile_did_change_callback(tile_did_change_callback_t callback) {
+  tile_did_change_callback = callback;
+}
+
+static void tile_did_change(ptr args) {
+  if (tile_did_change_callback == NULL) {
+    return;
+  }
+
+  ptr info = Scar(args);
+  
+  red_tile_t tile;
+  tile.data = (void*)Sinteger_value(Svector_ref(info, 0));
+  tile.i = (int)Sinteger_value(Svector_ref(info, 1));
+  tile.j = (int)Sinteger_value(Svector_ref(info, 2));
+  tile.x = (int)Sinteger_value(Svector_ref(info, 3));
+  tile.y = (int)Sinteger_value(Svector_ref(info, 4));
+  tile.w = (int)Sinteger_value(Svector_ref(info, 5));
+  tile.h = (int)Sinteger_value(Svector_ref(info, 6));
+
+  printf("Tile did change: %d %d\n", tile.i, tile.j);
+  tile_did_change_callback(&tile);
+}
+
 int libred_init(const char *execname, const char *petite, const char *scheme, const char *racket) {
     racket_boot_arguments_t ba;
     memset(&ba, 0, sizeof(ba));
@@ -59,9 +85,10 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     pipe(interpreter_stdout_pipe);
     ptr proc = Scar(racket_eval(Sstring_to_symbol("dispatch-init")));
     ptr args = Scons(Sunsigned((uint64_t)red_client_run_from_racket),
-                     Scons(Sinteger(interpreter_stdin_pipe[0]),
-                           Scons(Sinteger(interpreter_stdout_pipe[1]),
-                                 Snil)));
+		     Scons(Sunsigned((uint64_t)tile_did_change),
+			   Scons(Sinteger(interpreter_stdin_pipe[0]),
+				 Scons(Sinteger(interpreter_stdout_pipe[1]),
+				       Snil))));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
     
@@ -182,3 +209,4 @@ LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t
 
   return status;
 }
+

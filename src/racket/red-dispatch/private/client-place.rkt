@@ -11,17 +11,22 @@
   (_cprocedure '() _racket))
 
 (define _clientproc
-  (_cprocedure (list _getproc _putproc) _void))
+  (_cprocedure (list _putproc _getproc _putproc) _void))
 
 (define (place-main ch)
-  (define (getproc)
-    (place-channel-get ch))
-  (define (putproc v)
+  (define bufmgr-place (place-channel-get ch))
+
+  (define (rdyproc v)
     (place-channel-put ch v))
+  
+  (define (getproc)
+    (place-channel-get bufmgr-place))
+  (define (putproc v)
+    (place-channel-put bufmgr-place v))
 
   (define client-run-fp (place-channel-get ch))
   (define run-client-fn (cast client-run-fp _uintptr _clientproc))
-  
-  (run-client-fn getproc putproc)
+
+  (run-client-fn rdyproc getproc putproc)
   (error "Should not get here"))
 
