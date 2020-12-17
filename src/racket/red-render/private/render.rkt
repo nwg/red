@@ -1,24 +1,17 @@
 #lang racket/base
 
-(require
- (rename-in
-  "load-ffi.rkt"
-  [get-empty-line-height render-get-empty-line-height]))
+(require "load-ffi.rkt")
 (require racket/generator)
 (require ffi/unsafe)
 (require racket/place/dynamic)
 (require "ffi-types.rkt")
+(require "../types.rkt")
                     
 (provide
- place-main
- render-init
- render-context-create
- render-context-destroy
- render-draw-line-in-context
- render-get-line-info)
+ place-main)
 
 (struct render-context (id width height data ctx))
-(struct render-line-info (id info))
+(struct render-line (id info cref))
 
 (define (make-sequence-generator) (sequence->generator (in-naturals)))
 
@@ -60,27 +53,33 @@
   (let* ([context (hash-ref contexts cid)]
          [ctx (render-context-ctx context)]
          [line (hash-ref lines lid)])
-    (draw-line ctx (render-line-info-info line) x y)))
+    (draw-line ctx (render-line-cref line) x y)))
 
-(define (render-get-line-info data)
+(define (render-create-line data)
   (let* ([id (get-line-id)]        
-         [info (get-line-info data)]
-         [line-info (render-line-info id info)])
-    (hash-set! lines id line-info)
+         [lineInfo (get-line-info data)]
+         [info (lineInfo->render-line-info lineInfo)]
+         [line (render-line id info (lineInfo-lineRef lineInfo))])
+    (hash-set! lines id line)
     id))
 
-(define (render-get-line-height lid)
-  (let* ([info (hash-ref lines lid)]
-         [lineInfo (render-line-info-info info)])
-    (+
-     (lineInfo-ascent lineInfo)
-     (lineInfo-descent lineInfo)
-     (lineInfo-leading lineInfo))))
-  
+(define (render-get-line-info lid)
+  (let* ([line (hash-ref lines lid)]
+         [info (render-line-info line)])
+    info))
 
-(define (render-get-total-line-height lids)
-  (for/sum ([lid lids])
-    (render-get-line-height lid)))
+(define (render-get-line-infos lids)
+  (for/list ([lid lids])
+    (if lid
+        (render-get-line-info lid)
+        #f)))
+
+(define (render-get-font-info)
+  (let ([info (get-font-info)])
+    (render-font-info
+     (fontInfo-ascent info)
+     (fontInfo-descent info)
+     (fontInfo-leading info))))
 
 (define cmds
   (make-hasheq
@@ -88,11 +87,10 @@
     `(render-init . ,render-init)
     `(render-context-create . ,render-context-create)
     `(render-context-destroy . ,render-context-destroy)
-    `(render-get-line-info . ,render-get-line-info)
     `(render-draw-line-in-context . ,render-draw-line-in-context)
-    `(render-get-empty-line-height . ,render-get-empty-line-height)
-    `(render-get-total-line-height . ,render-get-total-line-height)
-    `(render-get-line-height . ,render-get-line-height)
+    `(render-get-line-infos . ,render-get-line-infos)
+    `(render-create-line . ,render-create-line)
+    `(render-get-font-info . ,render-get-font-info)
     `(render-context-get-data . ,render-context-get-data))))
 
 (define (handle-msg pch msg)

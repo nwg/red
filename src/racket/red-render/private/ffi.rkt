@@ -14,7 +14,7 @@
          red_render_create_context
          red_render_destroy_context
          red_render_draw_line
-         red_render_get_line_height
+         red_render_get_font_info
          red_render_clear_rect)
 
 (define-ffi-definer
@@ -49,15 +49,15 @@
 
 (define-red-render
   red_render_draw_line
-  (_fun _ctx-pointer _lineInfo-pointer _double* _double* -> _void))
+  (_fun _ctx-pointer _CTLineRef _double* _double* -> _void))
 
 (define-red-render
   red_render_clear_rect
   (_fun _ctx-pointer _int _int _int _int -> _void))
 
 (define-red-render
-  red_render_get_line_height
-  (_fun -> _double))
+  red_render_get_font_info
+  (_fun (info : _fontInfo-pointer) -> _void -> info))
 
 (define-red-render
   red_render_destroy_context

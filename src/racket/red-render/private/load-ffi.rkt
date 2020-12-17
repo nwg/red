@@ -9,7 +9,7 @@
  context-destroy
  draw-line
  clear-rect
- get-empty-line-height
+ get-font-info
  (struct-out lineInfo))
 
 (require "params.rkt")
@@ -61,5 +61,6 @@
 (define (clear-rect ctx x y w h)
   ((render-get-func 'red_render_clear_rect) ctx x y w h))
 
-(define (get-empty-line-height)
-  ((render-get-func 'red_render_get_line_height)))
+(define (get-font-info)
+  (let ([info (empty-fontInfo)])
+    ((render-get-func 'red_render_get_font_info) info)))

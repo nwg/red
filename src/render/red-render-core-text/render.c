@@ -48,7 +48,7 @@ EXPORT void red_render_get_line_info(const char *lineText, int numBytes, red_ren
 }
 
 EXPORT void red_render_free_line_info(red_render_line_info_t *lineInfo) {
-    CFRelease(lineInfo);
+    CFRelease(lineInfo->line);
 }
 
 EXPORT CGContextRef red_render_create_context(int width, int height, void *data) {
@@ -70,8 +70,10 @@ EXPORT void red_render_destroy_context(CGContextRef ctx) {
     CFRelease(ctx);
 }
 
-EXPORT CGFloat red_render_get_line_height(void) {
-    return CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font);
+EXPORT void red_render_get_font_info(red_render_font_info_t *info) {
+    info->ascent = CTFontGetAscent(font);
+    info->descent = CTFontGetDescent(font);
+    info->leading = CTFontGetLeading(font);
 }
 
 EXPORT void red_render_clear_rect(CGContextRef ctx, int x, int y, int width, int height) {
@@ -79,9 +81,8 @@ EXPORT void red_render_clear_rect(CGContextRef ctx, int x, int y, int width, int
     CGContextFillRect(ctx, CGRectMake(x, y, width, height));
 }
 
-EXPORT void red_render_draw_line(CGContextRef ctx, red_render_line_info_t *lineInfo, double xStart, double yStart) {
+EXPORT void red_render_draw_line(CGContextRef ctx, CTLineRef line, double xStart, double yStart) {
     CGContextSetTextPosition(ctx, xStart, yStart);
 
-    CTLineRef line = lineInfo->line;
     CTLineDraw(line, ctx);
 }

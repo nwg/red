@@ -6,12 +6,13 @@
 ;(require red-render)
 (require ffi/unsafe)
 (require tile-matrix)
+(require red-render)
 
 (provide place-main)
 
 (struct portal (id bufid width height tile-matrix [bounds #:mutable]))
 (struct buffer (id [records #:mutable] [height #:mutable]))
-(struct line-record (line-id data))
+(struct line-record (line-id data [position #:mutable] [info #:mutable] [height #:mutable]))
 (struct memory (id size addr))
 
 (define buffers (make-hasheqv))
@@ -77,24 +78,29 @@
          [extents (bounds-extents bnds)]
          [tile-height (size-height extents)])
 
-      (let* ([cid (send tile get-attribute 'cid)]
-             [bufid (send m get-attribute 'bufid)]
-             [buffer (hash-ref buffers bufid)]
-             [records (buffer-records buffer)]
-             [total-height (buffer-height buffer)]
-             [empty-line-height (render-call `(render-get-empty-line-height))])
-        (define y 0)
-        (for ([record records])
-          (if record
-              (let* ([lid (line-record-line-id record)]
-                     [line-height (record-height record)])
-                (set! y (+ y line-height))
-                (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- y y-start)))
-                )
+    (let* ([cid (send tile get-attribute 'cid)]
+           [bufid (send m get-attribute 'bufid)]
+           [buffer (hash-ref buffers bufid)]
+           [all-records (buffer-records buffer)]
+           [visible-records (records-in-range all-records y-start (+ y-start tile-height))]
+           [total-height (buffer-height buffer)]
+           [empty-line-height (get-empty-line-height)])
+      (for ([record visible-records])
+        (when (line-record-line-id record)
+          (let* ([lid (line-record-line-id record)]
+                 [line-info (line-record-info record)]
+                 [line-height (render-line-info-height line-info)]
+                 [position (line-record-position record)]
+                 [line-y (+ position line-height)])
+            ;; (set! y (+ y line-height))
+            (printf "Position is ~a\n" position)
+            (printf "Ascent is ~a\n" (render-line-info-ascent line-info))
+            (printf "Descent is ~a\n" (render-line-info-descent line-info))
+            (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start (render-line-info-descent line-info))))
+            ;; (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start)))
+            )))
 
-              (begin
-                (set! y (+ y empty-line-height)))))
-        0)))
+      0)))
   
 (define (make-2d-vector rows cols)
   (for/vector ([i rows])
@@ -135,35 +141,119 @@
     (hash-set! buffers id buffer)
     id))
 
-(define (record-height record)
-  (let ([result (render-call `(render-get-line-height ,(line-record-line-id record)))])
-    result))
-
 (define (total-height records)
-  (let* ([empty-line-height (render-call `(render-get-empty-line-height))]
-         [fs (for/sum ([r records]
-                       #:when (false? r))
-               empty-line-height)]
-         [lids (for/list ([r records]
-                          #:when r)
-                 (line-record-line-id r))])
-    (render-call `(render-get-total-line-height ,lids))))
+  (for/sum ([r records])
+    (line-record-height r)))
 
 (define (load-records-from-file fn)
   (with-input-from-file fn
     (λ ()
       (for/vector ([data (in-lines)])
         (if (> (string-length data) 0)
-            (let ([lid (render-call `(render-get-line-info ,data))])
-              (line-record lid data))
-            #f)))))
+            (let ([lid (render-call `(render-create-line ,data))])
+              (line-record lid data #f #f #f))
+            (line-record #f #f #f #f #f))))))
 
+(define (histogram lst [key identity])
+  (reverse
+   (foldr
+    (λ (v i)
+      (let ([v (car i)]
+            [vv (key v)])
+        (cons (+ v vv) i)))
+    (list 0)
+    lst)))
+
+(define (get-empty-line-height)
+  (let ([info (render-call `(render-get-font-info))])
+    (+
+     (render-font-info-ascent info)
+     (render-font-info-descent info)
+     (render-font-info-leading info))))
+
+(define (set-positions-on-records! records)
+  (let* ([lids (map (λ (v) (if (line-record-line-id v) (line-record-line-id v) #f)) (vector->list records))]
+         [infos (render-call `(render-get-line-infos ,lids))]
+         [empty-height (get-empty-line-height)])
+    (define (height info)
+      (if info
+          (render-line-info-height info)
+          empty-height))
+    (let ([heights (map height infos)])
+      (for ([r records]
+            [position (histogram heights)]
+            [info infos]
+            [height heights])
+
+        (set-line-record-height! r height)
+        (set-line-record-position! r position)
+        (set-line-record-info! r info)))))
+  
+(define (binary-search v of)
+  (define (work start-i end-i)
+    (if (>= start-i end-i)
+        #f
+        (let* ([i (floor (/ (+ start-i end-i) 2))]
+               [o (of i)])
+          (cond
+            [(eq? o '<) (work 0 i)]
+            [(eq? o '>) (work (add1 i) end-i)]
+            [(eq? o '=) i]
+            [else (error "Bad result from search fn:" o)]))))
+
+  (let ([len (vector-length v)])
+    (work 0 len)))
+
+(define (records-in-range records start-y end-y)
+  (define (search-start i)
+    (let* ([r (vector-ref records i)]
+           [pos (line-record-position r)]
+           [info (line-record-info r)]
+           [height (line-record-height r)])
+      (cond
+        [(or
+          (= pos start-y)
+          (and (< pos start-y) (> (+ pos height) start-y)))
+         '=]
+        [(< start-y pos) '<]
+        [else '>])))
+
+  (define (search-end i)
+    (let* ([r (vector-ref records i)]
+           [pos (line-record-position r)]
+           [info (line-record-info r)]
+           [height (render-line-info-height info)])
+      (cond
+        [(or
+          (= (+ pos height) end-y)
+          (and (< pos end-y) (> (+ pos height) end-y)))
+         ;; (printf "pos=~a height=~a end-y=~a => '=\n" pos height end-y)
+         '=]
+        [(< end-y pos)
+         ;; (printf "pos=~a height=~a end-y=~a => '<\n" pos height end-y)
+         '<]
+        [else
+         ;; (printf "pos=~a height=~a end-y=~a => '>\n" pos height end-y)
+         '>])))
+    
+
+  (let ([i-start (binary-search records search-start)]
+        [i-end (binary-search records search-end)])
+    (if (not (and i-start i-end))
+        (error "Could not find start and end for" start-y end-y)
+        (begin
+          ;; (printf "Found i-start=~a i-end=~a\n" i-start i-end)
+          (vector-copy records i-start (add1 i-end))))))
+  
 (define (buffer-open-file bufid fn)
   (let* ([buffer (hash-ref buffers bufid)]
-         [recordsv (load-records-from-file fn)]
-         [height (total-height recordsv)])
+         [recordsv (load-records-from-file fn)])
+    (set-positions-on-records! recordsv)
     (set-buffer-records! buffer recordsv)
-    (set-buffer-height! buffer height)
+
+    (let ([height (total-height recordsv)])
+      (set-buffer-height! buffer height))
+    
     0))
 
 (define (set-current-bounds portalid x y w h)
