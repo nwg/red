@@ -92,12 +92,7 @@
                  [line-height (render-line-info-height line-info)]
                  [position (line-record-position record)]
                  [line-y (+ position line-height)])
-            ;; (set! y (+ y line-height))
-            (printf "Position is ~a\n" position)
-            (printf "Ascent is ~a\n" (render-line-info-ascent line-info))
-            (printf "Descent is ~a\n" (render-line-info-descent line-info))
             (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start (render-line-info-descent line-info))))
-            ;; (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start)))
             )))
 
       0)))
