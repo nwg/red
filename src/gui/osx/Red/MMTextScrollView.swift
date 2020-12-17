@@ -30,7 +30,6 @@ class MMTextScrollView: NSView, NibLoadable {
     
     func dataDidChange(_ i : Int, _ j : Int) {
         let view = self.dataViews![i][j]
-        print("Reloading view")
         view.reload()
     }
     

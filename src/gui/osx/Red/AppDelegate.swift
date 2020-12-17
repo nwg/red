@@ -80,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             var buffer : OpaquePointer?
             result = libred_create_buffer(&buffer)
             if result != 0 { abort() }
-            
+
             var portal : OpaquePointer?
             result = libred_open_portal(buffer, Int32(width), Int32(height), &portal)
             if result != 0 { abort() }

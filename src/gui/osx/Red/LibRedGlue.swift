@@ -18,7 +18,6 @@ func tileDidChange(_ tile : UnsafeMutablePointer<RedTile>?) {
         DispatchQueue.main.async {
             let delegate = NSApplication.shared.delegate as? AppDelegate
             let view = delegate?.textScrollView
-            print("Tile did change \(theTile)")
             view?.dataDidChange(Int(theTile.i), Int(theTile.j))
         }
     }

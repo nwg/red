@@ -52,7 +52,6 @@ static void tile_did_change(ptr args) {
   tile.w = (int)Sinteger_value(Svector_ref(info, 5));
   tile.h = (int)Sinteger_value(Svector_ref(info, 6));
 
-  printf("Tile did change: %d %d\n", tile.i, tile.j);
   tile_did_change_callback(&tile);
 }
 
