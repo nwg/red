@@ -56,6 +56,7 @@
             (error "bufmgr failed to initialize\n")))))))
 
   (thread-wait client-sync)
+  (wait-for-full-init)
     
   0)
 
