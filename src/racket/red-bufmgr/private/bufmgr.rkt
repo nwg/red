@@ -69,6 +69,7 @@
   (let* ([m (new tile-matrix% [rows rows] [cols cols] [total-size (size total-width total-height)] [tile-size (size tile-width tile-height)])])
     (set-field! tile-needs-draw-callback m tile-needs-draw)
     (set-field! tile-did-move-callback m tile-did-move)
+    (set-field! tile-was-deleted-callback m tile-was-deleted)
     (for ([tile (send m get-all-tiles)])
       (let ([cid (render-call `(render-context-create ,tile-width ,tile-height))])
         (send tile set-attribute! 'cid cid)))
@@ -119,11 +120,14 @@
 
       0)))
 
-(define (tile-did-move m old-pos tile)
-  (let* ([pos-info (get-callback-tile-info tile)]
-         [old-i (position-i old-pos)]
-         [old-j (position-j old-pos)])
-    (callback-call `(tile-did-move ,old-i ,old-j ,pos-info))))
+(define (tile-was-deleted m tile)
+  (let* ([pos-info (get-callback-tile-info tile)])
+    (callback-call `(tile-was-deleted ,pos-info))))
+
+(define (tile-did-move m moves)
+  (let* ([set-vector (list->vector (set->list moves))]
+         [movesv (vector-map (λ (move) (vector-map (λ (pos) (vector-drop (struct->vector pos) 1)) move)) set-vector)])
+    (callback-call `(tile-did-move ,movesv))))
   
 (define (make-2d-vector rows cols)
   (for/vector ([i rows])

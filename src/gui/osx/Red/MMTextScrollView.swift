@@ -112,4 +112,20 @@ class MMTextScrollView: NSView, NibLoadable {
         self.syncPortalView(i: i, j: j)
     }
         
+    func dataDidMove(moves : [TileMove]) {
+        var newDataViews = self.dataViews!
+        for move in moves {
+            if let view = self.dataViews[move.iFrom][move.jFrom] {
+                newDataViews[move.iTo][move.jTo] = view
+                newDataViews[move.iFrom][move.jFrom] = .none
+            }
+        }
+        self.dataViews = newDataViews
+        
+    }
+    
+    func dataWasDeleted(i: Int, j: Int) {
+        self.dataViews[i][j]?.removeFromSuperview()
+        self.dataViews[i][j] = .none
+    }
 }

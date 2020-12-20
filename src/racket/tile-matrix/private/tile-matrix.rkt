@@ -6,6 +6,7 @@
 (require racket/vector)
 (require racket/math)
 (require "data.rkt")
+(require racket/set)
 
 (provide tile-matrix%)
 
@@ -16,6 +17,7 @@
 
     (field [tile-did-move-callback #f])
     (field [tile-needs-draw-callback #f])
+    (field [tile-was-deleted-callback #f])
 
     (set! total-size (size (exact-ceiling (size-width total-size)) (exact-ceiling (size-height total-size))))
     
@@ -123,12 +125,14 @@
               
 
           (begin
+            
             (set! current-viewport new-bounds)
             (let ([new-center (get-center-position new-bounds)])
               (when (not (equal? current-center new-center))
                 (let ([old-center current-center])
                   (set! current-center new-center)
-                  (let* ([dpos (position-subtract new-center old-center)]
+                  (let* ([deleted-positions (list->mutable-set (all-visible-positions))]
+                         [dpos (position-subtract new-center old-center)]
                          [di (position-i dpos)]
                          [dj (position-j dpos)]
                          [max-pos (max-position old-center)]
@@ -153,6 +157,8 @@
 
                     (define dirty-pos-test (invert preserved-pos-test))
 
+
+                    (define moves (mutable-set))
                     (for ([new-local-pos (visible-positions-passing-test preserved-pos-test)])
                       (let* ([new-global-pos (global-position new-local-pos new-center)]
                              [old-local-pos (position-add new-local-pos dpos)]
@@ -163,9 +169,23 @@
                         (set-field! pos tile new-local-pos)
                         (set-tile! new-local-pos tile)
                         (set-tile! old-local-pos swap-tile)
+                        (set-add! moves (vector old-local-pos new-local-pos))))
+
+                    (when tile-was-deleted-callback
+                      (let* ([preserved (for/set ([pos (visible-positions-passing-test preserved-pos-test)])
+                                          (let ([old-local-pos (position-add pos dpos)])
+                                            old-local-pos))]
+                             [all-positions (list->set (all-visible-positions))]
+                             [deleted-positions (set-subtract all-positions preserved)])
                         
-                        (when tile-did-move-callback
-                          (tile-did-move-callback self old-local-pos tile))))
+                        (for ([pos deleted-positions])
+                          (tile-was-deleted-callback self (get-tile pos)))))
+                    
+                    (when tile-did-move-callback
+                      (tile-did-move-callback self moves))
+
+
+
 
                     (redraw-tiles (visible-positions-passing-test dirty-pos-test)))))))))
     

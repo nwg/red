@@ -24,8 +24,16 @@ typedef struct red_tile_s {
   int h;
 } red_tile_t;
 
+typedef struct red_tile_move_s {
+  int from_i;
+  int from_j;
+  int to_i;
+  int to_j;
+} red_tile_move_t;
+
 typedef void (*tile_did_change_callback_t)(red_tile_t *tile);
-typedef void (*tile_did_move_callback_t)(uint64_t old_i, uint64_t old_j, red_tile_t *tile);
+typedef void (*tile_did_move_callback_t)(red_tile_move_t *moves, int num_moves);
+typedef void (*tile_was_deleted_callback_t)(red_tile_t *tile);
 
 LIBRED_EXPORT int libred_init(const char *execname, const char *petite, const char *scheme, const char *racket);
 
@@ -40,5 +48,6 @@ LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t
 LIBRED_EXPORT int libred_set_current_bounds(red_portal_t *portal, red_bounds_t bounds);
 LIBRED_EXPORT void libred_set_tile_did_change_callback(tile_did_change_callback_t callback);
 LIBRED_EXPORT void libred_set_tile_did_move_callback(tile_did_move_callback_t callback);
+LIBRED_EXPORT void libred_set_tile_was_deleted_callback(tile_was_deleted_callback_t callback);
 
 #endif

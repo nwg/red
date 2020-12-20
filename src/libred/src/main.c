@@ -34,9 +34,20 @@ static int interpreter_stdout_pipe[2];
 
 static tile_did_change_callback_t tile_did_change_callback = NULL;
 static tile_did_move_callback_t tile_did_move_callback = NULL;
+static tile_was_deleted_callback_t tile_was_deleted_callback = NULL;
 
 LIBRED_EXPORT void libred_set_tile_did_change_callback(tile_did_change_callback_t callback) {
   tile_did_change_callback = callback;
+}
+
+static void get_tile(ptr info, red_tile_t *tile) {
+  tile->data = (void*)Sinteger_value(Svector_ref(info, 0));
+  tile->i = (int)Sinteger_value(Svector_ref(info, 1));
+  tile->j = (int)Sinteger_value(Svector_ref(info, 2));
+  tile->x = (int)Sinteger_value(Svector_ref(info, 3));
+  tile->y = (int)Sinteger_value(Svector_ref(info, 4));
+  tile->w = (int)Sinteger_value(Svector_ref(info, 5));
+  tile->h = (int)Sinteger_value(Svector_ref(info, 6));
 }
 
 static void tile_did_change(ptr info) {
@@ -45,13 +56,7 @@ static void tile_did_change(ptr info) {
   }
 
   red_tile_t tile;
-  tile.data = (void*)Sinteger_value(Svector_ref(info, 0));
-  tile.i = (int)Sinteger_value(Svector_ref(info, 1));
-  tile.j = (int)Sinteger_value(Svector_ref(info, 2));
-  tile.x = (int)Sinteger_value(Svector_ref(info, 3));
-  tile.y = (int)Sinteger_value(Svector_ref(info, 4));
-  tile.w = (int)Sinteger_value(Svector_ref(info, 5));
-  tile.h = (int)Sinteger_value(Svector_ref(info, 6));
+  get_tile(info, &tile);
 
   tile_did_change_callback(&tile);
 }
@@ -60,20 +65,38 @@ LIBRED_EXPORT void libred_set_tile_did_move_callback(tile_did_move_callback_t ca
   tile_did_move_callback = callback;
 }
 
-static void tile_did_move(uint64_t old_i, uint64_t old_j, ptr info) {
+static void tile_did_move(ptr movesv) {
   if (tile_did_move_callback == NULL) {
     return;
   }
-  red_tile_t tile;
-  tile.data = (void*)Sinteger_value(Svector_ref(info, 0));
-  tile.i = (int)Sinteger_value(Svector_ref(info, 1));
-  tile.j = (int)Sinteger_value(Svector_ref(info, 2));
-  tile.x = (int)Sinteger_value(Svector_ref(info, 3));
-  tile.y = (int)Sinteger_value(Svector_ref(info, 4));
-  tile.w = (int)Sinteger_value(Svector_ref(info, 5));
-  tile.h = (int)Sinteger_value(Svector_ref(info, 6));
+  uptr len = Svector_length(movesv);
+  red_tile_move_t moves[len];
+
+  for (uptr i = 0; i < len; i++) {
+    ptr movev = Svector_ref(movesv, i);
+    ptr fromv = Svector_ref(movev, 0);
+    ptr tov = Svector_ref(movev, 1);
+    moves[i].from_i = Sinteger_value(Svector_ref(fromv, 0));
+    moves[i].from_j = Sinteger_value(Svector_ref(fromv, 1));
+    moves[i].to_i = Sinteger_value(Svector_ref(tov, 0));
+    moves[i].to_j = Sinteger_value(Svector_ref(tov, 1));
+  }
   
-  tile_did_move_callback(old_i, old_j, &tile);
+  tile_did_move_callback((red_tile_move_t*)moves, len);
+}
+
+LIBRED_EXPORT void libred_set_tile_was_deleted_callback(tile_was_deleted_callback_t callback) {
+  tile_was_deleted_callback = callback;
+}
+
+static void tile_was_deleted(ptr info) {
+  if (tile_was_deleted_callback == NULL) {
+    return;
+  }
+  red_tile_t tile;
+  get_tile(info, &tile);
+  
+  tile_was_deleted_callback(&tile);
 }
 
 int libred_init(const char *execname, const char *petite, const char *scheme, const char *racket) {
@@ -107,9 +130,10 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     ptr args = Scons(Sunsigned((uint64_t)red_client_run_from_racket),
 		     Scons(Sunsigned((uint64_t)tile_did_change),
 			   Scons(Sunsigned((uint64_t)tile_did_move),
-				 Scons(Sinteger(interpreter_stdin_pipe[0]),
-				       Scons(Sinteger(interpreter_stdout_pipe[1]),
-					     Snil)))));
+				 Scons(Sunsigned((uint64_t)tile_was_deleted),
+				       Scons(Sinteger(interpreter_stdin_pipe[0]),
+					     Scons(Sinteger(interpreter_stdout_pipe[1]),
+						   Snil))))));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
     
