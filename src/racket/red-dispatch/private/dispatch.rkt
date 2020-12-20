@@ -17,7 +17,7 @@
 (define-runtime-path bufmgr-place-module "bufmgr-place.rkt")
 (define-runtime-path render-place-module "render-place.rkt")
 
-(define (dispatch-init client-run-fp tile-did-change-fp interp-stdin-fd interp-stdout-fd)
+(define (dispatch-init client-run-fp tile-did-change-fp tile-did-move-fp interp-stdin-fd interp-stdout-fd)
 
   (define-values (c2b b2c) (place-channel))
   
@@ -40,7 +40,7 @@
   (set! init-completion
    (thread
     (λ ()
-      (callbacks-init tile-did-change-fp)
+      (callbacks-init tile-did-change-fp tile-did-move-fp)
   
       (set! render-place (dynamic-place render-place-module 'place-main))
       (let-values ([(render-to-bufmgr bufmgr-to-render) (place-channel)])

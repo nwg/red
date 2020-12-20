@@ -24,6 +24,8 @@ typedef struct red_buffer_s {
 
 typedef struct red_portal_s {
   remote_portal_id_t remote_id;
+  uint64_t width;
+  uint64_t height;
   red_buffer_t *buffer;
 } red_portal_t;
 
@@ -31,18 +33,17 @@ static int interpreter_stdin_pipe[2];
 static int interpreter_stdout_pipe[2];
 
 static tile_did_change_callback_t tile_did_change_callback = NULL;
+static tile_did_move_callback_t tile_did_move_callback = NULL;
 
 LIBRED_EXPORT void libred_set_tile_did_change_callback(tile_did_change_callback_t callback) {
   tile_did_change_callback = callback;
 }
 
-static void tile_did_change(ptr args) {
+static void tile_did_change(ptr info) {
   if (tile_did_change_callback == NULL) {
     return;
   }
 
-  ptr info = Scar(args);
-  
   red_tile_t tile;
   tile.data = (void*)Sinteger_value(Svector_ref(info, 0));
   tile.i = (int)Sinteger_value(Svector_ref(info, 1));
@@ -53,6 +54,26 @@ static void tile_did_change(ptr args) {
   tile.h = (int)Sinteger_value(Svector_ref(info, 6));
 
   tile_did_change_callback(&tile);
+}
+
+LIBRED_EXPORT void libred_set_tile_did_move_callback(tile_did_move_callback_t callback) {
+  tile_did_move_callback = callback;
+}
+
+static void tile_did_move(uint64_t old_i, uint64_t old_j, ptr info) {
+  if (tile_did_move_callback == NULL) {
+    return;
+  }
+  red_tile_t tile;
+  tile.data = (void*)Sinteger_value(Svector_ref(info, 0));
+  tile.i = (int)Sinteger_value(Svector_ref(info, 1));
+  tile.j = (int)Sinteger_value(Svector_ref(info, 2));
+  tile.x = (int)Sinteger_value(Svector_ref(info, 3));
+  tile.y = (int)Sinteger_value(Svector_ref(info, 4));
+  tile.w = (int)Sinteger_value(Svector_ref(info, 5));
+  tile.h = (int)Sinteger_value(Svector_ref(info, 6));
+  
+  tile_did_move_callback(old_i, old_j, &tile);
 }
 
 int libred_init(const char *execname, const char *petite, const char *scheme, const char *racket) {
@@ -85,9 +106,10 @@ int libred_init(const char *execname, const char *petite, const char *scheme, co
     ptr proc = Scar(racket_eval(Sstring_to_symbol("dispatch-init")));
     ptr args = Scons(Sunsigned((uint64_t)red_client_run_from_racket),
 		     Scons(Sunsigned((uint64_t)tile_did_change),
-			   Scons(Sinteger(interpreter_stdin_pipe[0]),
-				 Scons(Sinteger(interpreter_stdout_pipe[1]),
-				       Snil))));
+			   Scons(Sunsigned((uint64_t)tile_did_move),
+				 Scons(Sinteger(interpreter_stdin_pipe[0]),
+				       Scons(Sinteger(interpreter_stdout_pipe[1]),
+					     Snil)))));
     ptr result = racket_apply(proc, args);
     assert(Sinteger_value(Scar(result)) == 0);
     
@@ -133,6 +155,8 @@ LIBRED_EXPORT int libred_open_portal(red_buffer_t *buffer, int width, int height
   if (outportal) {
     red_portal_t *portal = malloc(sizeof(red_portal_t));
     portal->remote_id = id;
+    portal->width = width;
+    portal->height = height;
     portal->buffer = buffer;
     *outportal = portal;
   }
@@ -174,8 +198,8 @@ LIBRED_EXPORT int libred_draw_buffer_in_portal(red_buffer_t *buffer, red_portal_
   return 0;
 }
 
-LIBRED_EXPORT int libred_set_current_bounds(red_buffer_t *buffer, red_bounds_t bounds) {
-  int status = red_client_set_current_bounds(buffer->remote_id, bounds);
+LIBRED_EXPORT int libred_set_current_bounds(red_portal_t *portal, red_bounds_t bounds) {
+  int status = red_client_set_current_bounds(portal->remote_id, bounds);
   if (status != 0) {
     return -1;
   }
@@ -183,29 +207,22 @@ LIBRED_EXPORT int libred_set_current_bounds(red_buffer_t *buffer, red_bounds_t b
   return 0;
 }
 
-LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t *destinfo) {
-  assert(destinfo);
-  destinfo->rows = RED_RENDER_ROWS;
-  destinfo->cols = RED_RENDER_COLS;
+LIBRED_EXPORT int libred_get_render_info(red_portal_t *portal, red_render_info_t *destInfo) {
+  assert(destInfo);
 
-  render_info_item_t items[RED_RENDER_ROWS][RED_RENDER_COLS];
-  
-  int status = red_client_get_render_info(portal->remote_id, items);
-
-  for (int i = 0; i < RED_RENDER_ROWS; i++) {
-    for (int j = 0; j < RED_RENDER_COLS; j++) {
-      red_tile_t *tile = &destinfo->tiles[i][j];
-      render_info_item_t *item = &items[i][j];
-      tile->data = item->data;
-      tile->i = item->i;
-      tile->j = item->j;
-      tile->x = item->x;
-      tile->y = item->y;
-      tile->w = item->w;
-      tile->h = item->h;
-    }
+  red_client_render_info_t clientInfo;
+  int status = red_client_get_render_info(portal->remote_id, &clientInfo);
+  if (status != 0) {
+    return -1;
   }
-
-  return status;
+  
+  destInfo->rows = clientInfo.rows;
+  destInfo->cols = clientInfo.cols;
+  destInfo->tile_width = portal->width;
+  destInfo->tile_height = portal->height;
+  destInfo->total_width = clientInfo.width;
+  destInfo->total_height = clientInfo.height;
+  
+  return 0;
 }
 

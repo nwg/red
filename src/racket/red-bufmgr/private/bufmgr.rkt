@@ -7,11 +7,12 @@
 (require ffi/unsafe)
 (require tile-matrix)
 (require red-render)
+(require (only-in srfi/43 vector-fold))
 
 (provide place-main)
 
-(struct portal (id bufid width height tile-matrix [render-info #:mutable] [bounds #:mutable]))
-(struct buffer (id [records #:mutable] [height #:mutable]))
+(struct portal (id bufid width height tile-matrix [bounds #:mutable]))
+(struct buffer (id [records #:mutable] [width #:mutable] [height #:mutable]))
 (struct line-record (line-id data [position #:mutable] [info #:mutable] [height #:mutable]))
 (struct memory (id size addr))
 
@@ -34,10 +35,9 @@
 (define get-portal-id (sequence-generator))
 (define get-memory-id (sequence-generator))
 
-(define (bufmgr-init render-pch client-pch)
-  ;; (set-box! render-place render-pch)
-  ;; (set-box! client-place client-pch)
-  0)
+(define portal-num-rows 3)
+(define portal-num-cols 3)
+  
 
 (define (render-call msg)
   (place-channel-put render-place msg)
@@ -49,9 +49,11 @@
 
 (define (open-portal bufid width height)
   (let* ([id (get-portal-id)]
-         [matrix (create-render-matrix bufid width height 3 3)]
-         [render-info (make-render-info matrix)]
-         [portal (portal id bufid width height matrix render-info #f)])
+         [buffer (hash-ref buffers bufid)]
+         [total-width (buffer-width buffer)]
+         [total-height (buffer-height buffer)]
+         [matrix (create-render-matrix bufid width height total-width total-height portal-num-rows portal-num-cols)]
+         [portal (portal id bufid width height matrix #f)])
     (send matrix set-attribute! 'portalid id)
     (hash-set! portals id portal)
     id))
@@ -63,11 +65,12 @@
     (hash-remove! portals pid)
     0))
 
-(define (create-render-matrix bufid width height rows cols)
-  (let* ([m (new tile-matrix% [rows rows] [cols cols] [tile-size (size width height)])])
+(define (create-render-matrix bufid tile-width tile-height total-width total-height rows cols)
+  (let* ([m (new tile-matrix% [rows rows] [cols cols] [total-size (size total-width total-height)] [tile-size (size tile-width tile-height)])])
     (set-field! tile-needs-draw-callback m tile-needs-draw)
+    (set-field! tile-did-move-callback m tile-did-move)
     (for ([tile (send m get-all-tiles)])
-      (let ([cid (render-call `(render-context-create ,width ,height))])
+      (let ([cid (render-call `(render-context-create ,tile-width ,tile-height))])
         (send tile set-attribute! 'cid cid)))
     m))
 
@@ -78,11 +81,13 @@
 
 (define (tile-needs-draw m tile)
   (send tile set-attribute! 'dirty #t)
-  (let* ([bnds (get-field bnds tile)]
+  (let* ([pos (get-field pos tile)]
+         [bnds (get-field bnds tile)]
          [origin (bounds-origin bnds)]
          [x-start (point-x origin)]
          [y-start (point-y origin)]
          [extents (bounds-extents bnds)]
+         [tile-width (size-width extents)]
          [tile-height (size-height extents)])
 
     (let* ([cid (send tile get-attribute 'cid)]
@@ -92,26 +97,33 @@
            [buffer (hash-ref buffers bufid)]
            [all-records (buffer-records buffer)]
            [visible-records (records-in-range all-records y-start (+ y-start tile-height))]
-           [total-height (buffer-height buffer)]
-           [empty-line-height (get-empty-line-height)])
+           [total-height (buffer-height buffer)])
+      (when (= (vector-length visible-records) 0)
+        (printf "Warning -- no visisble records for tile at ~a/~a\n" x-start y-start))
+      (render-call `(render-clear-rect ,cid 0 0 ,tile-width ,tile-height))
       (for ([record visible-records])
         (when (line-record-line-id record)
           (let* ([lid (line-record-line-id record)]
                  [line-info (line-record-info record)]
                  [line-height (render-line-info-height line-info)]
                  [position (line-record-position record)]
-                 [line-y (+ position line-height)])
-            (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start (render-line-info-descent line-info))))
+                 [ascent (render-line-info-ascent line-info)]
+                 [line-y (+ position ascent)]
+                 [data (line-record-data record)])
+
+            (render-call `(render-draw-line-in-context ,cid ,lid ,(- x-start) ,(- line-y y-start)))
             )))
 
-      (let* ([pos (get-field pos tile)]
-             [i (position-i pos)]
-             [j (position-j pos)]
-             [info (get-render-info portalid)]
-             [pos-info (vector-ref (vector-ref info i) j)])
+      (let* ([pos-info (get-callback-tile-info tile)])
         (callback-call `(tile-did-change ,pos-info)))
 
       0)))
+
+(define (tile-did-move m old-pos tile)
+  (let* ([pos-info (get-callback-tile-info tile)]
+         [old-i (position-i old-pos)]
+         [old-j (position-j old-pos)])
+    (callback-call `(tile-did-move ,old-i ,old-j ,pos-info))))
   
 (define (make-2d-vector rows cols)
   (for/vector ([i rows])
@@ -121,36 +133,37 @@
   (let ([col (vector-ref vv i)])
     (vector-set! col j val)))
 
-(define (get-render-info portalid)
-  (let ([p (hash-ref portals portalid)])
-    (portal-render-info p)))
+(define (get-callback-tile-info tile)
+  (let* ([pos (get-field pos tile)]
+         [i (position-i pos)]
+         [j (position-j pos)]
+         [bnds (get-field bnds tile)]
+         [pt (bounds-origin bnds)]
+         [x (point-x pt)]
+         [y (point-y pt)]
+         [sz (bounds-extents bnds)]
+         [w (size-width sz)]
+         [h (size-height sz)]
+         [cid (send tile get-attribute 'cid)]
+         [data (render-call `(render-context-get-data ,cid))]
+         [data-ptr (cast data _pointer _uint64)]
+         [v (vector data-ptr i j x y w h)])
+    v))
 
-(define (make-render-info tile-matrix)
-  (let* ([rows (get-field rows tile-matrix)]
-         [cols (get-field cols tile-matrix)]
-         [info-matrix (make-2d-vector rows cols)])
-    (for ([tile (send tile-matrix get-all-tiles)])
-      (let* ([pos (get-field pos tile)]
-             [i (position-i pos)]
-             [j (position-j pos)]
-             [bnds (get-field bnds tile)]
-             [pt (bounds-origin bnds)]
-             [x (point-x pt)]
-             [y (point-y pt)]
-             [sz (bounds-extents bnds)]
-             [w (size-width sz)]
-             [h (size-height sz)]
-             [cid (send tile get-attribute 'cid)]
-             [data (render-call `(render-context-get-data ,cid))]
-             [data-ptr (cast data _pointer _uint64)]
-             [bnds (get-field bnds tile)]
-             [v (vector data-ptr i j x y w h)])
-        (vector-set-2d! info-matrix i j v)))
-    info-matrix))
+(define (get-render-info portalid)
+  (let* ([portal (hash-ref portals portalid)]
+         [bufid (portal-bufid portal)]
+         [buffer (hash-ref buffers bufid)]
+         [height (exact-round (buffer-height buffer))]
+         [width (exact-round (buffer-width buffer))]
+         [m (portal-tile-matrix portal)]
+         [rows (send m num-visible-rows)]
+         [cols (send m num-visible-cols)])
+    (vector rows cols width height)))
 
 (define (create-buffer)
   (let* ([id (get-buffer-id)]
-         [buffer (buffer id '() #f)])
+         [buffer (buffer id '() #f #f)])
     (hash-set! buffers id buffer)
     id))
 
@@ -201,7 +214,17 @@
         (set-line-record-height! r height)
         (set-line-record-position! r position)
         (set-line-record-info! r info)))))
-  
+
+(define (max-width-for-records records)
+  (define (find-max i s v)
+    (let ([info (line-record-info v)])
+      (if info
+          (let ([width (render-line-info-width info)])
+            (max s width))
+          s)))
+
+  (vector-fold find-max -inf.0 records))
+
 (define (binary-search v of)
   (define (work start-i end-i)
     (if (>= start-i end-i)
@@ -218,6 +241,8 @@
     (work 0 len)))
 
 (define (records-in-range records start-y end-y)
+  (define len (vector-length records))
+  
   (define (search-start i)
     (let* ([r (vector-ref records i)]
            [pos (line-record-position r)]
@@ -238,6 +263,7 @@
            [height (render-line-info-height info)])
       (cond
         [(or
+          (= i (sub1 len))
           (= (+ pos height) end-y)
           (and (< pos end-y) (> (+ pos height) end-y)))
          ;; (printf "pos=~a height=~a end-y=~a => '=\n" pos height end-y)
@@ -250,12 +276,14 @@
          '>])))
     
 
-  (let ([i-start (binary-search records search-start)]
-        [i-end (binary-search records search-end)])
-    (if (not (and i-start i-end))
-        (error "Could not find start and end for" start-y end-y)
+  (let* ([i-start (binary-search records search-start)]
+         [i-end (binary-search records search-end)])
+    (if (not i-start)
         (begin
-          ;; (printf "Found i-start=~a i-end=~a\n" i-start i-end)
+          (printf "Could not find start and end for ~a ~a ~a ~a\n" start-y end-y i-start i-end)
+          (vector))        
+        (let ([start-record (vector-ref records i-start)]
+              [end-record (vector-ref records i-end)])
           (vector-copy records i-start (add1 i-end))))))
   
 (define (buffer-open-file bufid fn)
@@ -266,17 +294,19 @@
 
     (let ([height (total-height recordsv)])
       (set-buffer-height! buffer height))
+    (let ([width (max-width-for-records recordsv)])
+      (set-buffer-width! buffer width))
     
     0))
 
 (define (set-current-bounds portalid x y w h)
   (let* ([p (hash-ref portals portalid)]
-        [m (portal-tile-matrix p)])
-    (set-portal-bounds! p (bounds (point x y) (size w h)))
+         [m (portal-tile-matrix p)]
+         [bnds (bounds (point x y) (size w h))])
+    (set-portal-bounds! p bnds)
     (thread
      (λ ()
-       (printf "Reloading data\n")
-       (send m reload-data)))
+       (send m move-viewport bnds)))
     0))
 
 (define-namespace-anchor a)

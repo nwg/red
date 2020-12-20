@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "client.h"
 #include "work_queue.h"
@@ -175,9 +176,9 @@ int red_client_draw_buffer_in_portal(remote_buffer_id_t buffer_id, remote_portal
   return 0;
 }
 
-int red_client_set_current_bounds(remote_buffer_id_t buffer_id, red_bounds_t bounds) {
+int red_client_set_current_bounds(remote_portal_id_t portal_id, red_bounds_t bounds) {
   argsBlock blk = ^{
-    return racket_list(Sunsigned64(buffer_id), Sunsigned64(bounds.x),
+    return racket_list(Sunsigned64(portal_id), Sunsigned64(bounds.x),
 		       Sunsigned64(bounds.y), Sunsigned64(bounds.w),
 		       Sunsigned64(bounds.h), Snil);
   };
@@ -190,34 +191,20 @@ int red_client_set_current_bounds(remote_buffer_id_t buffer_id, red_bounds_t bou
   return 0;
 }
 
-int red_client_get_render_info(remote_portal_id_t portal_id, render_info_item_t items[RED_RENDER_ROWS][RED_RENDER_COLS]) {
-
+int red_client_get_render_info(remote_portal_id_t portal_id, red_client_render_info_t *info) {
   argsBlock argsBlk = ^{
     return racket_list(Sunsigned64(portal_id), Snil);
   };
 
   resultBlock resultBlk = ^(ptr result) {
-    for (int i = 0; i < RED_RENDER_ROWS; i++) {
-      ptr col = Svector_ref(result, i);
-      for (int j = 0; j < RED_RENDER_COLS; j++) {
-	ptr v = Svector_ref(col, j);
-	iptr data = Sinteger_value(Svector_ref(v, 0));
-	iptr i = Sinteger_value(Svector_ref(v, 1));
-	iptr j = Sinteger_value(Svector_ref(v, 2));
-	iptr x = Sinteger_value(Svector_ref(v, 3));
-	iptr y = Sinteger_value(Svector_ref(v, 4));
-	iptr w = Sinteger_value(Svector_ref(v, 5));
-	iptr h = Sinteger_value(Svector_ref(v, 6));
-	render_info_item_t *item = &items[i][j];
-	item->data = (void*)data;
-	item->i = i;
-	item->j = j;
-	item->x = x;
-	item->y = y;
-	item->w = w;
-	item->h = h;
-      }
-    }
+    iptr rows = Sinteger_value(Svector_ref(result, 0));
+    iptr cols = Sinteger_value(Svector_ref(result, 1));
+    iptr width = Sinteger_value(Svector_ref(result, 2));
+    iptr height = Sinteger_value(Svector_ref(result, 3));
+    info->rows = rows;
+    info->cols = cols;
+    info->width = width;
+    info->height = height;
   };
 
   run_standard_command("get-render-info", argsBlk, resultBlk);

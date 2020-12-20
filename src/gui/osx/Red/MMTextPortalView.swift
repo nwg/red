@@ -35,7 +35,8 @@ class CustomImageView: NSView, CALayerDelegate {
         self.image = NSImage(cgImage: self.cgImage!, size: NSSize(width: width, height: height))
     }
     
-    func reload() {
+    func reload(data: NSData) {
+        self.data = data
         self.createImage()
         self.layer?.contents = self.image
         self.needsDisplay = true
@@ -63,14 +64,20 @@ class MMTextPortalView: NSView, CALayerDelegate, NibLoadable {
         super.resize(withOldSuperviewSize: oldSize)
     }
     
-    public func reload() {
-        self.customImageView?.reload()
+    public func reload(data: NSData) {
+        self.customImageView?.reload(data: data)
     }
     
-    public func setupImage(data : CFData, width: Int, height: Int) -> Void {
+    public func setupImage(data : NSData, size : CGSize) -> Void {
         self.data = data
         
-        self.customImageView = CustomImageView(frame: CGRect(x: 0, y: 0, width: width/2, height: height/2), width: width, height: height, data:data)
+        self.customImageView = CustomImageView(
+            frame: CGRect(x: 0, y: 0, width: size.width/2, height: size.height/2),
+            width: Int(size.width),
+            height: Int(size.height),
+            data:data
+        )
+        
         self.addSubview(self.customImageView!)
         
         if self.frame.size.width < frame.size.width || self.frame.size.height < frame.size.height {

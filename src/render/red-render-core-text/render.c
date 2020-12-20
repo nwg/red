@@ -77,12 +77,11 @@ EXPORT void red_render_get_font_info(red_render_font_info_t *info) {
 }
 
 EXPORT void red_render_clear_rect(CGContextRef ctx, int x, int y, int width, int height) {
-    CGContextSetRGBFillColor(ctx, 255/255.f, 38/255.f, 255/255.f, 1.0); // white background
+    CGContextSetRGBFillColor(ctx, 37/255.f, 38/255.f, 48/255.f, 1.0); // white background
     CGContextFillRect(ctx, CGRectMake(x, y, width, height));
 }
 
 EXPORT void red_render_draw_line(CGContextRef ctx, CTLineRef line, double xStart, double yStart) {
     CGContextSetTextPosition(ctx, xStart, yStart);
-
     CTLineDraw(line, ctx);
 }

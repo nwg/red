@@ -4,6 +4,7 @@
 (require racket/generator)
 (require racket/function)
 (require racket/vector)
+(require racket/math)
 (require "data.rkt")
 
 (provide tile-matrix%)
@@ -11,12 +12,14 @@
 (define tile-matrix%
   (class object%
     (super-new)
-    (init-field rows cols tile-size)
+    (init-field rows cols total-size tile-size)
 
     (field [tile-did-move-callback #f])
     (field [tile-needs-draw-callback #f])
 
-    (define current-viewport (bounds (point 0 0) tile-size))
+    (set! total-size (size (exact-ceiling (size-width total-size)) (exact-ceiling (size-height total-size))))
+    
+    (define current-viewport #f)
     
     (define (min-position center)
       (position-subtract center (position (floor (/ rows 2)) (floor (/ cols 2)))))
@@ -38,10 +41,30 @@
     (define (set-tile! pos tile)
       (vector-set! (vector-ref the-tiles (position-i pos)) (position-j pos) tile))
 
+    (define/public (num-visible-rows)
+      (min rows (add1 (floor (/ (size-height total-size) (size-height tile-size))))))
+
+    (define/public (num-visible-cols)
+      (min cols (add1 (floor (/ (size-width total-size) (size-width tile-size))))))
+    
+    (define (origin-for-position p)
+      (point (* (size-width tile-size) (position-j p))
+             (* (size-height tile-size) (position-i p))))
+    
+    (define (position-visible p)
+      (let ([o (origin-for-position p)])
+        (and (< (point-x o) (size-width total-size))
+             (< (point-y o) (size-height total-size)))))
+      
     (define (all-positions)
       (for*/list ([i rows]
                   [j cols])
         (position i j)))
+
+    (define (all-visible-positions)
+      (for/list ([p (all-positions)]
+                 #:when (position-visible p))
+        p))
 
     (define (all-tiles)
       (apply vector-append (vector->list the-tiles)))
@@ -57,79 +80,94 @@
       (let* ([center (bounds-center viewport)]
              [tile-i (floor (/ (point-y center) (size-height tile-size)))]
              [tile-j (floor (/ (point-x center) (size-width tile-size)))]
-             [min-i (floor (/ (sub1 rows) 2))]
-             [min-j (floor (/ (sub1 cols) 2))])
-        (position (max min-i tile-i) (max min-i tile-j))))
+             [rows-from-center (floor (/ rows 2))]
+             [cols-from-center (floor (/ cols 2))]
+             [min-i rows-from-center]
+             [min-j cols-from-center]
+             [max-i (max min-i (- (floor (/ (size-height total-size) (size-height tile-size))) rows-from-center))]
+             [max-j (max min-j (- (floor (/ (size-width total-size) (size-width tile-size))) cols-from-center))]
+             [pos (position (min (max min-i tile-i) max-i) (min (max min-j tile-j) max-j))])
 
-    (define (positions-passing-test f)
+        pos))
+
+    (define (visible-positions-passing-test f)
       (in-generator
-       (for* ([i (in-range rows)]
-              [j (in-range cols)])
-         
-         (let ([pos (position i j)])
-           (when (f pos)
-             (yield pos))))))
+       (for ([pos (all-visible-positions)])
+         (when (f pos)
+           (yield pos)))))
     
-    (define current-center (get-center-position current-viewport))
+    (define current-center #f)
 
     (define the-tiles (for/vector ([i rows])
                         (for/vector ([j cols])
                           (let ([bnds (bounds-for-position (position i j))])
                             (new tile% [pos (position i j)] [bnds bnds])))))
 
+        
     (define (internal-move-viewport self new-bounds)
-      (set! current-viewport new-bounds)
-      (let ([new-center (get-center-position new-bounds)])
-        (when (not (equal? current-center new-center))
-          (let ([old-center current-center])
-            (set! current-center new-center)
-            (let* ([dpos (position-subtract new-center old-center)]
-                   [di (position-i dpos)]
-                   [dj (position-j dpos)]
-                   [max-pos (max-position old-center)]
-                   [max-i (position-i max-pos)]
-                   [max-j (position-j max-pos)]
-                   [min-pos (min-position old-center)]
-                   [min-i (position-i min-pos)]
-                   [min-j (position-j min-pos)]
-                   [start-i-preserved (if (< di 0) (- di) 0)]
-                   [end-i-preserved (if (< di 0) rows (- rows di))]
-                   [start-j-preserved (if (< dj 0) (- dj) 0)]
-                   [end-j-preserved (if (< dj 0) cols (- cols dj))])
+      (define (redraw-tiles positions)
+        (for ([local-pos positions])
+          (let* ([new-global-pos (global-position local-pos current-center)]
+                 [new-bnds (bounds-for-position new-global-pos)]
+                 [tile (get-tile local-pos)])
+            (set-field! pos tile local-pos)
+            (set-field! bnds tile new-bnds)
+            (when tile-needs-draw-callback
+              (tile-needs-draw-callback self tile)))))
+      
+      (if (not current-viewport)
+          (begin
+            (set! current-viewport new-bounds)
+            (set! current-center (get-center-position new-bounds))
+            (redraw-tiles (all-visible-positions)))
+              
 
-              (define (preserved-pos-test pos)
-                (and
-                 (<= start-i-preserved (position-i pos) (sub1 end-i-preserved))
-                 (<= start-j-preserved (position-j pos) (sub1 end-j-preserved))))
+          (begin
+            (set! current-viewport new-bounds)
+            (let ([new-center (get-center-position new-bounds)])
+              (when (not (equal? current-center new-center))
+                (let ([old-center current-center])
+                  (set! current-center new-center)
+                  (let* ([dpos (position-subtract new-center old-center)]
+                         [di (position-i dpos)]
+                         [dj (position-j dpos)]
+                         [max-pos (max-position old-center)]
+                         [max-i (position-i max-pos)]
+                         [max-j (position-j max-pos)]
+                         [min-pos (min-position old-center)]
+                         [min-i (position-i min-pos)]
+                         [min-j (position-j min-pos)]
+                         [start-i-preserved (if (< di 0) (- di) 0)]
+                         [end-i-preserved (if (< di 0) rows (- rows di))]
+                         [start-j-preserved (if (< dj 0) (- dj) 0)]
+                         [end-j-preserved (if (< dj 0) cols (- cols dj))])
 
-              (define (invert f)
-                (lambda args
-                  (not (apply f args))))
+                    (define (preserved-pos-test pos)
+                      (and
+                       (<= start-i-preserved (position-i pos) (sub1 end-i-preserved))
+                       (<= start-j-preserved (position-j pos) (sub1 end-j-preserved))))
 
-              (define dirty-pos-test (invert preserved-pos-test))
+                    (define (invert f)
+                      (lambda args
+                        (not (apply f args))))
 
-              (for ([new-local-pos (positions-passing-test preserved-pos-test)])
-                (let* ([new-global-pos (global-position new-local-pos new-center)]
-                       [old-local-pos (position-add new-local-pos dpos)]
-                       [new-bnds (bounds-for-position new-global-pos)]
-                       [tile (get-tile old-local-pos)]
-                       [swap-tile (get-tile new-local-pos)])
-                  (set-field! bnds tile new-bnds)
-                  (set-field! pos tile new-local-pos)
-                  (set-tile! new-local-pos tile)
-                  (set-tile! old-local-pos swap-tile)
-            
-                  (when tile-did-move-callback
-                    (tile-did-move-callback self old-local-pos tile))))
+                    (define dirty-pos-test (invert preserved-pos-test))
 
-              (for ([local-pos (positions-passing-test dirty-pos-test)])
-                (let* ([new-global-pos (global-position local-pos new-center)]
-                       [new-bnds (bounds-for-position new-global-pos)]
-                       [tile (get-tile local-pos)])
-                  (set-field! pos tile local-pos)
-                  (set-field! bnds tile new-bnds)
-                  (when tile-needs-draw-callback
-                    (tile-needs-draw-callback self tile)))))))))
+                    (for ([new-local-pos (visible-positions-passing-test preserved-pos-test)])
+                      (let* ([new-global-pos (global-position new-local-pos new-center)]
+                             [old-local-pos (position-add new-local-pos dpos)]
+                             [new-bnds (bounds-for-position new-global-pos)]
+                             [tile (get-tile old-local-pos)]
+                             [swap-tile (get-tile new-local-pos)])
+                        (set-field! bnds tile new-bnds)
+                        (set-field! pos tile new-local-pos)
+                        (set-tile! new-local-pos tile)
+                        (set-tile! old-local-pos swap-tile)
+                        
+                        (when tile-did-move-callback
+                          (tile-did-move-callback self old-local-pos tile))))
+
+                    (redraw-tiles (visible-positions-passing-test dirty-pos-test)))))))))
     
     (define/public (move-viewport new-bounds)
       (internal-move-viewport this new-bounds))

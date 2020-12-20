@@ -9,7 +9,7 @@
 import Cocoa
 import RedLib
 
-public typealias RedRenderInfo = red_render_info_t
+public typealias RedRenderInfo = red_render_info_t;
 public typealias RedTile = red_tile_t
 public typealias RedBounds = red_bounds_t
 
@@ -17,44 +17,74 @@ func tileDidChange(_ tile : UnsafeMutablePointer<RedTile>?) {
     if let theTile = tile?.pointee {
         DispatchQueue.main.async {
             let delegate = NSApplication.shared.delegate as? AppDelegate
+            let dataSource = delegate?.dataSource
+            dataSource?.update(tile: theTile)
             let view = delegate?.textScrollView
-            view?.dataDidChange(Int(theTile.i), Int(theTile.j))
+            view?.dataDidChange(i: Int(theTile.i), j: Int(theTile.j))
         }
     }
+}
+
+func tileDidMove(_ old_i : UInt64, _ old_j : UInt64, _ tile : UnsafeMutablePointer<RedTile>?) {
+    if let theTile = tile?.pointee {
+        DispatchQueue.main.async {
+            let delegate = NSApplication.shared.delegate as? AppDelegate
+            let dataSource = delegate?.dataSource
+            dataSource?.update(tile: theTile)
+            let view = delegate?.textScrollView
+            view?.dataDidChange(i: Int(theTile.i), j: Int(theTile.j))
+        }
+    }
+
 }
 
 func InitializeRedGlue() {
     libred_set_tile_did_change_callback(tileDidChange)
+    libred_set_tile_did_move_callback(tileDidMove)
+}
+
+func makeEmpty2D<T>(_ rows : Int, _ cols : Int) -> [[T?]] {
+    return [[T?]].init(
+        repeating: [T?].init(repeating: .none, count: cols),
+        count: rows)
 }
 
 class RenderInfoScrollViewDataSource : MMTextScrollViewDataSource {
-    var tiles = [UnsafeBufferPointer<RedTile>]()
     var info : RedRenderInfo
+    var data : [[NSData?]]
+    var tiles : [[RedTile?]]
     
     init(_ info: RedRenderInfo) {
         self.info = info
-        for i in 0..<Int(info.rows) {
-            withUnsafePointer(to: &self.info.tiles.0.0) { (ptr) in
-                let buffer = UnsafeBufferPointer(start: ptr + i * Int(info.cols), count: Int(info.cols))
-                tiles.append(buffer)
-            }
-        }
+        self.data = makeEmpty2D(Int(self.info.rows), Int(self.info.cols))
+        self.tiles = makeEmpty2D(Int(self.info.rows), Int(self.info.cols))
+    }
+    
+    func update(tile: RedTile) {
+        let i = Int(tile.i)
+        let j = Int(tile.j)
+        self.data[i][j] = NSData(bytesNoCopy: tile.data!, length: self.bytesPerTile(), freeWhenDone: false)
+        self.tiles[i][j] = tile
+    }
+    
+    func bytesPerTile() -> Int {
+        return 4 * Int(self.info.tile_width) * Int(self.info.tile_height)
     }
     
     func contentSize() -> CGSize {
-        return CGSize(width: self.tileWidth() * self.cols(), height: self.tileHeight() * self.rows())
+        return CGSize(width: Int(self.info.total_width / 2), height: Int(self.info.total_height / 2))
     }
     
-    func data(i: Int, j: Int) -> NSData {
-        let tile = self.tiles[i][j]
-        let size = Int(tile.w) * Int(tile.h) * 4
-        return NSData(bytesNoCopy: tile.data!, length: size, freeWhenDone: false)
+    func data(i: Int, j: Int) -> NSData? {
+        return self.data[i][j]
     }
-    
-    func frame(i: Int, j: Int) -> CGRect {
-        let tile = self.tiles[i][j]
+        
+    func frame(i: Int, j: Int) -> CGRect? {
         let size = self.contentSize()
-        return CGRect(x: Int(tile.x), y: Int(size.height) - self.tileHeight() - Int(tile.y), width: Int(tile.w), height: Int(tile.h))
+        guard let tile = tiles[i][j] else { return .none }
+        let y = Int(size.height) - Int(tile.y / 2) - Int(tile.h / 2)
+        let frame = CGRect(x: Int(tile.x / 2), y: y, width: Int(tile.w / 2), height: Int(tile.h / 2))
+        return frame
     }
     
     func rows() -> Int {
@@ -66,18 +96,25 @@ class RenderInfoScrollViewDataSource : MMTextScrollViewDataSource {
     }
 
     func tileWidth() -> Int {
-        guard let t = anyTile() else { return 0 }
-        return Int(t.w)
+        return Int(self.info.tile_width)
     }
 
     func tileHeight() -> Int {
-        guard let t = anyTile() else { return 0 }
-        return Int(t.h)
+        return Int(self.info.tile_height)
+    }
+    
+    func tileSize() -> CGSize {
+        return CGSize(width: self.tileWidth(), height: self.tileHeight())
     }
 
     func anyTile() -> RedTile? {
-        guard let first = tiles.first else { return .none }
-        guard let tile = first.first else { return .none }
-        return tile
+        for i in 0 ..< Int(self.info.rows) {
+            for j in 0 ..< Int(self.info.cols) {
+                if let tile = self.tiles[i][j] {
+                    return tile
+                }
+            }
+        }
+        return .none
     }
 }

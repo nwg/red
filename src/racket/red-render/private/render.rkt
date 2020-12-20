@@ -32,6 +32,11 @@
   0
   )
 
+(define (render-clear-rect cid x y w h)
+  (let* ([context (hash-ref contexts cid)]
+         [ctx (render-context-ctx context)])
+    (clear-rect ctx x y w h)))
+
 (define (render-context-get-data cid)
   (let ([context (hash-ref contexts cid)])
     (render-context-data context)))
@@ -91,6 +96,7 @@
     `(render-get-line-infos . ,render-get-line-infos)
     `(render-create-line . ,render-create-line)
     `(render-get-font-info . ,render-get-font-info)
+    `(render-clear-rect . ,render-clear-rect)
     `(render-context-get-data . ,render-context-get-data))))
 
 (define (handle-msg pch msg)

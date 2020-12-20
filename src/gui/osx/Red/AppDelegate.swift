@@ -24,9 +24,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var outputPipe: [Int32] = [-1, -1]
     private var inputPipe: [Int32] = [-1, -1]
     
+    private var buffer : OpaquePointer?
+    private var portal : OpaquePointer?
+
     private var bytes : UnsafeMutableRawPointer?
 
     var textScrollView : MMTextScrollView!
+    var dataSource : RenderInfoScrollViewDataSource!
     
     static func main() {
         var sigs : sigset_t = 0
@@ -40,12 +44,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        let width = 1600
+        let height = 1200
+
         self.textScrollView = MMTextScrollView.createFromNib()
-        let bounds = window.contentView!.bounds
-        let frame = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
-        self.textScrollView.frame = frame
+        var frame = self.window.frame
+        frame.size = CGSize(width: width/2, height: height/2)
+        frame = NSWindow.frameRect(forContentRect: frame, styleMask: self.window.styleMask)
+        self.window.setFrame(frame, display: true)
+        self.window.contentView?.addSubview(self.textScrollView)
+        let contentRect = CGRect(x: 0, y: 0, width: width/2, height: height/2)
+        self.textScrollView.frame = contentRect
         
-                
         let bundle = Bundle(identifier: "org.racket-lang.Racket")!
         let petite = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/petite.boot")
         let scheme = bundle.bundleURL.appendingPathComponent("Versions/Current/boot/scheme.boot")
@@ -73,43 +83,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         client_queue.async {
 
-            let width = 1600
-            let height = 1200
-
             var result : Int32
-            var buffer : OpaquePointer?
-            result = libred_create_buffer(&buffer)
+            result = libred_create_buffer(&self.buffer)
             if result != 0 { abort() }
 
-            var portal : OpaquePointer?
-            result = libred_open_portal(buffer, Int32(width), Int32(height), &portal)
-            if result != 0 { abort() }
-
-            result = libred_buffer_open_file(buffer, "/tmp/big-file.txt")
+            result = libred_buffer_open_file(self.buffer, "/tmp/big-file.txt")
             if result != 0 { abort() }
             
+            result = libred_open_portal(self.buffer, Int32(width), Int32(height), &self.portal)
+            if result != 0 { abort() }
+
             var info = RedRenderInfo()
-            result = libred_get_render_info(portal, &info)
-            let dataSource = RenderInfoScrollViewDataSource(info)
+            result = libred_get_render_info(self.portal, &info)
+            self.dataSource = RenderInfoScrollViewDataSource(info)
             
             self.clientQueue.asyncAfter(deadline: .now() + 1) {
                 let b = RedBounds(x:0, y:0, w: UInt64(width), h: UInt64(height))
-                result = libred_set_current_bounds(buffer, b)
+                result = libred_set_current_bounds(self.buffer, b)
             }
                 
             DispatchQueue.main.async {
-                self.textScrollView!.dataSource = dataSource
-                self.textScrollView!.reloadData()
-                self.textScrollView.frame = CGRect(x: 0, y: 0, width: width/2, height: height/2)
-                var frame = self.window.frame
-                frame.size = CGSize(width: width/2, height: height/2)
-                frame = NSWindow.frameRect(forContentRect: frame, styleMask: self.window.styleMask)
-                self.window.setFrame(frame, display: true)
-                self.window.contentView?.addSubview(self.textScrollView)
+                self.textScrollView!.dataSource = self.dataSource
+                self.textScrollView.startSendingBounds()
                 self.window.makeKeyAndOrderFront(self)
                 NSApplication.shared.activate(ignoringOtherApps: true)
             }
         }
+    }
+    
+    func setBounds(_ bounds : CGRect) {
+        let redBounds = red_bounds_t(x: UInt64(max(bounds.minX, 0)), y: UInt64(max(bounds.minY, 0)), w: UInt64(bounds.width), h: UInt64(bounds.height))
+        libred_set_current_bounds(self.portal, redBounds)
     }
     
     func applicationDidUpdate(_ notification: Notification) {
